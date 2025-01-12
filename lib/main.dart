@@ -12,11 +12,13 @@ import 'Controllers/ThemeController.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPreferences.getInstance();
-  Get.put(ThemeController());
+
   runApp(
     DevicePreview(
       enabled: true,
-      builder: (context) => const MyApp(),
+      builder: (context) {
+        return const MyApp();
+      },
     ),
   );
 }
@@ -31,6 +33,11 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
+        // Initialize ThemeController after ScreenUtil is initialized
+        if (!Get.isRegistered<ThemeController>()) {
+          Get.put(ThemeController());
+        }
+
         final themeController = Get.find<ThemeController>();
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
