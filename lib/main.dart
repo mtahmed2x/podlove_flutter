@@ -6,7 +6,7 @@ import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Controllers/ThemeController.dart';
+import 'controllers/ThemeController.dart';
 
 
 void main() async {
@@ -33,11 +33,9 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        // Initialize ThemeController after ScreenUtil is initialized
         if (!Get.isRegistered<ThemeController>()) {
           Get.put(ThemeController());
         }
-
         final themeController = Get.find<ThemeController>();
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:podlove_flutter/bindings/sign_up_binding.dart';
 import 'package:podlove_flutter/presentation/screens/splash_screen/initial_screen.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/presentation/screens/onboarding/approach.dart';
@@ -27,7 +28,7 @@ class AppRouter {
     GetPage(name: RouterPath.termsOfUse, page: () => TermsOfUse()),
     GetPage(name: RouterPath.attention, page: () => Attention()),
 
-    GetPage(name: RouterPath.signUp, page: () => SignUp()),
+    GetPage(name: RouterPath.signUp, page: () => SignUp(), binding: SignUpBinding()),
     GetPage(name: RouterPath.emailVerification, page: () => VerifyEmail()),
     GetPage(name: RouterPath.phoneVerification, page: () => VerifyPhone()),
     GetPage(name: RouterPath.signIn, page: () => SignIn()),

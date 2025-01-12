@@ -5,6 +5,7 @@ import 'package:podlove_flutter/presentation/widgets/custom_text_field.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../controllers/auth/sign_up_controller.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_round_button.dart';
 import '../../widgets/custom_text.dart';
@@ -14,6 +15,8 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<SignUpController>();
+
     return Scaffold(
       appBar: CustomAppBar(title: "Sign up"),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
@@ -52,36 +55,45 @@ class SignUp extends StatelessWidget {
                       ),
                     ),
                     // Input Fields
-                    const CustomTextField(
+                    CustomTextField(
                       fieldType: TextFieldType.text,
                       label: "Full Name",
                       hint: "Enter your full name here",
+                      controller: controller.fullNameController,
                     ),
-                    const CustomTextField(
+                    CustomTextField(
                       fieldType: TextFieldType.email,
                       label: "Email",
                       hint: "Enter your email",
+                      controller: controller.emailController,
                     ),
-                    const CustomTextField(
+                    CustomTextField(
                       fieldType: TextFieldType.text,
                       label: "Phone Number",
                       hint: "Enter your phone number",
+                      controller: controller.phoneNumberController,
                     ),
-                    const CustomTextField(
+                    CustomTextField(
                       fieldType: TextFieldType.password,
                       label: "Password",
                       hint: "Enter your password",
+                      controller: controller.passwordController,
                     ),
-                    const CustomTextField(
+                    CustomTextField(
                       fieldType: TextFieldType.password,
                       label: "Confirm Password",
                       hint: "Confirm your password",
+                      controller: controller.confirmPasswordController,
                     ),
                     SizedBox(height: 30.h),
-                    CustomRoundButton(
-                      text: "Sign up",
-                      onPressed: () => Get.toNamed(RouterPath.signUp),
-                    ),
+                    Obx(() => CustomRoundButton(
+                      text: controller.isLoading.value
+                          ? "Signing Up..."
+                          : "Sign up",
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => controller.signUp(),
+                    )),
                     SizedBox(height: 15.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 15.h),
@@ -99,7 +111,7 @@ class SignUp extends StatelessWidget {
                               onTap: () => Get.toNamed(RouterPath.signIn),
                               child: CustomText(
                                 text: " Sign in",
-                                fontSize: 14.sp, // Responsive font size
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: customOrange,
                               ),
@@ -108,7 +120,6 @@ class SignUp extends StatelessWidget {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
