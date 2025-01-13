@@ -6,7 +6,7 @@ import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'controllers/ThemeController.dart';
+import 'controllers/theme_controller.dart';
 
 
 void main() async {
