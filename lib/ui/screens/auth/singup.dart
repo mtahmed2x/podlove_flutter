@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:podlove_flutter/constants/colors.dart';
+import 'package:podlove_flutter/constants/strings_en.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
-import 'package:podlove_flutter/presentation/widgets/custom_text_field.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'controllers/signup_controller.dart';
+import '../../../controllers/auth/sign_up_controller.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_round_button.dart';
 import '../../widgets/custom_text.dart';
@@ -15,11 +16,10 @@ class SignUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SignupController>();
+    final controller = Get.find<SignUpController>();
 
     return Scaffold(
       appBar: CustomAppBar(title: "Sign up"),
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: Column(
           children: [
@@ -44,7 +44,7 @@ class SignUp extends StatelessWidget {
                             ),
                             SizedBox(height: 30.h),
                             CustomText(
-                              text: "Welcome!",
+                              text: AppStrings.welcomeBack,
                               color: const Color.fromARGB(255, 51, 51, 51),
                               fontSize: 22.sp,
                               fontWeight: FontWeight.w500,

@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: themeController.theme,
           initialRoute: RouterPath.initialScreen,
-          getPages: AppRouter.AppPages,
+          getPages: AppRouter.appPages,
           builder: DevicePreview.appBuilder,
           locale: DevicePreview.locale(context),
         );

@@ -1,24 +1,24 @@
 import 'package:get/get.dart';
-import 'package:podlove_flutter/presentation/screens/splash_screen/initial_screen.dart';
+import 'package:podlove_flutter/bindings/sign_up_binding.dart';
+import 'package:podlove_flutter/ui/screens/splash_screen/initial_screen.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
-import 'package:podlove_flutter/presentation/screens/onboarding/approach.dart';
-import 'package:podlove_flutter/presentation/screens/onboarding/expectation.dart';
-import 'package:podlove_flutter/presentation/screens/splash_screen/splash_screen.dart';
-import 'package:podlove_flutter/presentation/screens/onboarding/attention.dart';
-import '../presentation/screens/auth/bindings/signup_binding.dart';
-import '../presentation/screens/auth/forgot_password.dart';
-import '../presentation/screens/auth/reset_password.dart';
-import '../presentation/screens/auth/signin.dart';
-import '../presentation/screens/auth/singup.dart';
-import '../presentation/screens/auth/verify_code.dart';
-import '../presentation/screens/auth/verify_email.dart';
-import '../presentation/screens/auth/verify_phone.dart';
-import '../presentation/screens/terms/terms.dart';
+import 'package:podlove_flutter/ui/screens/onboarding/approach.dart';
+import 'package:podlove_flutter/ui/screens/onboarding/expectation.dart';
+import 'package:podlove_flutter/ui/screens/splash_screen/splash_screen.dart';
+import 'package:podlove_flutter/ui/screens/onboarding/attention.dart';
+import '../ui/screens/auth/forgot_password.dart';
+import '../ui/screens/auth/reset_password.dart';
+import '../ui/screens/auth/signin.dart';
+import '../ui/screens/auth/singup.dart';
+import '../ui/screens/auth/verify_code.dart';
+import '../ui/screens/auth/verify_email.dart';
+import '../ui/screens/auth/verify_phone.dart';
+import '../ui/screens/terms/terms.dart';
 
 
 
 class AppRouter {
-  static final AppPages = [
+  static final appPages = [
     GetPage(name: RouterPath.initialScreen, page: () => InitialScreen()),
     GetPage(name: RouterPath.splashScreen, page: () => SplashScreen()),
     
@@ -28,7 +28,7 @@ class AppRouter {
     GetPage(name: RouterPath.termsOfUse, page: () => TermsOfUse()),
     GetPage(name: RouterPath.attention, page: () => Attention()),
 
-    GetPage(name: RouterPath.signUp, page: () => SignUp(), binding: SignupBinding()),
+    GetPage(name: RouterPath.signUp, page: () => SignUp(), binding: SignUpBinding()),
     GetPage(name: RouterPath.emailVerification, page: () => VerifyEmail()),
     GetPage(name: RouterPath.phoneVerification, page: () => VerifyPhone()),
     GetPage(name: RouterPath.signIn, page: () => SignIn()),
