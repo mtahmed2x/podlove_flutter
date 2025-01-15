@@ -19,7 +19,7 @@ class SignUp extends StatelessWidget {
     final controller = Get.find<SignUpController>();
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Sign up"),
+      appBar: CustomAppBar(title: AppStrings.signUp),
       body: SafeArea(
         child: Column(
           children: [

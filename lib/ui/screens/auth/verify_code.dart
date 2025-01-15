@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:podlove_flutter/constants/colors.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_round_button.dart';
 import '../../widgets/custom_text.dart';
@@ -23,38 +22,38 @@ class VerifyCode extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 Center(
                   child: Column(
                     children: [
                       // Logo
                       Image.asset(
                         "assets/images/podLove.png",
-                        width: 250,
-                        height: 50,
+                        width: 250.w,
+                        height: 50.h,
                       ),
-                      const SizedBox(height: 25),
+                      SizedBox(height: 25.h),
                       CustomText(
                           text: "Enter Code",
                           color: Color.fromARGB(255, 51, 51, 51),
-                          fontSize: 22,
+                          fontSize: 22.h,
                           fontWeight: FontWeight.w500),
 
-                      const SizedBox(height: 15),
+                      SizedBox(height: 15.h),
                       CustomText(
                         text:
                         "Please enter the six digit code we sent you to your email",
                         color: Color.fromARGB(255, 51, 51, 51),
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 ),
                 OTPInputField(),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 CustomRoundButton(
                   text: "Verify Code",
                   onPressed: () => Get.toNamed(RouterPath.resetPass),

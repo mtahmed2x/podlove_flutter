@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:podlove_flutter/constants/colors.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'custom_text.dart';
 
 class OTPInputField extends StatefulWidget {
-  final int length; // The number of OTP digits
-  final TextEditingController? controller; // Optionally, pass a controller
-  final Function(String)? onChanged; // Callback to capture the input value
+  final int length;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
 
   const OTPInputField({
     super.key,
-    this.length = 6, // Default to 6 digits
+    this.length = 6,
     this.controller,
     this.onChanged,
   });
@@ -47,26 +47,25 @@ class OTPInputFieldState extends State<OTPInputField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment:
-          CrossAxisAlignment.start, // Align the column to the start
+          CrossAxisAlignment.start,
       children: [
-        // OTP input fields
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(widget.length, (index) {
-            // Check if the text field is empty or has text
             bool isFilled = _controllers[index].text.isNotEmpty;
 
             return SizedBox(
-              width: 50, // Adjust the width as per your design
+              width: 50.w,
               child: TextField(
                 controller: _controllers[index],
                 focusNode: _focusNodes[index],
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24),
-                maxLength: 1, // Only one digit per field
+                style: TextStyle(fontSize: 24.sp),
+                maxLength: 1,
                 decoration: InputDecoration(
-                  counterText: "", // Hide the counter text
+                  counterText: "",
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: EdgeInsets.symmetric(vertical: 10),
@@ -75,17 +74,17 @@ class OTPInputFieldState extends State<OTPInputField> {
                     borderSide: BorderSide(
                       color: isFilled
                           ? customOrange
-                          : customOrangeLight, // Dark if filled, light if empty
-                      width: 0.8,
+                          : customOrangeLight,
+                      width: 0.8.w,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12.r),
                     borderSide: BorderSide(
                       color: isFilled
                           ? customOrange
-                          : customOrangeLight, // Dark if filled, light if empty
-                      width: 0.8,
+                          : customOrangeLight,
+                      width: 0.8.w,
                     ),
                   ),
                 ),
@@ -110,12 +109,12 @@ class OTPInputFieldState extends State<OTPInputField> {
             );
           }),
         ),
-        SizedBox(height: 10), // Space between OTP and Resend OTP
+        SizedBox(height: 10.h),
         Padding(
           padding: EdgeInsets.only(
-              right: 10.0), // Adjust the padding here to move it left
+              right: 10.0.w),
           child: Align(
-            alignment: Alignment.centerRight, // Align the text to the right
+            alignment: Alignment.centerRight,
             child: GestureDetector(
               onTap: () {
                 print("Resend OTP clicked");
@@ -123,10 +122,10 @@ class OTPInputFieldState extends State<OTPInputField> {
               child: CustomText(
                 text: 'Resend OTP',
                 style: TextStyle(
-                    color: customOrange, // Your custom color for the text
-                    fontSize: 14,
+                    color: customOrange,
+                    fontSize: 14.sp,
                     decoration: TextDecoration.underline,
-                    decorationColor: customOrange // Underline the text
+                    decorationColor: customOrange
                     ),
               ),
             ),

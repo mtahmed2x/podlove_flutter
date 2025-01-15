@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:podlove_flutter/data/models/sign_up_response.dart';
-import 'package:podlove_flutter/data/repositories/sign_up_repository.dart';
+import 'package:podlove_flutter/data/models/signup_response.dart';
+import 'package:podlove_flutter/data/repositories/auth_repository.dart';
+import '../../data/models/signup_request.dart';
 import '../../routes/route_path.dart';
 
 class SignUpController extends GetxController {
-  final SignUpRepository signUpRepository;
-  SignUpController(this.signUpRepository);
+  final AuthRepository authRepository;
+  SignUpController(this.authRepository);
 
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -25,17 +26,17 @@ class SignUpController extends GetxController {
     isLoading.value = true;
     const String endpoint = "auth/register";
 
-    final Map<String, dynamic> data = {
-      "name": fullNameController.text,
-      "email": emailController.text,
-      "role": "USER",
-      "phoneNumber": phoneNumberController.text,
-      "password": passwordController.text,
-      "confirmPassword": confirmPasswordController.text
-    };
+    final signUpData = SignUpRequest(
+      name: fullNameController.text.trim(),
+      email: emailController.text.trim(),
+      role: "USER",
+      phoneNumber: phoneNumberController.text.trim(),
+      password: passwordController.text,
+      confirmPassword: confirmPasswordController.text,
+    );
 
     try {
-      final SignUpResponse response = await signUpRepository.signUp(endpoint, data);
+      final SignUpResponse response = await authRepository.signUp(endpoint, signUpData);
       if (response.success) {
         Get.snackbar("Success", response.message);
         Get.toNamed(RouterPath.signIn);
@@ -43,7 +44,7 @@ class SignUpController extends GetxController {
         Get.snackbar("Error", response.message);
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong. Please try again.");
+      Get.snackbar("Error", e.toString());
     } finally {
       isLoading.value = false;
     }

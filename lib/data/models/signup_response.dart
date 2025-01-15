@@ -3,8 +3,6 @@ import 'dart:convert';
 SignUpResponse signUpResponseFromJson(String str) =>
     SignUpResponse.fromJson(json.decode(str));
 
-String signUpResponseToJson(SignUpResponse data) => json.encode(data.toJson());
-
 class SignUpResponse {
   final bool success;
   final String message;
@@ -24,11 +22,6 @@ class SignUpResponse {
             : null,
       );
 
-  Map<String, dynamic> toJson() => {
-        "success": success,
-        "message": message,
-        "data": data?.toJson(),
-      };
 }
 
 class Data {
@@ -41,8 +34,4 @@ class Data {
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         isVerified: json["isVerified"] ?? false,
       );
-
-  Map<String, dynamic> toJson() => {
-        "isVerified": isVerified,
-      };
 }
