@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:podlove_flutter/routes/app_router.dart';
-import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'controllers/theme_controller.dart';
-
+import 'routes/app_router.dart';
+import 'providers/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,33 +15,31 @@ void main() async {
     DevicePreview(
       enabled: true,
       builder: (context) {
-        return const MyApp();
+        return const ProviderScope(child: MyApp());
       },
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeData = ref.watch(themeProvider);
+    final router = ref.watch(goRouterProvider);
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        if (!Get.isRegistered<ThemeController>()) {
-          Get.put(ThemeController());
-        }
-        final themeController = Get.find<ThemeController>();
-        return GetMaterialApp(
+        return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          theme: themeController.theme,
-          initialRoute: RouterPath.initialScreen,
-          getPages: AppRouter.appPages,
-          builder: DevicePreview.appBuilder,
+          theme: themeData,
+          routerConfig: router,
           locale: DevicePreview.locale(context),
+          builder: DevicePreview.appBuilder,
         );
       },
     );

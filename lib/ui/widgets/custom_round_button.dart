@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../controllers/theme_controller.dart';
+import '../../providers/theme_provider.dart';
 
-class CustomRoundButton extends StatelessWidget {
+class CustomRoundButton extends ConsumerWidget {
   final String text;
   final VoidCallback? onPressed;
   final Color? backgroundColor;
@@ -17,25 +17,26 @@ class CustomRoundButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeData = ref.watch(themeProvider);
+
     return SizedBox(
       width: double.infinity,
-      height: 48.h, // Responsive height using ScreenUtil
+      height: 48.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: themeController.colorScheme.secondary, // Use provided or theme color
+          backgroundColor: backgroundColor ?? themeData.colorScheme.secondary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100.r), // Responsive radius
+            borderRadius: BorderRadius.circular(100.r),
           ),
         ),
         onPressed: onPressed,
         child: Text(
           text,
           style: TextStyle(
-            fontSize: 16.sp, // Responsive font size
+            fontSize: 16.sp,
             fontWeight: FontWeight.w400,
-            color: themeController.colorScheme.onSecondary, // Text color from theme
+            color: themeData.colorScheme.onSecondary,
           ),
         ),
       ),

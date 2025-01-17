@@ -10,7 +10,6 @@ class CustomTextField extends StatefulWidget {
   final Color? labelTextColor;
   final String? hint;
   final Color? hintTextColor;
-  final TextEditingController? controller;
   final TextInputType? keyboardType;
   final bool? obscureText;
   final Widget? prefixIcon;
@@ -19,9 +18,10 @@ class CustomTextField extends StatefulWidget {
   final int? maxLength;
   final int? maxLines;
   final TextStyle? textStyle;
+  final bool? enabled;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
-  final bool? enabled;
 
   const CustomTextField({
     super.key,
@@ -30,7 +30,6 @@ class CustomTextField extends StatefulWidget {
     this.labelTextColor,
     this.hint,
     this.hintTextColor,
-    this.controller,
     this.keyboardType,
     this.obscureText,
     this.prefixIcon,
@@ -39,9 +38,10 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
     this.maxLines = 1,
     this.textStyle,
+    this.enabled = true,
+    this.controller,
     this.validator,
     this.onChanged,
-    this.enabled = true,
   });
 
   @override
@@ -64,16 +64,17 @@ class CustomTextFieldState extends State<CustomTextField> {
       children: [
         widget.label is String
             ? Text(
-          widget.label,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-            color: widget.labelTextColor ?? const Color.fromARGB(255, 51, 51, 51),
-          ),
-        )
+                widget.label,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: widget.labelTextColor ??
+                      const Color.fromARGB(255, 51, 51, 51),
+                ),
+              )
             : RichText(
-          text: widget.label as TextSpan,
-        ),
+                text: widget.label as TextSpan,
+              ),
         SizedBox(height: 10.h),
         TextFormField(
           controller: widget.controller,
@@ -89,24 +90,25 @@ class CustomTextFieldState extends State<CustomTextField> {
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: TextStyle(
-              color: widget.hintTextColor ?? const Color.fromARGB(255, 121, 121, 121),
+              color: widget.hintTextColor ??
+                  const Color.fromARGB(255, 121, 121, 121),
               fontWeight: FontWeight.w400,
               fontSize: 14.sp,
             ),
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.fieldType == TextFieldType.password
                 ? IconButton(
-              icon: Icon(
-                _isObscure ? Icons.visibility_off : Icons.visibility,
-                color: customOrange,
-                size: 20.sp,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isObscure = !_isObscure;
-                });
-              },
-            )
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                      color: customOrange,
+                      size: 20.sp,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
+                  )
                 : null,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 15.w,
@@ -117,7 +119,8 @@ class CustomTextFieldState extends State<CustomTextField> {
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: widget.borderColor ?? customOrange, width: 2.w),
+              borderSide: BorderSide(
+                  color: widget.borderColor ?? customOrange, width: 2.w),
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
           ),

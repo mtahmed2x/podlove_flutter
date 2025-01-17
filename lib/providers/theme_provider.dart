@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ThemeController extends GetxController {
-  final ThemeData theme = ThemeData(
+final themeProvider = Provider<ThemeData>((ref) {
+  return ThemeData(
     fontFamily: 'Poppins',
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
@@ -20,14 +19,6 @@ class ThemeController extends GetxController {
       elevation: 0,
       shadowColor: Colors.transparent,
       backgroundColor: Color(0xFFFEFEFE),
-
-      titleTextStyle: TextStyle(
-        color: const Color.fromARGB(255, 51, 51, 51),
-        fontWeight: FontWeight.w600,
-        fontSize: 20.sp,
-      ),
     ),
   );
-
-  ColorScheme get colorScheme => theme.colorScheme;
-}
+});
