@@ -65,8 +65,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: RouterPath.verifyCode,
-        builder: (context, state) => const VerifyCode(),
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>?;
+          return VerifyCode(
+            state: args?['status'] ?? "PhoneActivation",
+            title: args?['title'] ?? 'Verify Code',
+            email: args?['email'] ?? 'email',
+            phoneNumber: args?['phoneNumber'] ?? 'password',
+            instructionText: args?['instructionText'] ?? 'Please enter the six digit code we sent you to your number ',
+          );
+        },
       ),
+
       GoRoute(
         path: RouterPath.resetPass,
         builder: (context, state) => const ResetPassword(),

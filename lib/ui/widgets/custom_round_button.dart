@@ -21,7 +21,7 @@ class CustomRoundButton extends ConsumerWidget {
     final themeData = ref.watch(themeProvider);
 
     return SizedBox(
-      width: double.infinity,
+      width: 335.w,
       height: 48.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(

@@ -98,17 +98,17 @@ class CustomTextFieldState extends State<CustomTextField> {
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.fieldType == TextFieldType.password
                 ? IconButton(
-                    icon: Icon(
-                      _isObscure ? Icons.visibility_off : Icons.visibility,
-                      color: customOrange,
-                      size: 20.sp,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
-                    },
-                  )
+              icon: Icon(
+                _isObscure ? Icons.visibility_off : Icons.visibility,
+                color: customOrange,
+                size: 20.sp,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isObscure = !_isObscure;
+                });
+              },
+            )
                 : null,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 15.w,
@@ -123,7 +123,21 @@ class CustomTextFieldState extends State<CustomTextField> {
                   color: widget.borderColor ?? customOrange, width: 2.w),
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
+            errorStyle: TextStyle(
+              color: Colors.red,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2.w),
+              borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
+            ),
           ),
+
           validator: widget.validator,
           onChanged: widget.onChanged,
         ),

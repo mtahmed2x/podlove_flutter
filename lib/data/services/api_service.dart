@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'api_exceptions.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ApiService {
   ApiService._privateConstructor();
@@ -13,8 +14,12 @@ class ApiService {
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
-      headers: headers ?? {
-        'Content-Type': 'application/json',
+      headers: headers ??
+          {
+            'Content-Type': 'application/json',
+          },
+      validateStatus: (status) {
+        return status! < 500;
       },
     );
 
@@ -38,24 +43,22 @@ class ApiService {
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          // You can handle global responses here
           return handler.next(response);
         },
         onError: (DioException e, handler) {
-          // Handle errors globally
           throw _handleDioError(e);
         },
       ),
     );
   }
 
-  Future<T> getRequest<T>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onReceiveProgress,
-      }) async {
+  Future<T> get<T>(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
     try {
       Response<T> response = await _dio.get<T>(
         path,
@@ -70,15 +73,15 @@ class ApiService {
     }
   }
 
-  Future<T> postRequest<T>(
-      String path, {
-        data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-      }) async {
+  Future<Response<T>> post<T>(
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
     try {
       Response<T> response = await _dio.post<T>(
         path,
@@ -89,21 +92,21 @@ class ApiService {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data!;
+      return response;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<T> putRequest<T>(
-      String path, {
-        data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-      }) async {
+  Future<T> put<T>(
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
     try {
       Response<T> response = await _dio.put<T>(
         path,
@@ -120,13 +123,13 @@ class ApiService {
     }
   }
 
-  Future<T> deleteRequest<T>(
-      String path, {
-        data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-      }) async {
+  Future<T> delete<T>(
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) async {
     try {
       Response<T> response = await _dio.delete<T>(
         path,
@@ -152,7 +155,8 @@ class ApiService {
       case DioExceptionType.badResponse:
         {
           int? statusCode = error.response?.statusCode;
-          String message = error.response?.statusMessage ?? "Something went wrong";
+          String message =
+              error.response?.statusMessage ?? "Something went wrong";
           switch (statusCode) {
             case 400:
               return BadRequestException(message);
@@ -171,6 +175,6 @@ class ApiService {
       case DioExceptionType.connectionError:
       case DioExceptionType.unknown:
         return NoInternetException("No Internet connection");
-      }
+    }
   }
 }

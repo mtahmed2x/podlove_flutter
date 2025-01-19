@@ -15,4 +15,5 @@ class AppStrings {
   static const String signUp = "Sign Up";
   static const String alreadyHaveAnAccount = "Already have an account?";
   static const String signIn = "Sign in";
+  static const String resendOtp = "Resend OTP";
 }
