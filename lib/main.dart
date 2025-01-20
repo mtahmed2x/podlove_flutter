@@ -7,7 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
+
+  final prefs = await SharedPreferences.getInstance();
+  if (!prefs.containsKey('isFirstTime')) {
+    await prefs.setBool('isFirstTime', true);
+  }
 
   runApp(
     DevicePreview(
