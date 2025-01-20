@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'routes/app_router.dart';
-import 'providers/theme_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,8 +24,8 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeData = ref.watch(themeProvider);
-    final router = ref.watch(goRouterProvider);
+    final themeData = ref.read(themeProvider);
+    final appRouter = ref.read(routerProvider);
 
     return ScreenUtilInit(
       designSize: const Size(375, 812),
@@ -36,7 +35,7 @@ class MyApp extends ConsumerWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           theme: themeData,
-          routerConfig: router,
+          routerConfig: appRouter,
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
         );

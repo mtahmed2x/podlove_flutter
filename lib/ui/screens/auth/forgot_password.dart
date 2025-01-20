@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
-
-import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_round_button.dart';
-import '../../widgets/custom_text.dart';
+import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
+import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
 class ForgotPassword extends StatelessWidget {
-  const ForgotPassword ({super.key});
+  const ForgotPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class ForgotPassword extends StatelessWidget {
                       const SizedBox(height: 15),
                       CustomText(
                         text:
-                        "Enter your email and we will send you a verification code",
+                            "Enter your email and we will send you a verification code",
                         color: Color.fromARGB(255, 51, 51, 51),
                         fontSize: 14,
                         fontWeight: FontWeight.w400,

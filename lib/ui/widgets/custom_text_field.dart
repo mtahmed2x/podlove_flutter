@@ -45,10 +45,10 @@ class CustomTextField extends StatefulWidget {
   });
 
   @override
-  CustomTextFieldState createState() => CustomTextFieldState();
+  State<CustomTextField> createState() => _CustomTextFieldState();
 }
 
-class CustomTextFieldState extends State<CustomTextField> {
+class _CustomTextFieldState extends State<CustomTextField> {
   bool _isObscure = true;
 
   @override
@@ -98,17 +98,17 @@ class CustomTextFieldState extends State<CustomTextField> {
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.fieldType == TextFieldType.password
                 ? IconButton(
-              icon: Icon(
-                _isObscure ? Icons.visibility_off : Icons.visibility,
-                color: customOrange,
-                size: 20.sp,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isObscure = !_isObscure;
-                });
-              },
-            )
+                    icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility,
+                      color: customOrange,
+                      size: 20.sp,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
+                  )
                 : null,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 15.w,
@@ -137,7 +137,6 @@ class CustomTextFieldState extends State<CustomTextField> {
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
           ),
-
           validator: widget.validator,
           onChanged: widget.onChanged,
         ),

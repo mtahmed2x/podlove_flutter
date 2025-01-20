@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:podlove_flutter/data/models/sign_up_response_model.dart';
-import '../../data/services/api_service.dart';
+import 'package:podlove_flutter/data/models/Response/sign_up_response_model.dart';
+import 'package:podlove_flutter/providers/global_providers.dart';
+import '../../data/services/api_services.dart';
 
 class SignUpState {
   final bool isLoading;
@@ -42,7 +43,7 @@ class SignUpState {
     return SignUpState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      phoneNumber: phoneNumber?? phoneNumber,
+      phoneNumber: phoneNumber ?? phoneNumber,
       email: email ?? email,
       error: error ?? error,
       response: response ?? response,
@@ -51,7 +52,7 @@ class SignUpState {
 }
 
 class SignUpNotifier extends StateNotifier<SignUpState> {
-  final ApiService apiService;
+  final ApiServices apiService;
 
   SignUpNotifier(this.apiService) : super(SignUpState());
 
@@ -60,7 +61,6 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
 
   Future<void> signUp() async {
     final signUpData = {
@@ -81,27 +81,25 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
       );
       final signUpResponse = SignUpResponseModel.fromJson(response);
 
-      if(signUpResponse.statusCode == 201) {
+      if (signUpResponse.statusCode == 201) {
         state = state.copyWith(
-          isSuccess: true,
-          error: null,
-          isLoading: false,
-          phoneNumber: signUpData["phoneNumber"],
-          email: signUpData["email"]
-        );
-      }
-      else if(signUpResponse.statusCode == 400) {
+            isSuccess: true,
+            error: null,
+            isLoading: false,
+            phoneNumber: signUpData["phoneNumber"],
+            email: signUpData["email"]);
+      } else if (signUpResponse.statusCode == 400) {
         state = state.copyWith(
           isSuccess: false,
           error: "Signup failed : ${signUpResponse.message}",
           isLoading: false,
         );
-      }
-      else if(signUpResponse.statusCode == 409) {
+      } else if (signUpResponse.statusCode == 409) {
         final error = signUpResponse.data?.isVerified == true
             ? "Your account already exists. Please login."
             : "Your account already exists. Please verify.";
-        state = state.copyWith(isSuccess: false, error: error, isLoading: false);
+        state =
+            state.copyWith(isSuccess: false, error: error, isLoading: false);
       }
     } catch (e) {
       state = state.copyWith(
@@ -109,7 +107,6 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
         error: "An unexpected error occurred. Please try again.",
         isLoading: false,
       );
-
     }
   }
 
@@ -125,16 +122,8 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
 }
 
 final signUpProvider = StateNotifierProvider<SignUpNotifier, SignUpState>(
-      (ref) {
-    final apiService = ref.watch(apiServiceProvider);
+  (ref) {
+    final apiService = ref.read(apiServiceProvider);
     return SignUpNotifier(apiService);
   },
 );
-
-final apiServiceProvider = Provider<ApiService>((ref) {
-  final apiService = ApiService.instance;
-  apiService.init(baseUrl: 'http://10.0.60.41:7000/api/v1');
-  return apiService;
-});
-
-

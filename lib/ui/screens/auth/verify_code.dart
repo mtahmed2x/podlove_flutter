@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/strings_en.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:podlove_flutter/constants/colors.dart';
+import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
-class VerifyCode extends StatelessWidget {
+class VerifyCode extends ConsumerWidget {
   final String state;
   final String title;
   final String? email;
@@ -24,9 +26,12 @@ class VerifyCode extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final verifyCodeState = ref.watch(verifyCodeProvider);
+    final verifyCodeNotifier = ref.read(verifyCodeProvider.notifier);
+
     final contact = state == "PhoneVerifyActivation" ? phoneNumber : email;
-    final TextEditingController otpController = TextEditingController();
+
     final defaultPinTheme = PinTheme(
       width: 47.w,
       height: 49.h,
@@ -97,7 +102,7 @@ class VerifyCode extends StatelessWidget {
                 ),
                 Pinput(
                   length: 6,
-                  controller: otpController,
+                  controller: verifyCodeNotifier.otpController,
                   defaultPinTheme: defaultPinTheme,
                   focusedPinTheme: focusedPinTheme,
                   showCursor: true,
@@ -120,20 +125,25 @@ class VerifyCode extends StatelessWidget {
                 ),
                 SizedBox(height: 50.h),
                 CustomRoundButton(
-                  text: "Verify Code",
-                  onPressed: () {
-                    final otp = otpController.text;
-                    if (otp.length == 6) {
-
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Please enter a valid 6-digit code"),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
+                  text: verifyCodeState.isLoading
+                      ? "Verifing Code..."
+                      : "Verify Code",
+                  onPressed: verifyCodeState.isLoading
+                      ? null
+                      : () {
+                          final otp = verifyCodeNotifier.otpController.text;
+                          if (otp.length == 6) {
+                            verifyCodeNotifier.verifyCode(email!);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text("Please enter a valid 6-digit code"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                 ),
               ],
             ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../providers/theme_provider.dart';
+import 'package:podlove_flutter/providers/global_providers.dart';
 
 class CustomRoundButton extends ConsumerWidget {
   final String text;

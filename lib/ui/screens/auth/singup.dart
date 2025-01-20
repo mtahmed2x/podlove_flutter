@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/colors.dart';
 import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
-
-import '../../../constants/colors.dart';
-import '../../../constants/strings_en.dart';
-import '../../../routes/route_path.dart';
-import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_round_button.dart';
-import '../../widgets/custom_text.dart';
-import '../../widgets/custom_text_field.dart';
+import 'package:podlove_flutter/constants/strings_en.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
+import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
+import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
 
   @override
-  _SignUpState createState() => _SignUpState();
+  ConsumerState<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends ConsumerState<SignUp> {
@@ -28,13 +27,14 @@ class _SignUpState extends ConsumerState<SignUp> {
     final signUpNotifier = ref.read(signUpProvider.notifier);
 
     ref.listen<SignUpState>(signUpProvider, (previous, current) {
-      if(current.isSuccess == true) {
+      if (current.isSuccess == true) {
         GoRouter.of(context).go(
           RouterPath.verifyCode,
           extra: {
-            "state": "PhoneVerifyActivation",
-            "title": "Verify Phone Number",
-            "instructionText": "Please enter the six digit code we sent you to your number",
+            "state": "EmailVerifyActivation",
+            "title": "Verify Email",
+            "instructionText":
+                "Please enter the six digit code we sent you to your email",
             "phoneNumber": current.phoneNumber,
             "email": current.email,
           },

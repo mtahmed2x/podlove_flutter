@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 
 class InitialScreen extends StatelessWidget {
@@ -10,7 +10,7 @@ class InitialScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: GestureDetector(
-          onTap: () => Get.toNamed(RouterPath.splashScreen),
+          onTap: () => GoRouter.of(context).go(RouterPath.splashScreen),
           child: Container(
             width: double.infinity,
             height: double.infinity,
