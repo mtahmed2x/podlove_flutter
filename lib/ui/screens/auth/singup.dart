@@ -31,7 +31,7 @@ class _SignUpState extends ConsumerState<SignUp> {
         GoRouter.of(context).go(
           RouterPath.verifyCode,
           extra: {
-            "state": "EmailVerifyActivation",
+            "status": "EmailActivationVerify",
             "title": "Verify Email",
             "instructionText":
                 "Please enter the six digit code we sent you to your email",

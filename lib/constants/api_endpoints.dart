@@ -3,4 +3,5 @@ class ApiEndpoints {
   static String signUp = "/auth/register";
   static String activate = "/auth/activate";
   static String signIn = "/auth/login";
+  static String forgotPassword = "/auth/forgot-password";
 }

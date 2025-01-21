@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/data/models/Response/verify_code_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
@@ -44,23 +45,32 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
 
   final otpController = TextEditingController();
 
-  Future<void> verifyCode(String email) async {
-    final verifyCodeData = {
-      "email": email,
-      "verificationOTP": otpController.text,
-    };
-
+  Future<void> verifyCode(String status, String email) async {
+    state = state.copyWith(isLoading: true);
     try {
-      state = state.copyWith(isLoading: true);
+      if (status == "EmailRecoveryVerify") {
+        final recoveryCodeData = {
+          "email": email,
+          "recoveryOTP": otpController.text,
+        };
 
-      final response = await apiService.post(
-        "/auth/activate",
-        data: verifyCodeData,
-      );
-      logger.i(response);
+        final response = await apiService.post(
+          ApiEndpoints.emailRecoveryVerify,
+          data: recoveryCodeData,
+        );
+        logger.i(response);
+      } else if (status == "EmailActivationVerify") {
+        final verifyCodeData = {
+          "email": email,
+          "verificationOTP": otpController.text,
+        };
 
-      final verifyCodeResponse = VerifyCodeResponseModel.fromJson(response);
-      logger.i(verifyCodeResponse.data!.auth.email);
+        final response = await apiService.post(
+          ApiEndpoints.activate,
+          data: verifyCodeData,
+        );
+        final verifyCodeResponse = VerifyCodeResponseModel.fromJson(response);
+      }
     } catch (e) {
       state = state.copyWith(
         isSuccess: false,

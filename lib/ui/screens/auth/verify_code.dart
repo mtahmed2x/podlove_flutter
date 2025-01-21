@@ -10,7 +10,7 @@ import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
 class VerifyCode extends ConsumerWidget {
-  final String state;
+  final String status;
   final String title;
   final String? email;
   final String? phoneNumber;
@@ -18,7 +18,7 @@ class VerifyCode extends ConsumerWidget {
 
   const VerifyCode({
     super.key,
-    required this.state,
+    required this.status,
     required this.title,
     required this.email,
     required this.phoneNumber,
@@ -30,7 +30,7 @@ class VerifyCode extends ConsumerWidget {
     final verifyCodeState = ref.watch(verifyCodeProvider);
     final verifyCodeNotifier = ref.read(verifyCodeProvider.notifier);
 
-    final contact = state == "PhoneVerifyActivation" ? phoneNumber : email;
+    final contact = status == "PhoneActivationVerify" ? phoneNumber : email;
 
     final defaultPinTheme = PinTheme(
       width: 47.w,
@@ -133,7 +133,7 @@ class VerifyCode extends ConsumerWidget {
                       : () {
                           final otp = verifyCodeNotifier.otpController.text;
                           if (otp.length == 6) {
-                            verifyCodeNotifier.verifyCode(email!);
+                            verifyCodeNotifier.verifyCode(status, email!);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(

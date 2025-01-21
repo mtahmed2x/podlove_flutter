@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
-import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
-
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_round_button.dart';
 import '../../widgets/custom_text.dart';
+import '../../widgets/custom_text_field.dart';
 
 class ResetPassword extends StatelessWidget {
-  const ResetPassword ({super.key});
+  const ResetPassword({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,37 +18,37 @@ class ResetPassword extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 Center(
                   child: Column(
                     children: [
                       // Logo
                       Image.asset(
                         "assets/images/podLove.png",
-                        width: 250,
-                        height: 50,
+                        width: 250.w,
+                        height: 50.h,
                       ),
-                      const SizedBox(height: 25),
+                      SizedBox(height: 25.h),
                       CustomText(
-                          text: "Set a new password",
-                          color: Color.fromARGB(255, 51, 51, 51),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w500),
-
-                      const SizedBox(height: 15),
+                        text: "Set a new password",
+                        color: const Color.fromARGB(255, 51, 51, 51),
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(height: 15.h),
                       CustomText(
                         text:
-                        "Create a new password. Ensure it differs from previous ones for security",
-                        color: Color.fromARGB(255, 51, 51, 51),
-                        fontSize: 14,
+                            "Create a new password. Ensure it differs from previous ones for security",
+                        color: const Color.fromARGB(255, 51, 51, 51),
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 ),
@@ -62,7 +62,7 @@ class ResetPassword extends StatelessWidget {
                   label: "Confirm New Password",
                   hint: "Confirm your new password",
                 ),
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 CustomRoundButton(
                   text: "Reset Password",
                   onPressed: () => Get.toNamed(RouterPath.signIn),
