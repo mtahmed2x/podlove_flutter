@@ -50,10 +50,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouterPath.verifyCode,
-        builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>?;
+        builder: (context, process) {
+          final args = process.extra as Map<String, dynamic>?;
           return VerifyCode(
-            state: args?['status'] ?? "PhoneActivation",
+            status: args?['status'] ?? "PhoneActivation",
             title: args?['title'] ?? 'Verify Code',
             email: args?['email'] ?? 'email',
             phoneNumber: args?['phoneNumber'] ?? 'password',
