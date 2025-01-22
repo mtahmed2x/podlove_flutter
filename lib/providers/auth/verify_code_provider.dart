@@ -70,6 +70,7 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
           data: verifyCodeData,
         );
         final verifyCodeResponse = VerifyCodeResponseModel.fromJson(response);
+        logger.i(verifyCodeResponse);
       }
     } catch (e) {
       state = state.copyWith(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
@@ -7,9 +8,14 @@ import '../../widgets/custom_round_button.dart';
 import '../../widgets/custom_text.dart';
 import '../../widgets/custom_text_field.dart';
 
-class ResetPassword extends StatelessWidget {
+class ResetPassword extends ConsumerStatefulWidget {
   const ResetPassword({super.key});
+  @override
+  ConsumerState<ResetPassword> createState() => _ResetPasswordState();
+}
 
+class _ResetPasswordState extends ConsumerState<ResetPassword> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,20 +58,27 @@ class ResetPassword extends StatelessWidget {
                     ],
                   ),
                 ),
-                const CustomTextField(
-                  fieldType: TextFieldType.password,
-                  label: "Enter New Password",
-                  hint: "Enter your new password",
-                ),
-                const CustomTextField(
-                  fieldType: TextFieldType.password,
-                  label: "Confirm New Password",
-                  hint: "Confirm your new password",
-                ),
-                SizedBox(height: 15.h),
-                CustomRoundButton(
-                  text: "Reset Password",
-                  onPressed: () => Get.toNamed(RouterPath.signIn),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        fieldType: TextFieldType.password,
+                        label: "Enter New Password",
+                        hint: "Enter your new password",
+                      ),
+                      CustomTextField(
+                        fieldType: TextFieldType.password,
+                        label: "Confirm New Password",
+                        hint: "Confirm your new password",
+                      ),
+                      SizedBox(height: 15.h),
+                      CustomRoundButton(
+                        text: "Reset Password",
+                        onPressed: () => Get.toNamed(RouterPath.signIn),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

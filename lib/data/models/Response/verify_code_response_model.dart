@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import 'package:podlove_flutter/data/models/auth_model.dart';
-import 'package:podlove_flutter/data/models/user_model.dart';
 
 VerifyCodeResponseModel verifyCodeResponseModelFromJson(String str) =>
     VerifyCodeResponseModel.fromJson(json.decode(str));
@@ -34,18 +32,12 @@ class VerifyCodeResponseModel {
 
 class Data {
   final String accessToken;
-  final AuthModel auth;
-  final UserModel user;
 
   Data({
     required this.accessToken,
-    required this.auth,
-    required this.user,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         accessToken: json["accessToken"],
-        auth: AuthModel.fromJson(json["auth"]),
-        user: UserModel.fromJson(json["user"]),
       );
 }
