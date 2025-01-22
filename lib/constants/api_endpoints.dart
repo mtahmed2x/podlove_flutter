@@ -5,4 +5,5 @@ class ApiEndpoints {
   static String signIn = "/auth/login";
   static String forgotPassword = "/auth/forgot-password";
   static String emailRecoveryVerify = "/auth/recovery-verification";
+  static String resetPassword = "/auth/reset-password";
 }

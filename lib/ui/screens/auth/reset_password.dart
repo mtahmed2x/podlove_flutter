@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:podlove_flutter/routes/route_path.dart';
-import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_round_button.dart';
-import '../../widgets/custom_text.dart';
-import '../../widgets/custom_text_field.dart';
+import 'package:podlove_flutter/providers/auth/reset_password_provider.dart';
+import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
+import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 
 class ResetPassword extends ConsumerStatefulWidget {
   const ResetPassword({super.key});
@@ -18,6 +17,12 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final resetPasswordState = ref.watch(resetPasswordProvider);
+    final resetPasswordNotifier = ref.watch(resetPasswordProvider.notifier);
+
+    ref.listen<ResetPasswordState>(
+        resetPasswordProvider, (previous, current) {});
+
     return Scaffold(
       appBar: CustomAppBar(title: "Reset Password"),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
@@ -74,8 +79,16 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                       ),
                       SizedBox(height: 15.h),
                       CustomRoundButton(
-                        text: "Reset Password",
-                        onPressed: () => Get.toNamed(RouterPath.signIn),
+                        text: resetPasswordState.isLoading
+                            ? "Reseting password..."
+                            : "Reset password",
+                        onPressed: resetPasswordState.isLoading
+                            ? null
+                            : () {
+                                if (_formKey.currentState!.validate()) {
+                                  resetPasswordNotifier.resetPassword();
+                                }
+                              },
                       ),
                     ],
                   ),
