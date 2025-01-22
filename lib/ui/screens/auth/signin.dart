@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:podlove_flutter/constants/colors.dart';
-import 'package:podlove_flutter/constants/strings_en.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/auth/sign_in_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
@@ -46,14 +47,10 @@ class _SignInState extends ConsumerState<SignIn> {
                     child: Column(
                       children: [
                         // Logo
-                        Image.asset(
-                          "assets/images/podLove.png",
-                          width: 250.w,
-                          height: 50.h,
-                        ),
+                        AppWidgets.podLoveLogo,
                         SizedBox(height: 25.h),
                         CustomText(
-                          text: "Welcome Back!",
+                          text: AppStrings.welcomeBack,
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w500,
                           color: const Color.fromARGB(255, 51, 51, 51),
@@ -64,24 +61,24 @@ class _SignInState extends ConsumerState<SignIn> {
                   ),
                   CustomTextField(
                     fieldType: TextFieldType.email,
-                    label: "Email",
-                    hint: "Enter your user email here",
+                    label: AppStrings.email,
+                    hint: AppStrings.emailHint,
                     controller: signInNotifier.emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '* Please enter your email';
+                        return AppStrings.enterEmailError;
                       }
                       return null;
                     },
                   ),
                   CustomTextField(
                     fieldType: TextFieldType.password,
-                    label: "Password",
-                    hint: "Enter your password",
+                    label: AppStrings.password,
+                    hint: AppStrings.passwordHint,
                     controller: signInNotifier.passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '* Please enter your password';
+                        return AppStrings.enterPasswordError;
                       }
                       return null;
                     },
@@ -91,7 +88,7 @@ class _SignInState extends ConsumerState<SignIn> {
                       CustomCheckbox(
                         initialValue: true,
                         color: customOrange,
-                        label: 'Remember Me',
+                        label: AppStrings.rememberMe,
                         onChanged: (value) {},
                         labelColor: const Color.fromARGB(255, 51, 51, 51),
                         labelFontSize: 14.sp,
@@ -102,7 +99,7 @@ class _SignInState extends ConsumerState<SignIn> {
                         onTap: () =>
                             GoRouter.of(context).go(RouterPath.forgotPassword),
                         child: CustomText(
-                          text: "Forgot Password?",
+                          text: AppStrings.forgotPassword,
                           color: const Color.fromARGB(255, 43, 79, 111),
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -112,7 +109,9 @@ class _SignInState extends ConsumerState<SignIn> {
                   ),
                   SizedBox(height: 20.h),
                   CustomRoundButton(
-                    text: signInState.isLoading ? "Signing in ..." : "Sign in",
+                    text: signInState.isLoading
+                        ? AppStrings.signingIn
+                        : AppStrings.signIn,
                     onPressed: signInState.isLoading
                         ? null
                         : () {
@@ -124,7 +123,7 @@ class _SignInState extends ConsumerState<SignIn> {
                   SizedBox(height: 20.h),
                   Center(
                     child: CustomText(
-                      text: "Or",
+                      text: AppStrings.orText,
                       color: const Color.fromARGB(255, 51, 51, 51),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
@@ -132,13 +131,13 @@ class _SignInState extends ConsumerState<SignIn> {
                   ),
                   SizedBox(height: 20.h),
                   SocialMediaButton(
-                    path: "assets/images/google.png",
-                    text: "Sign in with Google",
+                    path: AppStrings.googleLogoPath,
+                    text: AppStrings.signInWithGoogle,
                   ),
                   SizedBox(height: 15.h),
                   SocialMediaButton(
-                    path: "assets/images/apple.png",
-                    text: "Sign in with Apple",
+                    path: AppStrings.appleLogoPath,
+                    text: AppStrings.signInWithApple,
                   ),
                   SizedBox(height: 30.h),
                   Container(
@@ -149,7 +148,7 @@ class _SignInState extends ConsumerState<SignIn> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                            text: "Don't have an account? ",
+                            text: AppStrings.noAccountPrompt,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                           ),
@@ -157,7 +156,7 @@ class _SignInState extends ConsumerState<SignIn> {
                             onTap: () =>
                                 GoRouter.of(context).go(RouterPath.signUp),
                             child: CustomText(
-                              text: " Sign up",
+                              text: AppStrings.signUpLink,
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               color: customOrange,

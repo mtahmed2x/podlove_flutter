@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:podlove_flutter/constants/colors.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
-import 'package:podlove_flutter/constants/strings_en.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
@@ -31,10 +32,9 @@ class _SignUpState extends ConsumerState<SignUp> {
         GoRouter.of(context).go(
           RouterPath.verifyCode,
           extra: {
-            "status": "EmailActivationVerify",
-            "title": "Verify Email",
-            "instructionText":
-                "Please enter the six digit code we sent you to your email",
+            "status": AppStrings.emailActivationVerify,
+            "title": AppStrings.verifyEmail,
+            "instructionText": AppStrings.verifyCodeInstruction,
             "phoneNumber": current.phoneNumber,
             "email": current.email,
           },
@@ -66,12 +66,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     width: 203.w,
                     child: Column(
                       children: [
-                        Image.asset(
-                          "assets/images/podLove.png",
-                          width: 203.w,
-                          height: 43.h,
-                          fit: BoxFit.cover,
-                        ),
+                        AppWidgets.podLoveLogo,
                         SizedBox(height: 30.h),
                         CustomText(
                           text: AppStrings.welcomeBack,
@@ -87,70 +82,72 @@ class _SignUpState extends ConsumerState<SignUp> {
                 // Form Fields
                 CustomTextField(
                   fieldType: TextFieldType.text,
-                  label: "Full Name",
-                  hint: "Enter your full name here",
+                  label: AppStrings.fullName,
+                  hint: AppStrings.fullNameHint,
                   controller: signUpNotifier.nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '* Please enter your full name';
+                      return AppStrings.enterFullNameError;
                     }
                     return null;
                   },
                 ),
                 CustomTextField(
                   fieldType: TextFieldType.email,
-                  label: "Email",
-                  hint: "Enter your email",
+                  label: AppStrings.email,
+                  hint: AppStrings.emailHint,
                   controller: signUpNotifier.emailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '* Please enter your email';
+                      return AppStrings.enterEmailError;
                     }
                     return null;
                   },
                 ),
                 CustomTextField(
                   fieldType: TextFieldType.text,
-                  label: "Phone Number",
-                  hint: "Enter your phone number",
+                  label: AppStrings.phoneNumber,
+                  hint: AppStrings.phoneNumberHint,
                   controller: signUpNotifier.phoneController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '* Please enter your phone number';
+                      return AppStrings.enterPhoneNumberError;
                     }
                     return null;
                   },
                 ),
                 CustomTextField(
                   fieldType: TextFieldType.password,
-                  label: "Password",
-                  hint: "Enter your password",
+                  label: AppStrings.password,
+                  hint: AppStrings.passwordHint,
                   controller: signUpNotifier.passwordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '* Please enter your password';
+                      return AppStrings.enterPasswordError;
                     }
                     return null;
                   },
                 ),
                 CustomTextField(
                   fieldType: TextFieldType.password,
-                  label: "Confirm Password",
-                  hint: "Confirm your password",
+                  label: AppStrings.confirmPassword,
+                  hint: AppStrings.confirmPasswordHint,
                   controller: signUpNotifier.confirmPasswordController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '* Please confirm your password';
+                      return AppStrings.confirmPasswordError;
                     }
                     if (value != signUpNotifier.passwordController.text) {
-                      return '* Passwords do not match';
+                      return AppStrings.passwordMismatchError;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 30.h),
                 CustomRoundButton(
-                  text: signUpState.isLoading ? "Signing Up..." : "Sign up",
+                  text: signUpState.isLoading
+                      ? AppStrings.signingUp
+                      : AppStrings.signUp,
                   onPressed: signUpState.isLoading
                       ? null
                       : () {
@@ -166,7 +163,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     onTap: () =>
                         Navigator.pushNamed(context, RouterPath.signIn),
                     child: CustomText(
-                      text: "Already have an account? Sign in",
+                      text: AppStrings.signInPrompt,
                       color: customOrange,
                     ),
                   ),

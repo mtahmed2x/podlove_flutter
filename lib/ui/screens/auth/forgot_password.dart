@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/auth/forgot_password_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
@@ -30,10 +32,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
           GoRouter.of(context).go(
             RouterPath.verifyCode,
             extra: {
-              "status": "EmailRecoveryVerify",
-              "title": "Verify Email",
-              "instructionText":
-                  "Please enter the six digit code we sent you to your email",
+              "status": AppStrings.emailRecoveryVerify,
+              "title": AppStrings.verifyEmailTitle,
+              "instructionText": AppStrings.verifyCodeInstruction,
               "email": current.email,
             },
           );
@@ -42,8 +43,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     );
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Forgot Password"),
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+      appBar: CustomAppBar(title: AppStrings.forgotPassword),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -56,22 +56,17 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   child: Column(
                     children: [
                       // Logo
-                      Image.asset(
-                        "assets/images/podLove.png",
-                        width: 250.w,
-                        height: 50.h,
-                      ),
+                      AppWidgets.podLoveLogo,
                       SizedBox(height: 25.h),
                       CustomText(
-                        text: "Forgot Password?",
+                        text: AppStrings.forgotPassword,
                         color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w500,
                       ),
                       SizedBox(height: 15.h),
                       CustomText(
-                        text:
-                            "Enter your email and we will send you a verification code",
+                        text: AppStrings.forgotPasswordInstruction,
                         color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -85,11 +80,11 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                   key: _formKey,
                   child: CustomTextField(
                     fieldType: TextFieldType.email,
-                    label: "Email",
-                    hint: "Enter your email",
+                    label: AppStrings.email,
+                    hint: AppStrings.emailHint,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '* Please enter your email';
+                        return AppStrings.enterEmailError;
                       }
                       return null;
                     },
@@ -99,8 +94,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 SizedBox(height: 10.h),
                 CustomRoundButton(
                   text: forgotPasswordState.isLoading
-                      ? "Sending code..."
-                      : "Send code",
+                      ? AppStrings.sendingCode
+                      : AppStrings.sendCode,
                   onPressed: () => forgotPasswordState.isLoading
                       ? null
                       : () {

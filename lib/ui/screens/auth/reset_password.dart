@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/providers/auth/reset_password_provider.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
@@ -24,8 +27,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
         resetPasswordProvider, (previous, current) {});
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Reset Password"),
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+      appBar: CustomAppBar(title: AppStrings.resetPasswordTitle),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -38,23 +40,18 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                   child: Column(
                     children: [
                       // Logo
-                      Image.asset(
-                        "assets/images/podLove.png",
-                        width: 250.w,
-                        height: 50.h,
-                      ),
+                      AppWidgets.podLoveLogo,
                       SizedBox(height: 25.h),
                       CustomText(
-                        text: "Set a new password",
-                        color: const Color.fromARGB(255, 51, 51, 51),
+                        text: AppStrings.setNewPasswordHeader,
+                        color: AppColors.primaryText,
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w500,
                       ),
                       SizedBox(height: 15.h),
                       CustomText(
-                        text:
-                            "Create a new password. Ensure it differs from previous ones for security",
-                        color: const Color.fromARGB(255, 51, 51, 51),
+                        text: AppStrings.setNewPasswordDescription,
+                        color: AppColors.primaryText,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         textAlign: TextAlign.center,
@@ -69,19 +66,19 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                     children: [
                       CustomTextField(
                         fieldType: TextFieldType.password,
-                        label: "Enter New Password",
-                        hint: "Enter your new password",
+                        label: AppStrings.enterNewPasswordLabel,
+                        hint: AppStrings.enterNewPasswordHint,
                       ),
                       CustomTextField(
                         fieldType: TextFieldType.password,
-                        label: "Confirm New Password",
-                        hint: "Confirm your new password",
+                        label: AppStrings.confirmNewPasswordLabel,
+                        hint: AppStrings.confirmNewPasswordHint,
                       ),
                       SizedBox(height: 15.h),
                       CustomRoundButton(
                         text: resetPasswordState.isLoading
-                            ? "Reseting password..."
-                            : "Reset password",
+                            ? AppStrings.resettingPassword
+                            : AppStrings.resetPassword,
                         onPressed: resetPasswordState.isLoading
                             ? null
                             : () {

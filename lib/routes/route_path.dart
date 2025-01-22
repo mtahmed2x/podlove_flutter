@@ -18,4 +18,10 @@ class RouterPath {
   static const String forgotPassword = '/forgotPass';
   static const String verifyCode = '/verifyCode';
   static const String resetPass = '/resetPass';
+
+  static const String locationAccess = '/location-access';
+  static const String enterLocation = '/enter-location';
+
+  static const String selectAge = '/select-age';
+  static const String selectPreferredAge = '/select-preferred-age';
 }

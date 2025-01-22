@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:podlove_flutter/constants/colors.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 
 enum TextFieldType { text, number, email, password }
 

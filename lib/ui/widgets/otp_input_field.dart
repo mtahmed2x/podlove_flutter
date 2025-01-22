@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:podlove_flutter/constants/colors.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'custom_text.dart';
 
@@ -46,10 +46,8 @@ class OTPInputFieldState extends State<OTPInputField> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(widget.length, (index) {
@@ -72,18 +70,14 @@ class OTPInputFieldState extends State<OTPInputField> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: isFilled
-                          ? customOrange
-                          : customOrangeLight,
+                      color: isFilled ? customOrange : customOrangeLight,
                       width: 0.8.w,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                     borderSide: BorderSide(
-                      color: isFilled
-                          ? customOrange
-                          : customOrangeLight,
+                      color: isFilled ? customOrange : customOrangeLight,
                       width: 0.8.w,
                     ),
                   ),
@@ -111,8 +105,7 @@ class OTPInputFieldState extends State<OTPInputField> {
         ),
         SizedBox(height: 10.h),
         Padding(
-          padding: EdgeInsets.only(
-              right: 10.0.w),
+          padding: EdgeInsets.only(right: 10.0.w),
           child: Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
@@ -125,8 +118,7 @@ class OTPInputFieldState extends State<OTPInputField> {
                     color: customOrange,
                     fontSize: 14.sp,
                     decoration: TextDecoration.underline,
-                    decorationColor: customOrange
-                    ),
+                    decorationColor: customOrange),
               ),
             ),
           ),
