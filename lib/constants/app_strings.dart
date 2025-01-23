@@ -89,4 +89,16 @@ class AppStrings {
 
   static const String minimumAge = "Minimum Age";
   static const String maximumAge = "Maximum Age";
+
+  static const String selectGenderTitle = "Select Gender";
+  static const String genderQuestion = "What's your Gender?";
+  static const String female = "Female";
+  static const String male = "Male";
+  static const String nonBinary = "Non-binary";
+  static const String transgender = "Transgender";
+  static const String genderFluid = "Gender Fluid";
+
+  static const String genderPreferenceTitle = "Gender Preference";
+  static const String lookingForText = "I'm looking for...";
+  static const String openToAll = "Open To All";
 }
