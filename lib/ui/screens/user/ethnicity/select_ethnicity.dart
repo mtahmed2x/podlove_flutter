@@ -98,14 +98,7 @@ class SelectEthnicity extends StatelessWidget {
                 const SizedBox(height: 50),
                 CustomRoundButton(
                   text: "Continue",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PreferredEthnicityPage(),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                 ),
                 const SizedBox(height: 50),
               ],

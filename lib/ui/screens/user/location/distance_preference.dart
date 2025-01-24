@@ -4,61 +4,58 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/dynamic_range_slider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DistancePreference extends StatelessWidget {
   const DistancePreference({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context,
+        designSize: const Size(375, 812), minTextAdapt: true);
+
     return Scaffold(
       appBar: CustomAppBar(title: "Distance Preferences"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 Center(
                   child: Column(
                     children: [
                       AppWidgets.podLoveLogo,
-                      const SizedBox(height: 25),
+                      SizedBox(height: 25.h),
                       CustomText(
                         text: "Set Your Distance",
-                        fontSize: 22,
+                        fontSize: 22.sp,
                         fontWeight: FontWeight.w500,
                         color: Color.fromARGB(255, 51, 51, 51),
                       ),
                       CustomText(
                         text: "Preferences",
-                        fontSize: 22,
+                        fontSize: 22.sp,
                         fontWeight: FontWeight.w500,
                         color: Color.fromARGB(255, 51, 51, 51),
                       ),
-                      const SizedBox(height: 40),
+                      SizedBox(height: 40.h),
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 DynamicRangeSlider(
                   min: 1,
                   max: 100,
                   initialValue: 65,
                   unit: "Miles",
                 ),
-                const SizedBox(height: 400),
+                SizedBox(height: 400.h),
                 CustomRoundButton(
                   text: "Continue",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SelectAgePage(),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                 ),
               ],
             ),

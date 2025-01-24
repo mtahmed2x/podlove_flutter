@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SelectInterests extends StatefulWidget {
   const SelectInterests({super.key});
@@ -28,6 +29,9 @@ class _LikesAndInterestsPageState extends State<SelectInterests> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context,
+        designSize: const Size(375, 812), minTextAdapt: true);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -43,26 +47,26 @@ class _LikesAndInterestsPageState extends State<SelectInterests> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Tell us what you enjoy",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               "Please select at least 3",
               style: TextStyle(color: Colors.grey),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Expanded(
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16.w,
+                  mainAxisSpacing: 16.h,
                   childAspectRatio: 3.5,
                 ),
                 itemCount: interests.length,
@@ -72,13 +76,15 @@ class _LikesAndInterestsPageState extends State<SelectInterests> {
 
                   return GestureDetector(
                     onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedInterests.remove(interest);
-                        } else {
-                          selectedInterests.add(interest);
-                        }
-                      });
+                      setState(
+                        () {
+                          if (isSelected) {
+                            selectedInterests.remove(interest);
+                          } else {
+                            selectedInterests.add(interest);
+                          }
+                        },
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -86,7 +92,7 @@ class _LikesAndInterestsPageState extends State<SelectInterests> {
                         border: Border.all(
                           color: isSelected ? Colors.orange : Colors.grey,
                         ),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Center(
                         child: Text(
@@ -104,14 +110,7 @@ class _LikesAndInterestsPageState extends State<SelectInterests> {
             ),
             CustomRoundButton(
               text: "Continue",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FindingMatchesScreen(),
-                  ),
-                );
-              },
+              onPressed: () {},
             )
           ],
         ),
