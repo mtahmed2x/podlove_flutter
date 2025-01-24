@@ -33,8 +33,7 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
   @override
   void initState() {
     super.initState();
-    _isChecked =
-        widget.initialValue; // Initialize the state with the given value
+    _isChecked = widget.initialValue;
   }
 
   @override

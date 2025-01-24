@@ -21,7 +21,26 @@ class RouterPath {
 
   static const String locationAccess = '/location-access';
   static const String enterLocation = '/enter-location';
+  static const String distancePreference = '/distance-preference';
 
   static const String selectAge = '/select-age';
   static const String selectPreferredAge = '/select-preferred-age';
+
+  static const String selectGender = '/select-gender';
+  static const String selectPreferredGender = '/select-preferred-gender';
+
+  static const String selectBodyType = '/select-body-type';
+  static const String selectPreferredBodyType = '/select-preferred-body-type';
+
+  static const String selectEthnicity = '/select-ethnicity';
+  static const String selectPreferredEthnicities =
+      '/select-preferred-ethnicities';
+
+  static const String selectInterests = '/select-interests';
+  static const String selectPersonalityTraits = '/select-personality-traits';
+
+  static const String uploadPhoto = '/upload-photo';
+  static const String addBio = '/add-bio';
+
+  static const String compatibalityQuestion = '/compatibality-question';
 }
