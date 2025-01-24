@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/enums.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
-
-// Enum to differentiate between before and after states
-enum HomeContentType { before, after }
 
 class HomeContent extends ConsumerWidget {
   final VoidCallback onMenuTap;
