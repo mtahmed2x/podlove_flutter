@@ -1,5 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
+import 'package:podlove_flutter/constants/enums.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
+import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
+import 'package:podlove_flutter/ui/screens/home/home.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/initial_screen.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/splash_screen.dart';
 import 'package:podlove_flutter/ui/screens/onboarding/approach.dart';
@@ -10,8 +15,6 @@ import 'package:podlove_flutter/ui/screens/auth/reset_password.dart';
 import 'package:podlove_flutter/ui/screens/auth/signin.dart';
 import 'package:podlove_flutter/ui/screens/auth/verify_code.dart';
 import 'package:podlove_flutter/ui/screens/terms/terms.dart';
-
-import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/screens/user/add_bio.dart';
 import 'package:podlove_flutter/ui/screens/user/age/select_age.dart';
 import 'package:podlove_flutter/ui/screens/user/age/select_preferred_age.dart';
@@ -155,6 +158,28 @@ class AppRouter {
             pageIndex: args?['pageIndex'] ?? 1,
           );
         },
+      ),
+      GoRoute(
+        path: RouterPath.homeBefore,
+        builder: (context, state) => const Home(type: HomePageType.before),
+      ),
+      GoRoute(
+        path: RouterPath.homeAfter,
+        builder: (context, state) => const Home(type: HomePageType.after),
+      ),
+      GoRoute(
+        path: RouterPath.homeContentBefore,
+        builder: (context, state) => HomeContent(
+          onMenuTap: () => Scaffold.of(context).openDrawer(),
+          type: HomeContentType.before,
+        ),
+      ),
+      GoRoute(
+        path: RouterPath.homeContentAfter,
+        builder: (context, state) => HomeContent(
+          onMenuTap: () => Scaffold.of(context).openDrawer(),
+          type: HomeContentType.after,
+        ),
       ),
     ],
   );

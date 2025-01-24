@@ -43,4 +43,10 @@ class RouterPath {
   static const String addBio = '/add-bio';
 
   static const String compatibalityQuestion = '/compatibality-question';
+
+  static const String homeBefore = '/home-before';
+  static const String homeAfter = '/home-after';
+
+  static const String homeContentBefore = '/home-content-before';
+  static const String homeContentAfter = '/home-content-after';
 }
