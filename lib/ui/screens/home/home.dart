@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:podlove_flutter/constants/enums.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/matches_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/notification_content.dart';
@@ -26,7 +26,6 @@ class _HomePageState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     _screens = [
-      // Use Go Router for navigation instead of direct widget creation
       Consumer(
         builder: (context, ref, child) {
           return HomeContent(

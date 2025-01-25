@@ -101,4 +101,6 @@ class AppStrings {
   static const String genderPreferenceTitle = "Gender Preference";
   static const String lookingForText = "I'm looking for...";
   static const String openToAll = "Open To All";
+
+  static const String saving = "Saving...";
 }

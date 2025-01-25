@@ -4,6 +4,7 @@ import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/data/models/Response/verify_code_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
 class VerifyCodeState {
@@ -40,8 +41,9 @@ class VerifyCodeState {
 
 class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
   final ApiServices apiService;
+  final Ref ref;
 
-  VerifyCodeNotifier(this.apiService) : super(VerifyCodeState());
+  VerifyCodeNotifier(this.apiService, this.ref) : super(VerifyCodeState());
 
   final otpController = TextEditingController();
 
@@ -70,7 +72,13 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
           data: verifyCodeData,
         );
         final verifyCodeResponse = VerifyCodeResponseModel.fromJson(response);
-        logger.i(verifyCodeResponse);
+        logger.i(verifyCodeResponse.data?.user.age);
+
+        ref
+            .read(userProvider.notifier)
+            .initializeFromVerification(verifyCodeResponse);
+
+        state = state.copyWith(isSuccess: true, isLoading: false);
       }
     } catch (e) {
       state = state.copyWith(
@@ -92,6 +100,14 @@ final verifyCodeProvider =
     StateNotifierProvider<VerifyCodeNotifier, VerifyCodeState>(
   (ref) {
     final apiService = ref.read(apiServiceProvider);
-    return VerifyCodeNotifier(apiService);
+    return VerifyCodeNotifier(apiService, ref);
   },
 );
+
+// final verifyCodeProvider =
+//     StateNotifierProvider<VerifyCodeNotifier, VerifyCodeState>(
+//   (ref) {
+//     final apiService = ref.read(apiServiceProvider);
+//     return VerifyCodeNotifier(apiService);
+//   },
+// );

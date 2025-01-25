@@ -20,4 +20,11 @@ class AuthModel {
         isVerified: json["isVerified"],
         isBlocked: json["isBlocked"],
       );
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "email": email,
+        "role": role,
+        "isVerified": isVerified,
+        "isBlocked": isBlocked,
+      };
 }

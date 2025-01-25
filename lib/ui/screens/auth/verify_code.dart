@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 
@@ -7,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 
 import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
@@ -31,6 +33,15 @@ class VerifyCode extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final verifyCodeState = ref.watch(verifyCodeProvider);
     final verifyCodeNotifier = ref.read(verifyCodeProvider.notifier);
+
+    ref.listen<VerifyCodeState>(
+      verifyCodeProvider,
+      (previous, current) {
+        if (current.isSuccess == true) {
+          GoRouter.of(context).go(RouterPath.locationAccess);
+        }
+      },
+    );
 
     final contact =
         status == AppStrings.phoneActivationVerify ? phoneNumber : email;

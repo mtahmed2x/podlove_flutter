@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
-import 'package:podlove_flutter/constants/enums.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
+import 'package:podlove_flutter/ui/widgets/custom_image_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/ui/widgets/reuseable_header.dart';
+import 'package:podlove_flutter/ui/widgets/subscription_card.dart';
 
 class HomeContent extends ConsumerWidget {
   final VoidCallback onMenuTap;
@@ -241,7 +244,7 @@ class HomeContent extends ConsumerWidget {
     required List<String> features,
     required bool isCurrentPlan,
   }) {
-    return SubscriptionPlanCard(
+    return SubscriptionCard(
       title: title,
       subtitle: subtitle,
       price: price,

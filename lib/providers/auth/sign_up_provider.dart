@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/data/models/Response/sign_up_response_model.dart';
+import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
-import '../../data/services/api_services.dart';
 
 class SignUpState {
   final bool isLoading;
