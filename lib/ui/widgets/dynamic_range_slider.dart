@@ -7,6 +7,7 @@ class DynamicRangeSlider extends StatefulWidget {
   final double max;
   final double initialValue;
   final String unit;
+  final ValueChanged<double>? onChanged;
 
   const DynamicRangeSlider({
     super.key,
@@ -14,6 +15,7 @@ class DynamicRangeSlider extends StatefulWidget {
     this.max = 100.0,
     this.initialValue = 65.0,
     this.unit = "Miles",
+    this.onChanged,
   });
 
   @override
@@ -88,9 +90,12 @@ class _DynamicRangeSliderState extends State<DynamicRangeSlider> {
                     max: widget.max,
                     divisions: (widget.max - widget.min).toInt(),
                     onChanged: (value) {
-                      setState(() {
-                        _currentValue = value;
-                      });
+                      setState(
+                        () {
+                          _currentValue = value;
+                        },
+                      );
+                      widget.onChanged?.call(value);
                     },
                   ),
                 ),

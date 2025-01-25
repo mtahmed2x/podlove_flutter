@@ -72,6 +72,17 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
+  void updateDistancePreference(int newDistance) {
+    if (state == null) return;
+
+    final newPreferences = state!.user.preferences.copyWith(
+      distance: newDistance,
+    );
+
+    final updatedUser = state!.user.copyWith(preferences: newPreferences);
+    _updateUser(updatedUser);
+  }
+
   void updateAge(int newAge) {
     final updatedUser = state!.user.copyWith(age: newAge);
     _updateUser(updatedUser);
@@ -82,6 +93,13 @@ class UserNotifier extends StateNotifier<UserState?> {
       age: state!.user.preferences.age.copyWith(min: min, max: max),
     );
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
+    _updateUser(updatedUser);
+  }
+
+  void updateGender(String newGender) {
+    if (state == null) return;
+
+    final updatedUser = state!.user.copyWith(gender: newGender);
     _updateUser(updatedUser);
   }
 

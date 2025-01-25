@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/dynamic_range_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DistancePreference extends StatelessWidget {
+class DistancePreference extends ConsumerWidget {
   const DistancePreference({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(context,
-        designSize: const Size(375, 812), minTextAdapt: true);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
 
     return Scaffold(
       appBar: CustomAppBar(title: "Distance Preferences"),
@@ -49,13 +53,32 @@ class DistancePreference extends StatelessWidget {
                 DynamicRangeSlider(
                   min: 1,
                   max: 100,
-                  initialValue: 65,
+                  initialValue:
+                      userState?.user.preferences.distance.toDouble() ?? 65.0,
                   unit: "Miles",
+                  onChanged: (value) {
+                    userNotifier.updateDistancePreference(value.toInt());
+                  },
                 ),
                 SizedBox(height: 400.h),
-                CustomRoundButton(
-                  text: "Continue",
-                  onPressed: () {},
+                Consumer(
+                  builder: (context, ref, _) {
+                    final currentState = ref.watch(userProvider);
+                    return CustomRoundButton(
+                      text: "Continue",
+                      onPressed: () {
+                        if (currentState?.user.preferences.distance != null) {
+                          GoRouter.of(context).go(RouterPath.selectAge);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please set a distance preference'),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  },
                 ),
               ],
             ),

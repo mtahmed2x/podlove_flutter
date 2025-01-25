@@ -58,7 +58,8 @@ class LocationAccess extends ConsumerWidget {
                               await userNotifier.getCurrentLocation();
                           if (context.mounted) {
                             if (success) {
-                              GoRouter.of(context).go(RouterPath.selectAge);
+                              GoRouter.of(context)
+                                  .go(RouterPath.distancePreference);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
