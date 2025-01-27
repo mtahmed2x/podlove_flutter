@@ -177,7 +177,7 @@ class SelectEthnicity extends ConsumerWidget {
                           return;
                         }
                         logger.i(state?.user.ethnicity);
-                        context.go(RouterPath.selectPreferredBodyType); // Navigate to the next screen
+                        context.go(RouterPath.selectPreferredEthnicities); // Navigate to the next screen
                       },
                     );
                   },

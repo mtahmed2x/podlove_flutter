@@ -53,8 +53,7 @@ class DistancePreference extends ConsumerWidget {
                 DynamicRangeSlider(
                   min: 1,
                   max: 100,
-                  initialValue:
-                      userState?.user.preferences.distance.toDouble() ?? 65.0,
+                  initialValue: 30,
                   unit: "Miles",
                   onChanged: (value) {
                     userNotifier.updateDistancePreference(value.toInt());

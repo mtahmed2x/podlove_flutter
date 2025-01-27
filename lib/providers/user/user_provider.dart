@@ -6,6 +6,7 @@ import 'package:podlove_flutter/data/models/Response/verify_code_response_model.
 import 'package:podlove_flutter/data/models/auth_model.dart';
 import 'package:podlove_flutter/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:podlove_flutter/utils/logger.dart';
 
 class UserState {
   final String accessToken;
@@ -146,6 +147,26 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
+  void updateInterests(List<String> newInterests) {
+    if (state == null) return;
+
+    final updatedUser = state!.user.copyWith(interests: newInterests);
+    _updateUser(updatedUser);
+  }
+
+  void updatePersonalityTrait(String trait, int value) {
+    if (state == null) return;
+
+    final updatedPersonality = state!.user.personality.copyWith(
+      spectrum: trait == "spectrum" ? value : state!.user.personality.spectrum,
+      balance: trait == "balance" ? value : state!.user.personality.balance,
+      focus: trait == "focus" ? value : state!.user.personality.focus,
+    );
+
+    final updatedUser = state!.user.copyWith(personality: updatedPersonality);
+    _updateUser(updatedUser);
+  }
+
   Future<bool> getCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.checkPermission();
@@ -177,6 +198,23 @@ class UserNotifier extends StateNotifier<UserState?> {
     }
   }
 
+  void updateCompatibilityAnswers(Map<int, dynamic> answers) {
+    if (state == null) return;
+
+    final updatedCompatibility = List<dynamic>.from(state!.user.compatibility);
+    answers.forEach((index, value) {
+      if (index < updatedCompatibility.length) {
+        updatedCompatibility[index] = value;
+      } else {
+        updatedCompatibility.add(value);
+      }
+    });
+
+    final updatedUser = state!.user.copyWith(compatibility: updatedCompatibility);
+    state = state!.copyWith(user: updatedUser);
+  }
+
+
   Future<String> _getPlaceName(double lat, double lng) async {
     final apiKey = 'AIzaSyAszXC1be8aJ37eHuNcBm_-O1clWkPUwV4';
     final response = await http.get(
@@ -194,31 +232,26 @@ class UserNotifier extends StateNotifier<UserState?> {
   Future<void> uploadAvatar(File imageFile) async {
     if (state == null) return;
 
+    final String cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dvjbfwhxe/image/upload';
+    final String uploadPreset = 'podlove_upload';
+
     state = state!.copyWith(isLoading: true, error: null);
 
     try {
-      final cloudinaryUrl = Uri.parse(
-          'https://api.cloudinary.com/v1_1/dvjbfwhxe/image/upload');
+      final request = http.MultipartRequest('POST', Uri.parse(cloudinaryUrl))
+        ..fields['upload_preset'] = uploadPreset
+        ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
 
-      final request = http.MultipartRequest('POST', cloudinaryUrl);
-
-      request.fields['upload_preset'] = 'ml_default';
-      request.files.add(await http.MultipartFile.fromPath(
-        'file',
-        imageFile.path,
-      ));
-
-      // Send the request
       final response = await request.send();
-
       if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final responseData = json.decode(responseBody);
+        final res = await http.Response.fromStream(response);
+        logger.i('Upload successful: ${res.body}');
+        final responseData = json.decode(res.body);
 
+        final imageUrl = responseData['secure_url'];
+        logger.i('Upload successful: $imageUrl');
 
-        final avatarUrl = responseData['secure_url'];
-
-        final updatedUser = state!.user.copyWith(avatar: avatarUrl);
+        final updatedUser = state!.user.copyWith(avatar: imageUrl);
 
         state = state!.copyWith(
           user: updatedUser,
@@ -226,10 +259,16 @@ class UserNotifier extends StateNotifier<UserState?> {
           error: null,
         );
       } else {
-        throw Exception("Failed to upload image to Cloudinary.");
+        final res = await http.Response.fromStream(response);
+        final errorData = json.decode(res.body);
+        logger.e('Upload failed: ${response.statusCode} - ${errorData['error']['message']}');
+        state = state!.copyWith(
+          isLoading: false,
+          error: errorData['error']['message'],
+        );
+        return;
       }
     } catch (e) {
-      // Handle errors and update the state
       state = state!.copyWith(
         isLoading: false,
         error: e.toString(),

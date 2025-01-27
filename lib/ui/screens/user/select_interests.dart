@@ -1,118 +1,134 @@
 import 'package:flutter/material.dart';
-import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
+import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
-class SelectInterests extends StatefulWidget {
+class SelectInterests extends ConsumerWidget {
   const SelectInterests({super.key});
 
   @override
-  State<SelectInterests> createState() => _LikesAndInterestsPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
+    final selectedInterests = <String>{};
 
-class _LikesAndInterestsPageState extends State<SelectInterests> {
-  final List<String> interests = [
-    "Photography",
-    "Cooking",
-    "Fitness",
-    "Music",
-    "Shopping",
-    "Travelling",
-    "Drinking",
-    "Video Games",
-    "Art & Crafts",
-    "Swimming",
-    "Extreme Sports",
-    "Speeches",
-  ];
+    final interests = [
+      "Photography",
+      "Cooking",
+      "Fitness",
+      "Music",
+      "Shopping",
+      "Travelling",
+      "Drinking",
+      "Video Games",
+      "Art & Crafts",
+      "Swimming",
+      "Extreme Sports",
+      "Speeches",
+    ];
 
-  final Set<String> selectedInterests = {};
-
-  @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(context,
-        designSize: const Size(375, 812), minTextAdapt: true);
+    final isLoading = userState?.isLoading ?? false;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        title: Text(
+        title: const Text(
           "Likes & Interests",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Tell us what you enjoy",
-              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              "Please select at least 3",
-              style: TextStyle(color: Colors.grey),
-            ),
-            SizedBox(height: 16.h),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
-                  childAspectRatio: 3.5,
-                ),
-                itemCount: interests.length,
-                itemBuilder: (context, index) {
-                  final interest = interests[index];
-                  final isSelected = selectedInterests.contains(interest);
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomText(
+                text: "Tell us what you enjoy",
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+              SizedBox(height: 8.h),
+              CustomText(
+                text: "Please select at least 3",
+                color: Colors.grey,
+              ),
+              SizedBox(height: 16.h),
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: 3.5,
+                  ),
+                  itemCount: interests.length,
+                  itemBuilder: (context, index) {
+                    final interest = interests[index];
+                    final isSelected = selectedInterests.contains(interest);
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(
-                        () {
-                          if (isSelected) {
-                            selectedInterests.remove(interest);
-                          } else {
-                            selectedInterests.add(interest);
-                          }
-                        },
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.orange[100] : Colors.white,
-                        border: Border.all(
-                          color: isSelected ? Colors.orange : Colors.grey,
+                    return GestureDetector(
+                      onTap: () {
+                        if (isSelected) {
+                          selectedInterests.remove(interest);
+                        } else {
+                          selectedInterests.add(interest);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:
+                          isSelected ? Colors.orange[100] : Colors.white,
+                          border: Border.all(
+                            color:
+                            isSelected ? Colors.orange : Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Center(
-                        child: Text(
-                          interest,
-                          style: TextStyle(
-                            color: isSelected ? Colors.orange : Colors.black,
-                            fontWeight: FontWeight.w500,
+                        child: Center(
+                          child: Text(
+                            interest,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.orange
+                                  : Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-            CustomRoundButton(
-              text: "Continue",
-              onPressed: () {},
-            )
-          ],
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(userProvider);
+                return CustomRoundButton(
+                  text: state?.isLoading == true
+                      ? "Saving..."
+                      : "Continue",
+                  onPressed: state?.isLoading == true ||
+                      selectedInterests.length < 3
+                      ? null
+                      : () {
+                    userNotifier.updateInterests(
+                        selectedInterests.toList());
+                    // Navigate to the next screen
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
