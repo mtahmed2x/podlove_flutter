@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:podlove_flutter/data/models/Response/verify_code_response_model.dart';
@@ -140,6 +141,11 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
+  void updateBio(String newBio) {
+    final updatedUser = state!.user.copyWith(bio: newBio);
+    _updateUser(updatedUser);
+  }
+
   Future<bool> getCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.checkPermission();
@@ -183,6 +189,52 @@ class UserNotifier extends StateNotifier<UserState?> {
       return data['results'][0]['formatted_address'] ?? 'Unknown location';
     }
     return 'Unknown location';
+  }
+
+  Future<void> uploadAvatar(File imageFile) async {
+    if (state == null) return;
+
+    state = state!.copyWith(isLoading: true, error: null);
+
+    try {
+      final cloudinaryUrl = Uri.parse(
+          'https://api.cloudinary.com/v1_1/dvjbfwhxe/image/upload');
+
+      final request = http.MultipartRequest('POST', cloudinaryUrl);
+
+      request.fields['upload_preset'] = 'ml_default';
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+      ));
+
+      // Send the request
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final responseData = json.decode(responseBody);
+
+
+        final avatarUrl = responseData['secure_url'];
+
+        final updatedUser = state!.user.copyWith(avatar: avatarUrl);
+
+        state = state!.copyWith(
+          user: updatedUser,
+          isLoading: false,
+          error: null,
+        );
+      } else {
+        throw Exception("Failed to upload image to Cloudinary.");
+      }
+    } catch (e) {
+      // Handle errors and update the state
+      state = state!.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+    }
   }
 
   // Future<void> saveProfile() async {

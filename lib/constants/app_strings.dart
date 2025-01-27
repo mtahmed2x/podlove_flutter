@@ -103,4 +103,11 @@ class AppStrings {
   static const String openToAll = "Open To All";
 
   static const String saving = "Saving...";
+
+  static const String uploadPhotoTitle = "Upload Photo";
+  static const String uploadPhotoPrompt = "Upload your photo";
+  static const String uploadPhotoDescription =
+      "We'd love to see you. Upload a photo for your dating journey.";
+  static const String tapToUpload = "Tap to upload your photo";
+  static const String tapToChangePhoto = "Tap to change photo";
 }
