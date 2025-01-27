@@ -23,7 +23,8 @@ class DistancePreference extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

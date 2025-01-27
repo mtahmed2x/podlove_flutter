@@ -69,7 +69,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                         AppWidgets.podLoveLogo,
                         SizedBox(height: 30.h),
                         CustomText(
-                          text: AppStrings.welcomeBack,
+                          text: AppStrings.welcome,
                           color: const Color.fromARGB(255, 51, 51, 51),
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w500,

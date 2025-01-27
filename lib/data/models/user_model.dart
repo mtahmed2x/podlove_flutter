@@ -15,7 +15,7 @@ class UserModel {
   final String bio;
   final List<dynamic> interests;
   final String avatar;
-  final List<dynamic> compatibility;
+  final List<String> compatibility;
   final List<dynamic> survey;
 
   UserModel({
@@ -56,7 +56,7 @@ class UserModel {
         bio: json["bio"],
         interests: List<dynamic>.from(json["interests"].map((x) => x)),
         avatar: json["avatar"],
-        compatibility: List<dynamic>.from(json["compatibility"].map((x) => x)),
+        compatibility: List<String>.from(json["compatibility"].map((x) => x)),
         survey: List<dynamic>.from(json["survey"].map((x) => x)),
       );
 
@@ -77,7 +77,7 @@ class UserModel {
         "bio": bio,
         "interests": List<dynamic>.from(interests.map((x) => x)),
         "avatar": avatar,
-        "compatibility": List<dynamic>.from(compatibility.map((x) => x)),
+        "compatibility": List<String>.from(compatibility.map((x) => x)),
         "survey": List<dynamic>.from(survey.map((x) => x)),
       };
 
@@ -98,7 +98,7 @@ class UserModel {
     String? bio,
     List<dynamic>? interests,
     String? avatar,
-    List<dynamic>? compatibility,
+    List<String>? compatibility,
     List<dynamic>? survey,
   }) {
     return UserModel(

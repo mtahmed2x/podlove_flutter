@@ -34,7 +34,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation:  RouterPath.compatibalityQuestion,
+    initialLocation: RouterPath.signUp,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -151,12 +151,10 @@ class AppRouter {
         builder: (context, state) => const AddBio(),
       ),
       GoRoute(
-        path: RouterPath.compatibalityQuestion,
+        path: '${RouterPath.compatibalityQuestion}/:pageIndex',
         builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>?;
-          return CompatibilityQuestion(
-            pageIndex: args?['pageIndex'] ?? 1,
-          );
+          final pageIndex = int.parse(state.pathParameters['pageIndex']!);
+          return CompatibilityQuestion(pageIndex: pageIndex);
         },
       ),
       GoRoute(

@@ -124,8 +124,8 @@ class SelectPersonalityTraits extends ConsumerWidget {
                     onPressed: state?.isLoading == true
                         ? null
                         : () {
-                      GoRouter.of(context).go(RouterPath.compatibalityQuestion);
-                    },
+                            GoRouter.of(context).go(RouterPath.selectInterests);
+                          },
                   );
                 }),
               ],
@@ -188,8 +188,8 @@ class _CustomScaleState extends State<_CustomScale> {
                 widget.onValueChanged(index);
               },
               child: Container(
-                width: 40.w,
-                height: 15.h,
+                width: 30.w,
+                height: 12.h,
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 decoration: BoxDecoration(
                   color: widget.pillColors[index],

@@ -38,7 +38,8 @@ class SelectPreferredAge extends ConsumerWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                padding: EdgeInsets.symmetric(horizontal: 20.w)
+                    .copyWith(top: 20.h, bottom: 44.h),
                 child: Column(
                   children: [
                     SizedBox(height: 15.h),

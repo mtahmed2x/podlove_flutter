@@ -184,13 +184,15 @@ class _UploadPhotoState extends ConsumerState<UploadPhoto> {
                                               .showSnackBar(
                                             const SnackBar(
                                               content: Text(
-                                                  "Failed to upload image."),
+                                                "Failed to upload image.",
+                                              ),
                                               backgroundColor: Colors.red,
                                             ),
                                           );
                                           return;
                                         }
-                                        GoRouter.of(context).go(RouterPath.homeBefore);
+                                        GoRouter.of(context).go(
+                                            '${RouterPath.compatibalityQuestion}/1');
                                       }
                                     });
                         },

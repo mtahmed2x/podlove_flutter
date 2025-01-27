@@ -137,6 +137,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
           ),
+          cursorColor: AppColors.accent,
           validator: widget.validator,
           onChanged: widget.onChanged,
         ),

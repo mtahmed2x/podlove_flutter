@@ -38,7 +38,8 @@ class SelectEthnicity extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,7 +76,8 @@ class SelectEthnicity extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updateEthnicity("African American/Black");
+                          userNotifier
+                              .updateEthnicity("African American/Black");
                         }
                       },
                     ),
@@ -167,18 +169,20 @@ class SelectEthnicity extends ConsumerWidget {
                       onPressed: state?.isLoading == true
                           ? null
                           : () {
-                        if (state?.user.ethnicity == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select your ethnicity'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        logger.i(state?.user.ethnicity);
-                        context.go(RouterPath.selectPreferredEthnicities); // Navigate to the next screen
-                      },
+                              if (state?.user.ethnicity == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please select your ethnicity'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              logger.i(state?.user.ethnicity);
+                              context.go(RouterPath
+                                  .selectPreferredEthnicities); // Navigate to the next screen
+                            },
                     );
                   },
                 ),

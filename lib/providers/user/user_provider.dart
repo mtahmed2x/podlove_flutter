@@ -106,37 +106,40 @@ class UserNotifier extends StateNotifier<UserState?> {
   }
 
   void updatePreferredGender(String newPreferredGender) {
-    final newPreferences = state!.user.preferences.copyWith(gender: newPreferredGender);
+    final newPreferences =
+        state!.user.preferences.copyWith(gender: newPreferredGender);
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
     _updateUser(updatedUser);
   }
 
   void updateBodyType(String newBodyType) {
-    if(state == null) return;
+    if (state == null) return;
 
     final updatedUser = state!.user.copyWith(bodyType: newBodyType);
     _updateUser(updatedUser);
   }
 
   void updatePreferredBodyType(String newPreferredBodyType) {
-    if(state == null) return;
+    if (state == null) return;
 
-    final newPreferences = state!.user.preferences.copyWith(bodyType: newPreferredBodyType);
+    final newPreferences =
+        state!.user.preferences.copyWith(bodyType: newPreferredBodyType);
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
 
     _updateUser(updatedUser);
   }
 
   void updateEthnicity(String newEthnicity) {
-    if(state == null) return;
+    if (state == null) return;
     final updatedUser = state!.user.copyWith(ethnicity: newEthnicity);
     _updateUser(updatedUser);
   }
 
   void updatePreferredEthnicity(String newPreferredEthnicity) {
-    if(state == null) return;
+    if (state == null) return;
 
-    final newPreferences = state!.user.preferences.copyWith(ethnicity: newPreferredEthnicity);
+    final newPreferences =
+        state!.user.preferences.copyWith(ethnicity: newPreferredEthnicity);
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
 
     _updateUser(updatedUser);
@@ -198,10 +201,10 @@ class UserNotifier extends StateNotifier<UserState?> {
     }
   }
 
-  void updateCompatibilityAnswers(Map<int, dynamic> answers) {
+  void updateCompatibilityAnswers(Map<int, String> answers) {
     if (state == null) return;
 
-    final updatedCompatibility = List<dynamic>.from(state!.user.compatibility);
+    final updatedCompatibility = List<String>.from(state!.user.compatibility);
     answers.forEach((index, value) {
       if (index < updatedCompatibility.length) {
         updatedCompatibility[index] = value;
@@ -210,10 +213,10 @@ class UserNotifier extends StateNotifier<UserState?> {
       }
     });
 
-    final updatedUser = state!.user.copyWith(compatibility: updatedCompatibility);
+    final updatedUser =
+        state!.user.copyWith(compatibility: updatedCompatibility);
     state = state!.copyWith(user: updatedUser);
   }
-
 
   Future<String> _getPlaceName(double lat, double lng) async {
     final apiKey = 'AIzaSyAszXC1be8aJ37eHuNcBm_-O1clWkPUwV4';
@@ -232,7 +235,8 @@ class UserNotifier extends StateNotifier<UserState?> {
   Future<void> uploadAvatar(File imageFile) async {
     if (state == null) return;
 
-    final String cloudinaryUrl = 'https://api.cloudinary.com/v1_1/dvjbfwhxe/image/upload';
+    final String cloudinaryUrl =
+        'https://api.cloudinary.com/v1_1/dvjbfwhxe/image/upload';
     final String uploadPreset = 'podlove_upload';
 
     state = state!.copyWith(isLoading: true, error: null);
@@ -261,7 +265,8 @@ class UserNotifier extends StateNotifier<UserState?> {
       } else {
         final res = await http.Response.fromStream(response);
         final errorData = json.decode(res.body);
-        logger.e('Upload failed: ${response.statusCode} - ${errorData['error']['message']}');
+        logger.e(
+            'Upload failed: ${response.statusCode} - ${errorData['error']['message']}');
         state = state!.copyWith(
           isLoading: false,
           error: errorData['error']['message'],

@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
-import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_radio_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
-class CompatibilityQuestion extends ConsumerWidget {
+class CompatibilityQuestion extends StatelessWidget {
   final int pageIndex;
 
   const CompatibilityQuestion({super.key, required this.pageIndex});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Access UserNotifier to update the user state
-    final userNotifier = ref.read(userProvider.notifier);
-    final userState = ref.watch(userProvider);
-
+  Widget build(BuildContext context) {
     // Full list of questions
     final List<Map<String, dynamic>> questions = [
       {
@@ -68,13 +64,7 @@ class CompatibilityQuestion extends ConsumerWidget {
       },
       {
         'question': "Do you have kids? *",
-        'options': ["Yes", "No"],
-        'followUp': {
-          'Yes': {
-            'question': "If yes, how many kids do you have?",
-            'options': [] // Free text input
-          }
-        }
+        'options': ["Yes", "No"]
       },
       {
         'question': "Do you want kids in the future? *",
@@ -103,37 +93,34 @@ class CompatibilityQuestion extends ConsumerWidget {
           "Regularly – I drink frequently, such as weekly or more",
           "Prefer not to say – I'd rather not disclose this information"
         ],
-        'followUp': {
-          'Never': {
-            'question':
-                'If "Never", would you be comfortable dating someone who drinks?',
-            'options': ["Yes", "No", "Depends"]
-          },
-        }
       },
       {
         'question':
-        "Do you consider yourself religious or spiritual? * (Select the option that best describes you.)",
+            'If "Never", would you be comfortable dating someone who drinks?',
+        'options': ["Yes", "No", "Depends"]
+      },
+      {
+        'question':
+            "Do you consider yourself religious or spiritual? * (Select the option that best describes you.)",
         'options': [
           "Yes, I'm religious",
           "Yes, I'm spiritual but not religious",
           "No, I'm not religious or spiritual",
           "Prefer not to say"
         ],
-        'followUp': {
-          "Yes, I'm religious" : {
-            'question': 'If "Religious", what is your religion or denomination?',
-            'options': ["Christianity", "Islam", "Judaism", "Buddhist", "Other"]
-          },
-          "Yes, I'm spiritual but not religious" : {
-            'question': 'If "Spiritual", would you like to describe your spiritual beliefs?',
-            'options': [] // Free text input can be handled separately.
-          },
-        },
+      },
+      {
+        'question': 'If "Religious", what is your religion or denomination?',
+        'options': ["Christianity", "Islam", "Judaism", "Buddhist", "Other"]
       },
       {
         'question':
-        "How important is religion or spirituality in your life? * (Select the option that best describes you.)",
+            'If "Spiritual", would you like to describe your spiritual beliefs?',
+        'options': [] // Free text input can be handled separately.
+      },
+      {
+        'question':
+            "How important is religion or spirituality in your life? * (Select the option that best describes you.)",
         'options': [
           "Not important at all",
           "Somewhat important",
@@ -144,7 +131,7 @@ class CompatibilityQuestion extends ConsumerWidget {
       },
       {
         'question':
-        "Would you date someone with different religious or spiritual beliefs? * (Select one option.)",
+            "Would you date someone with different religious or spiritual beliefs? * (Select one option.)",
         'options': [
           "Yes, I'm open to dating someone with different beliefs",
           "No, I prefer someone who shares my beliefs",
@@ -153,7 +140,7 @@ class CompatibilityQuestion extends ConsumerWidget {
       },
       {
         'question':
-        "How would you describe your level of political engagement? * (Select the option that best describes you.)",
+            "How would you describe your level of political engagement? * (Select the option that best describes you.)",
         'options': [
           "Not at all political – I don't follow politics and prefer to avoid political discussions",
           "Slightly political – I'm minimally engaged, but I occasionally follow major events",
@@ -164,7 +151,7 @@ class CompatibilityQuestion extends ConsumerWidget {
       },
       {
         'question':
-        "Would you date someone with different political beliefs? * (Select one option.)",
+            "Would you date someone with different political beliefs? * (Select one option.)",
         'options': [
           "Yes, I'm open to dating someone with different political views",
           "No, I prefer someone who aligns with my political beliefs",
@@ -174,13 +161,11 @@ class CompatibilityQuestion extends ConsumerWidget {
       {
         'question': "Do you have pets? *",
         'options': ["Yes", "No"],
-        'followUp': {
-          'Yes': {
-            'question': "If yes, which pet do you have?",
-            'options': ["Dog", "Cat", "Bird", "Other"]
-          }
-        }
       },
+      {
+        'question': "If yes, which pet do you have?",
+        'options': ["Dog", "Cat", "Bird", "Other"]
+      }
     ];
 
     // Split questions into two pages dynamically
@@ -188,15 +173,13 @@ class CompatibilityQuestion extends ConsumerWidget {
         ? questions.sublist(0, (questions.length / 2).ceil())
         : questions.sublist((questions.length / 2).ceil());
 
-    // Map to store answers for the current page
-    final Map<int, dynamic> pageAnswers = {};
-
     return Scaffold(
       appBar: CustomAppBar(title: "Discover Compatibility"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -215,20 +198,6 @@ class CompatibilityQuestion extends ConsumerWidget {
                     child: _QuestionWidget(
                       question: question['question'],
                       options: question['options'],
-                      onChanged: (value) {
-                        // Update local answers for this page
-                        pageAnswers[index +
-                            (pageIndex == 2
-                                ? (questions.length / 2).ceil()
-                                : 0)] = value;
-
-                        // Handle follow-up questions dynamically
-                        if (question.containsKey('followUp') &&
-                            question['followUp'].containsKey(value)) {
-                          pageAnswers[index + 1] =
-                              question['followUp'][value]['options'];
-                        }
-                      },
                     ),
                   );
                 }),
@@ -236,25 +205,12 @@ class CompatibilityQuestion extends ConsumerWidget {
                 CustomRoundButton(
                   text: pageIndex == 1 ? "Next" : "Submit",
                   onPressed: () {
-                    // Update user state with answers
-                    userNotifier.updateCompatibilityAnswers(pageAnswers);
-
                     if (pageIndex == 1) {
-                      // Navigate to the second page
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const CompatibilityQuestion(pageIndex: 2),
-                        ),
-                      );
+                      GoRouter.of(context)
+                          .go('${RouterPath.compatibalityQuestion}/2');
                     } else {
-                      // Submit answers and show confirmation
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Compatibility answers submitted!"),
-                        ),
-                      );
+                      GoRouter.of(context)
+                          .go(RouterPath.selectPersonalityTraits);
                     }
                   },
                 ),
@@ -270,13 +226,11 @@ class CompatibilityQuestion extends ConsumerWidget {
 
 class _QuestionWidget extends StatefulWidget {
   final String question;
-  final List<String> options;
-  final ValueChanged<dynamic> onChanged;
+  final List<dynamic> options;
 
   const _QuestionWidget({
     required this.question,
     required this.options,
-    required this.onChanged,
   });
 
   @override
@@ -284,13 +238,10 @@ class _QuestionWidget extends StatefulWidget {
 }
 
 class _QuestionWidgetState extends State<_QuestionWidget> {
-  int? _selectedIndex;
-  String? _textInput;
+  String? _selectedOption;
 
   @override
   Widget build(BuildContext context) {
-    final isTextInput = widget.options.isEmpty;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -303,26 +254,19 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
           ),
         ),
         SizedBox(height: 8.h),
-        if (isTextInput)
-          TextField(
-            onChanged: (value) {
-              setState(() {
-                _textInput = value;
-              });
-              widget.onChanged(value);
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              hintText: "Enter your answer",
-            ),
-          )
-        else
-          ...List.generate(widget.options.length, (index) {
-            final isSelected = _selectedIndex == index;
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h),
+        ...List.generate(widget.options.length, (index) {
+          final option = widget.options[index];
+          final isSelected = _selectedOption == option;
+
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedOption = option;
+                });
+                print("Selected Option: $option");
+              },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -330,34 +274,29 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
                     isSelected: isSelected,
                     onTap: () {
                       setState(() {
-                        _selectedIndex = index;
+                        _selectedOption = option;
                       });
-                      widget.onChanged(widget.options[index]);
+                      print("Selected Option: $option");
                     },
                   ),
                   SizedBox(width: 8.w),
                   Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                        widget.onChanged(widget.options[index]);
-                      },
-                      child: Text(
-                        widget.options[index],
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color.fromARGB(255, 51, 50, 50),
-                        ),
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: isSelected
+                            ? AppColors.primaryText
+                            : const Color.fromARGB(255, 51, 50, 50),
                       ),
                     ),
                   ),
                 ],
               ),
-            );
-          }),
+            ),
+          );
+        }),
       ],
     );
   }

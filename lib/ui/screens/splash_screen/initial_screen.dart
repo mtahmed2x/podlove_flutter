@@ -10,7 +10,8 @@ class InitialScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: GestureDetector(
-          onTap: () => GoRouter.of(context).go(RouterPath.splashScreen),
+          onTap: () =>
+              GoRouter.of(context).go('${RouterPath.compatibalityQuestion}/1'),
           child: Container(
             width: double.infinity,
             height: double.infinity,

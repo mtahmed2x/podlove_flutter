@@ -38,7 +38,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -50,7 +51,7 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       SizedBox(height: 25.h),
                       CustomText(
                         text:
-                        "At PodLove, we believe love can flourish across all backgrounds. Are there any cultural or ethnic preferences that are important for you in a partner?",
+                            "At PodLove, we believe love can flourish across all backgrounds. Are there any cultural or ethnic preferences that are important for you in a partner?",
                         color: Color.fromARGB(255, 51, 51, 51),
                         fontSize: 18.sp,
                         textAlign: TextAlign.center,
@@ -76,7 +77,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updatePreferredEthnicity("African American/Black");
+                          userNotifier.updatePreferredEthnicity(
+                              "African American/Black");
                         }
                       },
                     ),
@@ -98,7 +100,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Caucasian/White");
+                          userNotifier
+                              .updatePreferredEthnicity("Caucasian/White");
                         }
                       },
                     ),
@@ -109,7 +112,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Hispanic/Latino");
+                          userNotifier
+                              .updatePreferredEthnicity("Hispanic/Latino");
                         }
                       },
                     ),
@@ -120,7 +124,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Middle Eastern");
+                          userNotifier
+                              .updatePreferredEthnicity("Middle Eastern");
                         }
                       },
                     ),
@@ -131,7 +136,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Native American");
+                          userNotifier
+                              .updatePreferredEthnicity("Native American");
                         }
                       },
                     ),
@@ -142,7 +148,8 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       labelFontWeight: FontWeight.w400,
                       onChanged: (value) {
                         if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Pacific Islander");
+                          userNotifier
+                              .updatePreferredEthnicity("Pacific Islander");
                         }
                       },
                     ),
@@ -168,19 +175,21 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       onPressed: state?.isLoading == true
                           ? null
                           : () {
-                        if (state?.user.preferences.ethnicity == null ||
-                            state!.user.preferences.ethnicity.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select at least one preference'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        logger.i(state.user.preferences.ethnicity);
-                        context.go(RouterPath.addBio); // Navigate to the next screen
-                      },
+                              if (state?.user.preferences.ethnicity == null ||
+                                  state!.user.preferences.ethnicity.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Please select at least one preference'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              logger.i(state.user.preferences.ethnicity);
+                              context.go(RouterPath
+                                  .addBio); // Navigate to the next screen
+                            },
                     );
                   },
                 ),

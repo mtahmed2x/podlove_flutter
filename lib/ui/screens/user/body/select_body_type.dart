@@ -38,7 +38,8 @@ class SelectBodyType extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -153,18 +154,20 @@ class SelectBodyType extends ConsumerWidget {
                       onPressed: state?.isLoading == true
                           ? null
                           : () {
-                        if (state?.user.bodyType == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select your body type'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        logger.i(state?.user.bodyType);
-                        context.go(RouterPath.selectPreferredBodyType); // Navigate to the next screen
-                      },
+                              if (state?.user.bodyType == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('Please select your body type'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              logger.i(state?.user.bodyType);
+                              context.go(RouterPath
+                                  .selectPreferredBodyType); // Navigate to the next screen
+                            },
                     );
                   },
                 ),

@@ -36,7 +36,8 @@ class SelectAge extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               children: [
                 SizedBox(height: 15.h),
@@ -70,7 +71,7 @@ class SelectAge extends ConsumerWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 100.h),
+                SizedBox(height: 30.h),
                 Consumer(builder: (context, ref, _) {
                   final state = ref.watch(userProvider);
                   return CustomRoundButton(

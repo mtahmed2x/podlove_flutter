@@ -39,7 +39,8 @@ class AddBio extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -101,18 +102,20 @@ class AddBio extends ConsumerWidget {
                       onPressed: state?.isLoading == true
                           ? null
                           : () {
-                        if (state?.user.bio == null || state!.user.bio.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please add your bio'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        logger.i(state.user.bio);
-                        context.go(RouterPath.uploadPhoto); // Navigate to the next screen
-                      },
+                              if (state?.user.bio == null ||
+                                  state!.user.bio.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Please add your bio'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              logger.i(state.user.bio);
+                              context.go(RouterPath
+                                  .uploadPhoto); // Navigate to the next screen
+                            },
                     );
                   },
                 ),

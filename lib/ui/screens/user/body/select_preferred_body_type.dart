@@ -38,7 +38,8 @@ class SelectPreferredBodyType extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -57,7 +58,8 @@ class SelectPreferredBodyType extends ConsumerWidget {
                       ),
                       SizedBox(height: 20.h),
                       CustomText(
-                        text: "Choose the option that best represents your preference",
+                        text:
+                            "Choose the option that best represents your preference",
                         color: Color.fromARGB(255, 51, 51, 51),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -153,18 +155,20 @@ class SelectPreferredBodyType extends ConsumerWidget {
                       onPressed: state?.isLoading == true
                           ? null
                           : () {
-                        if (state?.user.preferences.bodyType == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select your preferred body type'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
-                        logger.i(state?.user.preferences.bodyType);
-                        context.go(RouterPath.selectEthnicity); // Navigate to the next screen
-                      },
+                              if (state?.user.preferences.bodyType == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Please select your preferred body type'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              logger.i(state?.user.preferences.bodyType);
+                              context.go(RouterPath
+                                  .selectEthnicity); // Navigate to the next screen
+                            },
                     );
                   },
                 ),

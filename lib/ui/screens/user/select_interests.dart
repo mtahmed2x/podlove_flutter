@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/utils/logger.dart';
+
+final selectedInterestsProvider =
+    StateProvider<Set<String>>((ref) => <String>{});
 
 class SelectInterests extends ConsumerWidget {
   const SelectInterests({super.key});
@@ -12,7 +18,9 @@ class SelectInterests extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
-    final selectedInterests = <String>{};
+    final selectedInterests = ref.watch(selectedInterestsProvider);
+    final selectedInterestsNotifier =
+        ref.read(selectedInterestsProvider.notifier);
 
     final interests = [
       "Photography",
@@ -49,7 +57,8 @@ class SelectInterests extends ConsumerWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -80,18 +89,20 @@ class SelectInterests extends ConsumerWidget {
                     return GestureDetector(
                       onTap: () {
                         if (isSelected) {
-                          selectedInterests.remove(interest);
+                          selectedInterestsNotifier.state = {
+                            ...selectedInterests
+                          }..remove(interest);
                         } else {
-                          selectedInterests.add(interest);
+                          selectedInterestsNotifier.state = {
+                            ...selectedInterests
+                          }..add(interest);
                         }
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color:
-                          isSelected ? Colors.orange[100] : Colors.white,
+                          color: isSelected ? Colors.orange[100] : Colors.white,
                           border: Border.all(
-                            color:
-                            isSelected ? Colors.orange : Colors.grey,
+                            color: isSelected ? Colors.orange : Colors.grey,
                           ),
                           borderRadius: BorderRadius.circular(20.r),
                         ),
@@ -99,9 +110,7 @@ class SelectInterests extends ConsumerWidget {
                           child: Text(
                             interest,
                             style: TextStyle(
-                              color: isSelected
-                                  ? Colors.orange
-                                  : Colors.black,
+                              color: isSelected ? Colors.orange : Colors.black,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -114,17 +123,18 @@ class SelectInterests extends ConsumerWidget {
               Consumer(builder: (context, ref, _) {
                 final state = ref.watch(userProvider);
                 return CustomRoundButton(
-                  text: state?.isLoading == true
-                      ? "Saving..."
-                      : "Continue",
-                  onPressed: state?.isLoading == true ||
-                      selectedInterests.length < 3
-                      ? null
-                      : () {
-                    userNotifier.updateInterests(
-                        selectedInterests.toList());
-                    // Navigate to the next screen
-                  },
+                  text: state?.isLoading == true ? "Saving..." : "Continue",
+                  onPressed:
+                      state?.isLoading == true || selectedInterests.length < 3
+                          ? null
+                          : () {
+                              userNotifier
+                                  .updateInterests(selectedInterests.toList());
+                              logger.i(state!.user.location);
+                              logger.i(state.user.personality.focus);
+                              logger.i(state.user.interests[0]);
+                              GoRouter.of(context).go(RouterPath.homeBefore);
+                            },
                 );
               }),
             ],
