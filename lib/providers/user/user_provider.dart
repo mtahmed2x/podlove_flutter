@@ -103,6 +103,43 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
+  void updatePreferredGender(String newPreferredGender) {
+    final newPreferences = state!.user.preferences.copyWith(gender: newPreferredGender);
+    final updatedUser = state!.user.copyWith(preferences: newPreferences);
+    _updateUser(updatedUser);
+  }
+
+  void updateBodyType(String newBodyType) {
+    if(state == null) return;
+
+    final updatedUser = state!.user.copyWith(bodyType: newBodyType);
+    _updateUser(updatedUser);
+  }
+
+  void updatePreferredBodyType(String newPreferredBodyType) {
+    if(state == null) return;
+
+    final newPreferences = state!.user.preferences.copyWith(bodyType: newPreferredBodyType);
+    final updatedUser = state!.user.copyWith(preferences: newPreferences);
+
+    _updateUser(updatedUser);
+  }
+
+  void updateEthnicity(String newEthnicity) {
+    if(state == null) return;
+    final updatedUser = state!.user.copyWith(ethnicity: newEthnicity);
+    _updateUser(updatedUser);
+  }
+
+  void updatePreferredEthnicity(String newPreferredEthnicity) {
+    if(state == null) return;
+
+    final newPreferences = state!.user.preferences.copyWith(ethnicity: newPreferredEthnicity);
+    final updatedUser = state!.user.copyWith(preferences: newPreferences);
+
+    _updateUser(updatedUser);
+  }
+
   Future<bool> getCurrentLocation() async {
     try {
       LocationPermission permission = await Geolocator.checkPermission();
