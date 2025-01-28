@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:podlove_flutter/data/models/auth_model.dart';
+import 'package:podlove_flutter/data/models/user_model.dart';
 
 class SignInResponseModel {
   final int statusCode;
@@ -28,14 +30,24 @@ class SignInResponseModel {
 
 class Data {
   final String accessToken;
+  final AuthModel auth;
+  final UserModel user;
 
   Data({
     required this.accessToken,
+    required this.auth,
+    required this.user,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-      accessToken: json['accessToken'] ?? '',
-    );
-  }
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+        accessToken: json["accessToken"],
+        auth: AuthModel.fromJson(json["auth"]),
+        user: UserModel.fromJson(json["user"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "accessToken": accessToken,
+        "auth": auth.toJson(),
+        "user": user.toJson(),
+      };
 }

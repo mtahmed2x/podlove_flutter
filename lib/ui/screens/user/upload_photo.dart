@@ -40,40 +40,6 @@ class _UploadPhotoState extends ConsumerState<UploadPhoto> {
     }
   }
 
-  Future<void> _uploadImage(WidgetRef ref) async {
-    if (_selectedImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select an image first!")),
-      );
-      return;
-    }
-
-    try {
-      final request = http.MultipartRequest('POST', Uri.parse(cloudinaryUrl))
-        ..fields['upload_preset'] = uploadPreset
-        ..files.add(
-            await http.MultipartFile.fromPath('file', _selectedImage!.path));
-
-      final response = await request.send();
-      if (response.statusCode == 200) {
-        final res = await http.Response.fromStream(response);
-        logger.i('Upload successful: ${res.body}');
-        final responseData = json.decode(res.body);
-
-        final imageUrl = responseData['secure_url'];
-        logger.i('Upload successful: $imageUrl');
-      } else {
-        final res = await http.Response.fromStream(response);
-        logger.e('Upload failed: ${response.statusCode} - ${res.body}');
-      }
-    } catch (e) {
-      logger.e('Error uploading image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred while uploading the image")),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

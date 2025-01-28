@@ -49,4 +49,14 @@ class RouterPath {
 
   static const String homeContentBefore = '/home-content-before';
   static const String homeContentAfter = '/home-content-after';
+
+  static const String profile = '/profile';
+  static const String editProfile = '/edit-profile';
+
+  static const String privacy = '/privacy';
+  static const String terms = '/termsconditions';
+  static const String faqs = '/faqs';
+
+  static const String settings = '/settings';
+  static const String changePassword = '/change-password';
 }

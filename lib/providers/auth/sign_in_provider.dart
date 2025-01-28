@@ -4,6 +4,7 @@ import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/data/models/Response/sign_in_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,8 +42,9 @@ class SignInState {
 
 class SignInNotifier extends StateNotifier<SignInState> {
   final ApiServices apiService;
+  final Ref ref;
 
-  SignInNotifier(this.apiService) : super(SignInState());
+  SignInNotifier(this.apiService, this.ref) : super(SignInState());
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -67,6 +69,10 @@ class SignInNotifier extends StateNotifier<SignInState> {
       if (signInResponse.success == true) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', signInResponse.data!.accessToken);
+
+        ref.read(userProvider.notifier).initializeFromResponse(signInResponse);
+        logger.i(ref.read(userProvider)!.user.age);
+        state = state.copyWith(isLoading: false, isSuccess: true);
       }
     } catch (e) {
       state = state.copyWith(
@@ -90,6 +96,6 @@ class SignInNotifier extends StateNotifier<SignInState> {
 final signInProvider = StateNotifierProvider<SignInNotifier, SignInState>(
   (ref) {
     final apiService = ref.read(apiServiceProvider);
-    return SignInNotifier(apiService);
+    return SignInNotifier(apiService, ref);
   },
 );

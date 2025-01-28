@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ProfileContent extends StatelessWidget {
+class ProfileContent extends ConsumerWidget {
   const ProfileContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userProvider);
+
     return Scaffold(
       appBar: CustomAppBar(
         title: "Profile",
         imageUrl: "assets/images/edit-icon.png",
-        onImageTap: () {},
+        onImageTap: () {
+          GoRouter.of(context).go(RouterPath.editProfile);
+        },
       ),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,19 +37,18 @@ class ProfileContent extends StatelessWidget {
                     children: [
                       const SizedBox(height: 30),
                       CircleAvatar(
-                        radius: 48,
-                        backgroundImage:
-                            AssetImage("assets/images/profile-avatar.png"),
+                        radius: 72,
+                        backgroundImage: NetworkImage(userState!.user.avatar),
                       ),
                       const SizedBox(height: 20),
                       CustomText(
-                        text: "Robert Smith",
+                        text: userState.user.name,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                       const SizedBox(height: 5),
                       CustomText(
-                        text: "robertsmith34@gmail.com",
+                        text: userState.auth.email,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -57,8 +66,7 @@ class ProfileContent extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     CustomText(
-                      text:
-                          "Passionate about photography and exploring new places. Family-oriented, career-driven, and ready to meet someone who shares my values. Bonus points if you love dogs!",
+                      text: userState.user.bio,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
@@ -73,7 +81,7 @@ class ProfileContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         CustomText(
-                          text: "567-123-4567",
+                          text: userState.user.phoneNumber,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -90,7 +98,7 @@ class ProfileContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         CustomText(
-                          text: "42 years",
+                          text: userState.user.age.toString(),
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -107,7 +115,7 @@ class ProfileContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         CustomText(
-                          text: "Male",
+                          text: userState.user.gender,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -124,7 +132,7 @@ class ProfileContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         CustomText(
-                          text: "Female",
+                          text: userState.user.preferences.gender,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -141,7 +149,7 @@ class ProfileContent extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         CustomText(
-                          text: "Laguna Beach, CA",
+                          text: userState.user.location.latitude.toString(),
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),

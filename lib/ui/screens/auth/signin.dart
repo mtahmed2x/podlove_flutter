@@ -29,6 +29,12 @@ class _SignInState extends ConsumerState<SignIn> {
     final signInState = ref.watch(signInProvider);
     final signInNotifier = ref.read(signInProvider.notifier);
 
+    ref.listen(signInProvider, (prev, current) {
+      if (current.isSuccess == true) {
+        context.go(RouterPath.homeBefore);
+      }
+    });
+
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.welcome),
       body: SafeArea(

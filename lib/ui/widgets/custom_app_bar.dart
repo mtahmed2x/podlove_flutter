@@ -40,11 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.only(right: 10.w),
             child: GestureDetector(
               onTap: onImageTap,
-              child: Image.asset(
-                imageUrl!,
-                width: 24.w,
-                fit: BoxFit.cover,
-              ),
+              child: _buildImage(imageUrl!),
             ),
           ),
         if (secondImageUrl != null)
@@ -52,16 +48,35 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.only(right: 10.w),
             child: GestureDetector(
               onTap: onSecondImageTap,
-              child: Image.asset(
-                secondImageUrl!,
-                width: 24.w,
-                height: 24.h,
-                fit: BoxFit.cover,
-              ),
+              child: _buildImage(secondImageUrl!),
             ),
           ),
       ],
     );
+  }
+
+  /// Helper method to determine whether to use AssetImage or NetworkImage
+  Widget _buildImage(String url) {
+    if (url.startsWith('http') || url.startsWith('https')) {
+      // Use a NetworkImage
+      return Image.network(
+        url,
+        width: 24.w,
+        height: 24.h,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(Icons.error, size: 24.sp, color: Colors.red);
+        },
+      );
+    } else {
+      // Assume it's an asset image
+      return Image.asset(
+        url,
+        width: 24.w,
+        height: 24.h,
+        fit: BoxFit.cover,
+      );
+    }
   }
 
   @override

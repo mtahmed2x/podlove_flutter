@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/matches_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/notification_content.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends ConsumerState<Home> {
   }
 
   void _navigateToPage(String routeName) {
-    context.pushNamed(routeName);
+    context.push(routeName);
   }
 
   @override
@@ -65,21 +66,30 @@ class _HomePageState extends ConsumerState<Home> {
               child: Image.asset("assets/images/podLove.png"),
             ),
             _buildDrawerItem(
-                icon: "assets/images/quiz.png",
-                title: 'FAQs',
-                routeName: 'faq'),
+              icon: "assets/images/quiz.png",
+              title: 'FAQs',
+              routeName: RouterPath.faqs,
+            ),
             _buildDrawerItem(
-                icon: "assets/images/support.png",
-                title: 'Help Center',
-                routeName: 'help'),
+              icon: "assets/images/support.png",
+              title: 'Help Center',
+              routeName: 'help',
+            ),
             _buildDrawerItem(
-                icon: "assets/images/encrypted.png",
-                title: 'Privacy Policy',
-                routeName: 'privacy'),
+              icon: "assets/images/encrypted.png",
+              title: 'Terms & Conditions',
+              routeName: RouterPath.terms,
+            ),
             _buildDrawerItem(
-                icon: "assets/images/settings.png",
-                title: 'Settings',
-                routeName: 'settings'),
+              icon: "assets/images/encrypted.png",
+              title: 'Privacy Policy',
+              routeName: RouterPath.privacy,
+            ),
+            _buildDrawerItem(
+              icon: "assets/images/settings.png",
+              title: 'Settings',
+              routeName: RouterPath.settings,
+            ),
             const Expanded(child: SizedBox()),
             if (widget.type == HomePageType.after)
               ListTile(
@@ -103,10 +113,11 @@ class _HomePageState extends ConsumerState<Home> {
     );
   }
 
-  ListTile _buildDrawerItem(
-      {required String icon,
-      required String title,
-      required String routeName}) {
+  ListTile _buildDrawerItem({
+    required String icon,
+    required String title,
+    required String routeName,
+  }) {
     return ListTile(
       leading: Image.asset(icon),
       title: Text(title),

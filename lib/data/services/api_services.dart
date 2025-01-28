@@ -51,7 +51,7 @@ class ApiServices {
     );
   }
 
-  Future<T> get<T>(
+  Future<Response<T>> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -66,7 +66,7 @@ class ApiServices {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data!;
+      return response;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

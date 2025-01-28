@@ -61,6 +61,8 @@ class UserModel {
       );
 
   Map<String, dynamic> toJson() => {
+        "name": name,
+        "phoneNumber": phoneNumber,
         "personality": personality.toJson(),
         "location": location.toJson(),
         "preferences": preferences.toJson(),

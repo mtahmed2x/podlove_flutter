@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:podlove_flutter/data/models/Response/sign_in_response_model.dart';
 import 'package:podlove_flutter/data/models/Response/verify_code_response_model.dart';
 import 'package:podlove_flutter/data/models/auth_model.dart';
 import 'package:podlove_flutter/data/models/user_model.dart';
@@ -51,12 +52,22 @@ class UserNotifier extends StateNotifier<UserState?> {
 
   UserNotifier(this.apiService) : super(null);
 
-  void initializeFromVerification(VerifyCodeResponseModel response) {
-    state = UserState(
-      accessToken: response.data!.accessToken,
-      auth: response.data!.auth,
-      user: response.data!.user,
-    );
+  void initializeFromResponse(dynamic response) {
+    if (response is VerifyCodeResponseModel) {
+      state = UserState(
+        accessToken: response.data!.accessToken,
+        auth: response.data!.auth,
+        user: response.data!.user,
+      );
+    } else if (response is SignInResponseModel) {
+      state = UserState(
+        accessToken: response.data!.accessToken,
+        auth: response.data!.auth,
+        user: response.data!.user,
+      );
+    } else {
+      throw Exception("Unsupported response type");
+    }
   }
 
   void _updateUser(UserModel newUser) {
@@ -75,6 +86,18 @@ class UserNotifier extends StateNotifier<UserState?> {
     );
 
     final updatedUser = state!.user.copyWith(location: newLocation);
+    _updateUser(updatedUser);
+  }
+
+  void updateName(String newName) {
+    if (state == null) return;
+    final updatedUser = state!.user.copyWith(name: newName);
+    _updateUser(updatedUser);
+  }
+
+  void updatePhoneNumber(String newPhoneNumber) {
+    if (state == null) return;
+    final updatedUser = state!.user.copyWith(phoneNumber: newPhoneNumber);
     _updateUser(updatedUser);
   }
 

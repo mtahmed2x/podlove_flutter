@@ -4,7 +4,14 @@ import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
+import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
 import 'package:podlove_flutter/ui/screens/home/home.dart';
+import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
+import 'package:podlove_flutter/ui/screens/home/settings/change_password.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/faq.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/privacy_policty.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/settings.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/terms_conditions.dart';
 import 'package:podlove_flutter/ui/screens/onboarding/connection_pathway.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/initial_screen.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/splash_screen.dart';
@@ -35,7 +42,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.connectionPathWay,
+    initialLocation: RouterPath.signIn,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -182,6 +189,34 @@ class AppRouter {
           onMenuTap: () => Scaffold.of(context).openDrawer(),
           type: HomeContentType.after,
         ),
+      ),
+      GoRoute(
+        path: RouterPath.profile,
+        builder: (context, state) => const ProfileContent(),
+      ),
+      GoRoute(
+        path: RouterPath.editProfile,
+        builder: (context, state) => const EditProfile(),
+      ),
+      GoRoute(
+        path: RouterPath.privacy,
+        builder: (context, state) => const PrivacyPolicy(),
+      ),
+      GoRoute(
+        path: RouterPath.terms,
+        builder: (context, state) => const TermsConditions(),
+      ),
+      GoRoute(
+        path: RouterPath.faqs,
+        builder: (context, state) => const FAQ(),
+      ),
+      GoRoute(
+        path: RouterPath.settings,
+        builder: (context, state) => const Settings(),
+      ),
+      GoRoute(
+        path: RouterPath.changePassword,
+        builder: (context, state) => const ChangePassword(),
       ),
     ],
   );

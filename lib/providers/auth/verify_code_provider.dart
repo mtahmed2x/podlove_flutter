@@ -76,7 +76,7 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
 
         ref
             .read(userProvider.notifier)
-            .initializeFromVerification(verifyCodeResponse);
+            .initializeFromResponse(verifyCodeResponse);
 
         state = state.copyWith(isSuccess: true, isLoading: false);
       }
