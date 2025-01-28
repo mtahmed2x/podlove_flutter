@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
-
 import 'custom_text.dart';
 
 class CustomCheckbox extends StatefulWidget {
@@ -44,7 +43,8 @@ class _CustomCheckboxState extends State<CustomCheckbox> {
         Checkbox(
           value: _isChecked,
           activeColor: widget.color ?? customOrange,
-          side: BorderSide(color: customOrange, width: 2),
+          checkColor: AppColors.background,
+          side: const BorderSide(color: customOrange, width: 2),
           onChanged: (value) {
             setState(() {
               _isChecked = value ?? false;

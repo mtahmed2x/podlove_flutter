@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +19,8 @@ class TermsOfUse extends StatelessWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 16.w).copyWith(top: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 20.w)
+                    .copyWith(top: 20.h, bottom: 44.h),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -103,12 +105,9 @@ class TermsOfUse extends StatelessWidget {
                       "If you have questions or concerns about these Terms of Use, please contact us at support@podlove.co.",
                     ),
                     SizedBox(height: 30.h),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 44.h),
-                      child: CustomRoundButton(
-                        text: "I Agree",
-                        onPressed: () => Get.toNamed(RouterPath.attention),
-                      ),
+                    CustomRoundButton(
+                      text: "I Agree",
+                      onPressed: () => GoRouter.of(context).go(RouterPath.connectionPathWay),
                     ),
                   ],
                 ),

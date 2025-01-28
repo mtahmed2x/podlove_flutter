@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +15,6 @@ class Expectation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: "What to Expect"),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -24,13 +25,8 @@ class Expectation extends StatelessWidget {
               children: [
                 SizedBox(height: 30.h),
                 SizedBox(
-                  width: 250.w,
-                  child: Image.asset(
-                    "assets/images/podLove.png",
-                    width: 200.w,
-                    height: 50.h,
-                    fit: BoxFit.cover,
-                  ),
+                  width: 203.w,
+                  child: AppWidgets.podLoveLogo,
                 ),
                 SizedBox(height: 30.h),
                 Text(
@@ -68,13 +64,13 @@ class Expectation extends StatelessWidget {
                     _BulletItem(
                       title: "Matching Based On",
                       description:
-                      "Value alignment\n • Compatibility scores\n • Shared life stage experiences\n • Communication style synergy",
+                          "Value alignment\n • Compatibility scores\n • Shared life stage experiences\n • Communication style synergy",
                       imagePath: "assets/images/tick-image.png",
                     ),
                     _BulletItem(
                       title: "Podcast Interaction",
                       description:
-                      "You meet your matches face to face during your podcast episode",
+                          "You meet your matches face to face during your podcast episode",
                       imagePath: "assets/images/tick-image.png",
                     ),
                     _BulletItem(
@@ -93,7 +89,8 @@ class Expectation extends StatelessWidget {
                 CustomRoundButton(
                   text: "Next",
                   backgroundColor: const Color.fromARGB(255, 39, 87, 166),
-                  onPressed: () => Get.toNamed(RouterPath.termsOfUse),
+                  onPressed: () =>
+                      GoRouter.of(context).go(RouterPath.termsOfUse),
                 ),
                 SizedBox(height: 44.h),
               ],
@@ -119,7 +116,8 @@ class _BulletItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0.h), // Responsive vertical padding
+      padding: EdgeInsets.symmetric(vertical: 8.0.h),
+      // Responsive vertical padding
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

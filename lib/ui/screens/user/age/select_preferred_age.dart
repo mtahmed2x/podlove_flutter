@@ -19,10 +19,9 @@ class SelectPreferredAge extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
     final preferences = userState?.user.preferences;
-    final initialMin = preferences?.age.min ?? 18;
-    final initialMax = preferences?.age.max ?? 60;
+    final initialMin = preferences?.age.min ?? 35;
+    final initialMax = preferences?.age.max ?? 55;
     final error = userState?.error;
-
     if (error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -30,7 +29,6 @@ class SelectPreferredAge extends ConsumerWidget {
         );
       });
     }
-
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.ageRangeTitle),
       body: SafeArea(
@@ -39,7 +37,7 @@ class SelectPreferredAge extends ConsumerWidget {
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 20.w)
-                    .copyWith(top: 20.h, bottom: 44.h),
+                    .copyWith(top: 56.h, bottom: 44.h),
                 child: Column(
                   children: [
                     SizedBox(height: 15.h),
@@ -47,12 +45,13 @@ class SelectPreferredAge extends ConsumerWidget {
                       child: Column(
                         children: [
                           AppWidgets.podLoveLogo,
-                          SizedBox(height: 25.h),
+                          SizedBox(height: 30.h),
                           CustomText(
                             text: AppStrings.ageRangeQuestion,
                             color: AppColors.primaryText,
                             fontSize: 22.sp,
                             textAlign: TextAlign.center,
+                            fontWeight: FontWeight.w500,
                           ),
                           SizedBox(height: 40.h),
                           _AgeRangeDropdown(
@@ -64,7 +63,7 @@ class SelectPreferredAge extends ConsumerWidget {
                                   .updatePreferencesAgeRange(min, max);
                             },
                           ),
-                          SizedBox(height: 100.h),
+                          SizedBox(height: 50.h),
                           Consumer(builder: (context, ref, _) {
                             final state = ref.watch(userProvider);
                             return CustomRoundButton(
@@ -74,26 +73,26 @@ class SelectPreferredAge extends ConsumerWidget {
                               onPressed: state?.isLoading == true
                                   ? null
                                   : () {
-                                      final prefs = state?.user.preferences.age;
-                                      if (prefs?.min == null ||
-                                          prefs?.max == null) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            content: Text(
-                                                'Please select valid age range'),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                        return;
-                                      }
-                                      logger.i(state?.accessToken);
-                                      logger.i(state?.user.age);
-                                      logger.i(state?.user);
-                                      logger.i(state?.user.location.place);
-                                      logger.i(state?.user.location.latitude);
-                                      context.go(RouterPath.selectGender);
-                                    },
+                                final prefs = state?.user.preferences.age;
+                                if (prefs?.min == null ||
+                                    prefs?.max == null) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Please select valid age range'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+                                logger.i(state?.accessToken);
+                                logger.i(state?.user.age);
+                                logger.i(state?.user);
+                                logger.i(state?.user.location.place);
+                                logger.i(state?.user.location.latitude);
+                                context.go(RouterPath.selectGender);
+                              },
                             );
                           }),
                         ],
@@ -128,39 +127,49 @@ class _AgeRangeDropdown extends StatefulWidget {
 class _AgeRangeDropdownState extends State<_AgeRangeDropdown> {
   late int _minAge;
   late int _maxAge;
-  final List<int> _ageOptions = List.generate(83, (index) => 18 + index);
+  final List<int> _ageOptions = List.generate(21, (index) => 35 + index);
 
   @override
   void initState() {
     super.initState();
-    _minAge = widget.minInitialAge;
-    _maxAge = widget.maxInitialAge;
+    _minAge = widget.minInitialAge < 35 ? 35 : widget.minInitialAge;
+    _maxAge = widget.maxInitialAge < 36 ? 36 : widget.maxInitialAge;
+    if (_minAge > 55) _minAge = 55;
+    if (_maxAge > 55) _maxAge = 55;
+    if (_maxAge <= _minAge) _maxAge = _minAge + 1 <= 55 ? _minAge + 1 : 55;
   }
 
   @override
   void didUpdateWidget(covariant _AgeRangeDropdown oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.minInitialAge != _minAge) {
-      _minAge = widget.minInitialAge;
+      _minAge = widget.minInitialAge < 35 ? 35 : widget.minInitialAge;
     }
     if (widget.maxInitialAge != _maxAge) {
-      _maxAge = widget.maxInitialAge;
+      _maxAge = widget.maxInitialAge < 36 ? 36 : widget.maxInitialAge;
     }
+    if (_minAge > 55) _minAge = 55;
+    if (_maxAge > 55) _maxAge = 55;
+    if (_maxAge <= _minAge) _maxAge = _minAge + 1 <= 55 ? _minAge + 1 : 55;
   }
 
   void _updateAges({int? minAge, int? maxAge}) {
     setState(() {
       if (minAge != null) {
-        _minAge = minAge.clamp(18, 100);
+        if (minAge! < 35) minAge = 35;
+        if (minAge! > 55) minAge = 55;
+        _minAge = minAge!;
         if (_maxAge <= _minAge) {
-          _maxAge = (_minAge + 1).clamp(_minAge + 1, 100);
+          _maxAge = _minAge + 1 <= 55 ? _minAge + 1 : 55;
         }
       }
       if (maxAge != null) {
-        _maxAge = maxAge.clamp(_minAge + 1, 100);
+        if (maxAge! < 36) maxAge = 36;
+        if (maxAge! > 55) maxAge = 55;
+        if (maxAge! <= _minAge) maxAge = _minAge + 1 <= 55 ? _minAge + 1 : 55;
+        _maxAge = maxAge!;
       }
     });
-
     widget.onAgeChanged?.call(_minAge, _maxAge);
   }
 
@@ -172,14 +181,14 @@ class _AgeRangeDropdownState extends State<_AgeRangeDropdown> {
         _AgeDropdown(
           value: _minAge,
           label: AppStrings.minimumAge,
-          items: _ageOptions.where((age) => age < _maxAge),
+          items: _ageOptions.where((age) => age >= 35 && age < _maxAge), // Ensure minimum age starts at 35
           onChanged: (value) => _updateAges(minAge: value),
         ),
         SizedBox(width: 40.w),
         _AgeDropdown(
           value: _maxAge,
           label: AppStrings.maximumAge,
-          items: _ageOptions.where((age) => age > _minAge),
+          items: _ageOptions.where((age) => age > _minAge && age <= 55), // Ensure maximum age is above minimum and <= 55
           onChanged: (value) => _updateAges(maxAge: value),
         ),
       ],
@@ -233,9 +242,9 @@ class _AgeDropdown extends StatelessWidget {
             ),
             items: items
                 .map((age) => DropdownMenuItem(
-                      value: age,
-                      child: Text("$age"),
-                    ))
+              value: age,
+              child: Text("$age"),
+            ))
                 .toList(),
             onChanged: (value) => value != null ? onChanged(value) : null,
           ),

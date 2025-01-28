@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,15 +16,16 @@ class Attention extends StatelessWidget {
       appBar: CustomAppBar(title: "Attention"),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(bottom: 44.h), // Added responsive bottom padding
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 40.h), // Responsive spacing
+                SizedBox(height: 40.h),
                 SizedBox(
-                  width: 120.w, // Responsive image width
+                  width: 120.w,
                   child: Image.asset(
                     "assets/images/attention.png",
                     width: 120.w, // Responsive width
@@ -55,9 +57,9 @@ class Attention extends StatelessWidget {
                 ),
                 SizedBox(height: 20.h), // Responsive spacing
                 CustomRoundButton(
-                  text: "Continue",
+                  text: "I Understood",
                   backgroundColor: const Color.fromARGB(255, 39, 87, 166),
-                  onPressed: () => Get.toNamed(RouterPath.signUp),
+                  onPressed: () => GoRouter.of(context).go(RouterPath.signUp),
                 ),
 
               ],

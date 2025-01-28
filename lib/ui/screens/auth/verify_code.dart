@@ -6,6 +6,7 @@ import 'package:podlove_flutter/constants/app_strings.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 
 import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
@@ -51,7 +52,7 @@ class VerifyCode extends ConsumerWidget {
       height: 49.h,
       textStyle: TextStyle(
         fontSize: 24.sp,
-        color: Colors.black,
+        color: AppColors.secondaryText,
         fontWeight: FontWeight.w600,
       ),
       decoration: BoxDecoration(
@@ -90,19 +91,15 @@ class VerifyCode extends ConsumerWidget {
                   child: Column(
                     children: [
                       // Logo
-                      Image.asset(
-                        AppStrings.podLoveLogoPath,
-                        width: 203.w,
-                        height: 43.h,
-                      ),
-                      SizedBox(height: 25.h),
+                      AppWidgets.podLoveLogo,
+                      SizedBox(height: 40.h),
                       CustomText(
                         text: AppStrings.enterCode,
                         color: AppColors.primaryText,
-                        fontSize: 22.h,
+                        fontSize: 22.sp,
                         fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 15.h),
                       CustomText(
                         text: (instructionText + contact!),
                         color: AppColors.primaryText,

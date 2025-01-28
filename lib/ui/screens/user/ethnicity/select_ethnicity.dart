@@ -39,7 +39,7 @@ class SelectEthnicity extends ConsumerWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+                .copyWith(top: 30.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -160,7 +160,7 @@ class SelectEthnicity extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 50.h),
+                SizedBox(height: 30.h),
                 Consumer(
                   builder: (context, ref, _) {
                     final state = ref.watch(userProvider);
@@ -186,7 +186,7 @@ class SelectEthnicity extends ConsumerWidget {
                     );
                   },
                 ),
-                SizedBox(height: 50.h),
+
               ],
             ),
           ),

@@ -67,14 +67,14 @@ class _SignUpState extends ConsumerState<SignUp> {
                     child: Column(
                       children: [
                         AppWidgets.podLoveLogo,
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 40.h),
                         CustomText(
                           text: AppStrings.welcome,
                           color: const Color.fromARGB(255, 51, 51, 51),
                           fontSize: 22.sp,
                           fontWeight: FontWeight.w500,
                         ),
-                        SizedBox(height: 30.h),
+                        SizedBox(height: 55.h),
                       ],
                     ),
                   ),
@@ -156,7 +156,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                           }
                         },
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 20.h),
                 // Sign In Link
                 Center(
                   child: GestureDetector(
@@ -164,7 +164,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                         Navigator.pushNamed(context, RouterPath.signIn),
                     child: CustomText(
                       text: AppStrings.signInPrompt,
-                      color: customOrange,
+                      color: AppColors.accent,
                     ),
                   ),
                 ),

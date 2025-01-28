@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_round_button.dart';
@@ -22,15 +24,10 @@ class Approach extends StatelessWidget {
             children: [
               SizedBox(height: 30.h),
               SizedBox(
-                width: 250.w,
-                child: Image.asset(
-                  "assets/images/podLove.png",
-                  width: 200.w,
-                  height: 50.h,
-                  fit: BoxFit.cover,
-                ),
+                width: 203.w,
+                child: AppWidgets.podLoveLogo,
               ),
-              SizedBox(height: 30.h),
+              SizedBox(height: 40.h),
               Text(
                 "Our Approach to Love",
                 textAlign: TextAlign.center,
@@ -55,7 +52,7 @@ class Approach extends StatelessWidget {
               CustomRoundButton(
                 text: "Next",
                 backgroundColor: const Color(0xFF2757A6),
-                onPressed: () => Get.toNamed(RouterPath.expectationFromApp),
+                onPressed: () => GoRouter.of(context).go(RouterPath.expectationFromApp),
               ),
               SizedBox(height: 44.h),
             ],

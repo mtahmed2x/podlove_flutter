@@ -15,7 +15,6 @@ class CompatibilityQuestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Full list of questions
     final List<Map<String, dynamic>> questions = [
       {
         'question':

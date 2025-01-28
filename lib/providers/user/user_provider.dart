@@ -6,6 +6,8 @@ import 'package:podlove_flutter/data/models/Response/verify_code_response_model.
 import 'package:podlove_flutter/data/models/auth_model.dart';
 import 'package:podlove_flutter/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:podlove_flutter/data/services/api_services.dart';
+import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
 class UserState {
@@ -45,7 +47,9 @@ class UserState {
 }
 
 class UserNotifier extends StateNotifier<UserState?> {
-  UserNotifier() : super(null);
+  final ApiServices apiService;
+
+  UserNotifier(this.apiService) : super(null);
 
   void initializeFromVerification(VerifyCodeResponseModel response) {
     state = UserState(
@@ -281,44 +285,43 @@ class UserNotifier extends StateNotifier<UserState?> {
     }
   }
 
-  // Future<void> saveProfile() async {
-  //   if (state == null) return;
+  Future<void> update() async {
+    if (state == null) return;
 
-  //   try {
-  //     state = state!.copyWith(isLoading: true, error: null);
+    try {
+      state = state!.copyWith(isLoading: true, error: null);
+      final userUpdateData = state!.user.toJson();
 
-  //     // Simulated API call - replace with actual implementation
-  //     await Future.delayed(const Duration(seconds: 2));
+      logger.i(userUpdateData);
 
-  //     if (state!.user.age < 18) {
-  //       // Example validation
-  //       throw Exception('Age must be at least 18');
-  //     }
+      final response = await apiService.patch(
+        "/user/update/${state!.user.id}",
+        data: userUpdateData,
+      );
 
-  //     // Real implementation would be:
-  //     // final response = await Dio().put(
-  //     //   '/api/user/update',
-  //     //   data: state!.user.toJson(),
-  //     //   options: Options(headers: {
-  //     //     'Authorization': 'Bearer ${state!.accessToken}'
-  //     //   }),
-  //     // );
+      logger.i(response);
+      logger.i(response["data"]);
 
-  //     state = state!.copyWith(
-  //       isLoading: false,
-  //       isSuccess: true,
-  //       error: null,
-  //     );
-  //   } catch (e) {
-  //     state = state!.copyWith(
-  //       isLoading: false,
-  //       isSuccess: false,
-  //       error: e.toString(),
-  //     );
-  //     rethrow;
-  //   }
-  // }
+      final userResponse = UserModel.fromJson(response["data"]);
+      logger.i(userResponse.name);
+
+      state = state!.copyWith(
+        isLoading: false,
+        isSuccess: true,
+        error: null,
+      );
+    } catch (e) {
+      state = state!.copyWith(
+        isLoading: false,
+        isSuccess: false,
+        error: e.toString(),
+      );
+      rethrow;
+    }
+  }
 }
 
-final userProvider =
-    StateNotifierProvider<UserNotifier, UserState?>((ref) => UserNotifier());
+final userProvider = StateNotifierProvider<UserNotifier, UserState?>((ref) {
+  final apiService = ref.read(apiServiceProvider);
+  return UserNotifier(apiService);
+});

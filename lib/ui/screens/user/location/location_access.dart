@@ -33,7 +33,7 @@ class LocationAccess extends ConsumerWidget {
                   child: Column(
                     children: [
                       AppWidgets.podLoveLogo,
-                      SizedBox(height: 25.h),
+                      SizedBox(height: 50.h),
                       Image.asset(
                         AppStrings.locationImagePath,
                         width: 170.w,
@@ -51,7 +51,7 @@ class LocationAccess extends ConsumerWidget {
                         fontSize: 14.sp,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 30.h),
+                      SizedBox(height: 50.h),
                       CustomRoundButton(
                         text: AppStrings.allowLocationAccessButton,
                         onPressed: () async {

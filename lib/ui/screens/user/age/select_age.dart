@@ -58,11 +58,11 @@ class SelectAge extends ConsumerWidget {
                         fontSize: 14.sp,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 40.h),
+                      SizedBox(height: 10.h),
                       CustomNumberPicker(
-                        start: 18,
-                        end: 100,
-                        initialValue: age,
+                        start: 35,
+                        end: 55,
+                        initialValue: 42,
                         onNumberSelected: (value) {
                           logger.i("old age: $age");
                           userNotifier.updateAge(value);

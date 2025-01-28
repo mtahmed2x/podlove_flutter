@@ -97,7 +97,7 @@ class ApiServices {
     }
   }
 
-  Future<T> put<T>(
+  Future<T> patch<T>(
     String path, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -107,7 +107,7 @@ class ApiServices {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      Response<T> response = await _dio.put<T>(
+      Response<T> response = await _dio.patch<T>(
         path,
         data: data,
         queryParameters: queryParameters,

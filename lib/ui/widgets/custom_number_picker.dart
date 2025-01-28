@@ -35,6 +35,7 @@ class _CustomNumberPickerState extends State<CustomNumberPicker> {
       alignment: Alignment.center,
       children: [
         SizedBox(
+          width: 175.w,
           height: 400.h, // Adjusted for screen responsiveness
           child: ListWheelScrollView.useDelegate(
             itemExtent: 50.h, // Adjusted item height
@@ -64,7 +65,7 @@ class _CustomNumberPickerState extends State<CustomNumberPicker> {
                   ),
                 );
               },
-              childCount: (widget.end - widget.start + 1), // Total number range
+              childCount: (widget.end - widget.start + 1),
             ),
           ),
         ),
@@ -73,16 +74,16 @@ class _CustomNumberPickerState extends State<CustomNumberPicker> {
           top: 175.h, // Adjusted for screen responsiveness
           child: Container(
             width: 175.w, // Responsive border width
-            height: 1.h, // Responsive thickness
+            height: 1.2.h, // Responsive thickness
             color: AppColors.accent,
           ),
         ),
         // Bottom Border
         Positioned(
-          bottom: 175.h, // Adjusted for screen responsiveness
+          bottom: 175.h,
           child: Container(
             width: 175.w, // Responsive border width
-            height: 1.h, // Responsive thickness
+            height: 1.2.h, // Responsive thickness
             color: AppColors.accent,
           ),
         ),

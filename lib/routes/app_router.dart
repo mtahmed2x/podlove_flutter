@@ -5,6 +5,7 @@ import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/home.dart';
+import 'package:podlove_flutter/ui/screens/onboarding/connection_pathway.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/initial_screen.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/splash_screen.dart';
 import 'package:podlove_flutter/ui/screens/onboarding/approach.dart';
@@ -14,7 +15,7 @@ import 'package:podlove_flutter/ui/screens/auth/forgot_password.dart';
 import 'package:podlove_flutter/ui/screens/auth/reset_password.dart';
 import 'package:podlove_flutter/ui/screens/auth/signin.dart';
 import 'package:podlove_flutter/ui/screens/auth/verify_code.dart';
-import 'package:podlove_flutter/ui/screens/terms/terms.dart';
+import 'package:podlove_flutter/ui/screens/onboarding/terms.dart';
 import 'package:podlove_flutter/ui/screens/user/add_bio.dart';
 import 'package:podlove_flutter/ui/screens/user/age/select_age.dart';
 import 'package:podlove_flutter/ui/screens/user/age/select_preferred_age.dart';
@@ -34,7 +35,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.signUp,
+    initialLocation: RouterPath.connectionPathWay,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -56,6 +57,9 @@ class AppRouter {
         path: RouterPath.termsOfUse,
         builder: (context, state) => const TermsOfUse(),
       ),
+      GoRoute(
+          path: RouterPath.connectionPathWay,
+          builder: (context, state) => const ConnectionPathway()),
       GoRoute(
         path: RouterPath.attention,
         builder: (context, state) => const Attention(),

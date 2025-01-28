@@ -120,23 +120,23 @@ class SelectInterests extends ConsumerWidget {
                   },
                 ),
               ),
-              Consumer(builder: (context, ref, _) {
-                final state = ref.watch(userProvider);
-                return CustomRoundButton(
-                  text: state?.isLoading == true ? "Saving..." : "Continue",
-                  onPressed:
-                      state?.isLoading == true || selectedInterests.length < 3
-                          ? null
-                          : () {
-                              userNotifier
-                                  .updateInterests(selectedInterests.toList());
-                              logger.i(state!.user.location);
-                              logger.i(state.user.personality.focus);
-                              logger.i(state.user.interests[0]);
-                              GoRouter.of(context).go(RouterPath.homeBefore);
-                            },
-                );
-              }),
+              Consumer(
+                builder: (context, ref, _) {
+                  final state = ref.watch(userProvider);
+                  return CustomRoundButton(
+                    text: state?.isLoading == true ? "Saving..." : "Continue",
+                    onPressed: state?.isLoading == true ||
+                            selectedInterests.length < 3
+                        ? null
+                        : () async {
+                            userNotifier
+                                .updateInterests(selectedInterests.toList());
+                            userNotifier.update();
+                            // GoRouter.of(context).go(RouterPath.homeBefore);
+                          },
+                  );
+                },
+              ),
             ],
           ),
         ),
