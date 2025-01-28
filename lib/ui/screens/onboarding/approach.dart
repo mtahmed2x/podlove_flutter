@@ -5,7 +5,6 @@ import 'package:podlove_flutter/routes/route_path.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/custom_round_button.dart';
 
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Approach extends StatelessWidget {
