@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:podlove_flutter/data/models/home_response_model.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
-import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
 import 'package:podlove_flutter/ui/screens/home/home.dart';
 import 'package:podlove_flutter/ui/screens/home/podcast.dart';
 import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
+import 'package:podlove_flutter/ui/screens/home/purchase.dart';
 import 'package:podlove_flutter/ui/screens/home/settings/change_password.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/faq.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/help.dart';
@@ -216,7 +215,14 @@ class AppRouter {
       GoRoute(
         path: RouterPath.podcast,
         builder: (context, state) => const PodcastPage(),
-      )
+      ),
+      GoRoute(
+        path: RouterPath.purchase,
+        builder: (context, state) {
+          final url = state.extra as String? ?? "https://fallback-url.com";
+          return Purchase(url: url);
+        },
+      ),
     ],
   );
 }

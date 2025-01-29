@@ -60,4 +60,5 @@ class RouterPath {
   static const String changePassword = '/change-password';
 
   static const String podcast = '/podcast';
+  static const String purchase = '/purchase';
 }

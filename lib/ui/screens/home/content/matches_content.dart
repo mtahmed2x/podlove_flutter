@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 
@@ -24,25 +25,30 @@ class MatchesContent extends ConsumerWidget {
                   children: [
                     GestureDetector(
                       onTap: () {},
-                      child: Image.asset(
-                        data.podcast!.status != "Done"
+                      child: ImageTextCard(
+                        imageUrl: data.podcast!.status != "Done"
                             ? "assets/images/hidden-match.png"
                             : "assets/images/revealed-match.png",
-                        width: 335,
-                        height: 302,
+                        text: "Match-1",
+                        textBackgroundColor: data.podcast!.status != "Done"
+                            ? AppColors.accent
+                            : AppColors.background,
+                        isNetworkImage: false,
                       ),
                     ),
                     const SizedBox(height: 30),
-                    Image.asset(
-                      "assets/images/hidden-match.png",
-                      width: 335,
-                      height: 302,
+                    ImageTextCard(
+                      imageUrl: "assets/images/hidden-match.png",
+                      text: "Match-2",
+                      textBackgroundColor: AppColors.accent,
+                      isNetworkImage: false,
                     ),
                     const SizedBox(height: 30),
-                    Image.asset(
-                      "assets/images/hidden-match.png",
-                      width: 335,
-                      height: 302,
+                    ImageTextCard(
+                      imageUrl: "assets/images/hidden-match.png",
+                      text: "Match-3",
+                      textBackgroundColor: AppColors.accent,
+                      isNetworkImage: false,
                     ),
                   ],
                 );
@@ -54,6 +60,55 @@ class MatchesContent extends ConsumerWidget {
             )),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ImageTextCard extends StatelessWidget {
+  final String imageUrl;
+  final String text;
+  final Color textBackgroundColor;
+  final bool isNetworkImage;
+
+  const ImageTextCard({
+    super.key,
+    required this.imageUrl,
+    required this.text,
+    this.textBackgroundColor = Colors.orangeAccent,
+    this.isNetworkImage = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Image(
+            image: isNetworkImage
+                ? NetworkImage(imageUrl) as ImageProvider
+                : AssetImage(imageUrl),
+            width: 335,
+            height: 240,
+            fit: BoxFit.cover,
+          ),
+          Container(
+            width: 335,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            color: textBackgroundColor,
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

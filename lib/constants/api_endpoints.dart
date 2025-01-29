@@ -18,4 +18,6 @@ class ApiEndpoints {
   static String help = "/support/create";
 
   static String deleteAccount = "/auth/delete";
+
+  static String purchase = "/subscription/upgrade";
 }

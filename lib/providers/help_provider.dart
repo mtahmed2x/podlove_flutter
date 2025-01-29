@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/models/Response/reset_password_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
@@ -47,9 +46,7 @@ class HelpNotifier extends StateNotifier<HelpState> {
 
   final issueController = TextEditingController();
 
-
   Future<void> submitHelp() async {
-
     final userState = ref.watch(userProvider);
 
     final helpData = {
@@ -65,7 +62,7 @@ class HelpNotifier extends StateNotifier<HelpState> {
         data: helpData,
       );
       logger.i(response);
-      if(response.statusCode == 201) {
+      if (response.statusCode == 201) {
         state = state.copyWith(
           isSuccess: true,
           isLoading: false,
@@ -89,9 +86,8 @@ class HelpNotifier extends StateNotifier<HelpState> {
   }
 }
 
-final helpProvider =
-StateNotifierProvider<HelpNotifier, HelpState>(
-      (ref) {
+final helpProvider = StateNotifierProvider<HelpNotifier, HelpState>(
+  (ref) {
     final apiService = ref.read(apiServiceProvider);
     return HelpNotifier(apiService, ref);
   },

@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
-import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/data/models/home_response_model.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
+import 'package:podlove_flutter/providers/purchase_providers.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_image_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/reuseable_header.dart';
 import 'package:podlove_flutter/ui/widgets/subscription_card.dart';
-import 'package:podlove_flutter/utils/logger.dart';
 
 class HomeContent extends ConsumerWidget {
   final VoidCallback onMenuTap;
@@ -24,7 +23,6 @@ class HomeContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
-    final userNotifier = ref.read(userProvider.notifier);
     final homeData = ref.watch(homeProvider);
 
     return SafeArea(
@@ -45,7 +43,11 @@ class HomeContent extends ConsumerWidget {
                 children: [
                   homeData.when(
                     data: (data) {
-                      logger.i(data.subscriptionPlans);
+                      String schedule = "TBD";
+                      if (data.podcast!.schedule!.date != "") {
+                        schedule =
+                            "${data.podcast!.schedule!.date} (${data.podcast!.schedule!.day}) ${data.podcast!.schedule!.time}";
+                      }
                       return Column(
                         children: [
                           // Matches section
@@ -117,7 +119,8 @@ class HomeContent extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(20),
                                     image: DecorationImage(
                                       image: AssetImage(
-                                          'assets/images/schedule.png'),
+                                        'assets/images/schedule.png',
+                                      ),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -137,7 +140,7 @@ class HomeContent extends ConsumerWidget {
                                       ),
                                       const SizedBox(height: 10),
                                       Text(
-                                        '12/07/24 (Monday) at 4 PM',
+                                        schedule,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -187,11 +190,14 @@ class HomeContent extends ConsumerWidget {
                           _buildSubscriptionPlansSection(
                             data.subscriptionPlans!,
                             userState.user.subscription.plan,
+                            context,
                           ),
                         ],
                       );
                     },
-                    loading: () => Center(child: CircularProgressIndicator()),
+                    loading: () => Center(
+                      child: CircularProgressIndicator(),
+                    ),
                     error: (error, stack) => Center(
                       child:
                           Text('Failed to load home data: ${error.toString()}'),
@@ -207,7 +213,10 @@ class HomeContent extends ConsumerWidget {
   }
 
   Widget _buildSubscriptionPlansSection(
-      List<SubscriptionPlan> subscriptionPlans, String subscriptionName) {
+    List<SubscriptionPlan> subscriptionPlans,
+    String subscriptionName,
+    BuildContext context,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -228,6 +237,7 @@ class HomeContent extends ConsumerWidget {
               return Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: _buildSubscriptionPlanCard(
+                  id: subscriptionPlan.id!,
                   title: parts[0],
                   subtitle: parts[1].trim(),
                   price: subscriptionPlan.unitAmount == "0"
@@ -238,6 +248,7 @@ class HomeContent extends ConsumerWidget {
                       .take(3) // Limit to the first 4 features
                       .toList(),
                   isCurrentPlan: isCurrentPlan,
+                  context: context,
                 ),
               );
             }).toList(),
@@ -248,19 +259,34 @@ class HomeContent extends ConsumerWidget {
   }
 
   Widget _buildSubscriptionPlanCard({
+    required String id,
     required String title,
     required String subtitle,
     required String price,
     required List<String> features,
     required bool isCurrentPlan,
+    required BuildContext context,
   }) {
-    return SubscriptionCard(
-      title: title,
-      subtitle: subtitle,
-      price: price,
-      features: features,
-      onViewDetails: () => print("View Details clicked"),
-      isCurrentPlan: isCurrentPlan,
+    return Consumer(
+      builder: (context, ref, _) {
+        final purchaseNotifier = ref.read(purchaseProvider.notifier);
+        return SubscriptionCard(
+          title: title,
+          subtitle: subtitle,
+          price: price,
+          features: features,
+          onViewDetails: () => {},
+          isCurrentPlan: isCurrentPlan,
+          onPressed: () {
+            isCurrentPlan
+                ? null
+                : () async {
+                    purchaseNotifier.purchase(id);
+                    // context.push(RouterPath.purchase, extra: checkoutUrl);
+                  };
+          },
+        );
+      },
     );
   }
 }

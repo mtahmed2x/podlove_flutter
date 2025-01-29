@@ -8,6 +8,7 @@ class SubscriptionCard extends StatelessWidget {
   final String price;
   final List<String> features;
   final VoidCallback onViewDetails;
+  final VoidCallback onPressed;
   final bool isCurrentPlan;
 
   const SubscriptionCard({
@@ -15,6 +16,7 @@ class SubscriptionCard extends StatelessWidget {
     required this.subtitle,
     required this.price,
     required this.features,
+    required this.onPressed,
     required this.onViewDetails,
     this.isCurrentPlan = false,
     super.key,
@@ -112,7 +114,7 @@ class SubscriptionCard extends StatelessWidget {
                 width: 250.w,
                 height: 55.h,
                 child: OutlinedButton(
-                  onPressed: isCurrentPlan ? null : () {},
+                  onPressed: onPressed,
                   style: OutlinedButton.styleFrom(
                     backgroundColor: isCurrentPlan
                         ? Color.fromARGB(255, 254, 254, 254)

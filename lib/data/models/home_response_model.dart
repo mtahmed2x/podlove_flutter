@@ -62,6 +62,7 @@ class HomeData {
 }
 
 class Podcast {
+  final Schedule? schedule;
   final String? id;
   final String? primaryUser;
   final Participant? participant1;
@@ -73,6 +74,7 @@ class Podcast {
   final int? v;
 
   Podcast({
+    this.schedule,
     this.id,
     this.primaryUser,
     this.participant1,
@@ -85,6 +87,7 @@ class Podcast {
   });
 
   Podcast copyWith({
+    Schedule? schedule,
     String? id,
     String? primaryUser,
     Participant? participant1,
@@ -96,6 +99,7 @@ class Podcast {
     int? v,
   }) =>
       Podcast(
+        schedule: schedule ?? this.schedule,
         id: id ?? this.id,
         primaryUser: primaryUser ?? this.primaryUser,
         participant1: participant1 ?? this.participant1,
@@ -108,6 +112,9 @@ class Podcast {
       );
 
   factory Podcast.fromJson(Map<String, dynamic> json) => Podcast(
+        schedule: json["schedule"] == null
+            ? null
+            : Schedule.fromJson(json["schedule"]),
         id: json["_id"],
         primaryUser: json["primaryUser"],
         participant1: json["participant1"] == null
@@ -123,6 +130,35 @@ class Podcast {
         status: json["status"],
         recordingUrl: json["recordingUrl"],
         v: json["__v"],
+      );
+}
+
+class Schedule {
+  String? date;
+  String? day;
+  String? time;
+
+  Schedule({
+    this.date,
+    this.day,
+    this.time,
+  });
+
+  Schedule copyWith({
+    String? date,
+    String? day,
+    String? time,
+  }) =>
+      Schedule(
+        date: date ?? this.date,
+        day: day ?? this.day,
+        time: time ?? this.time,
+      );
+
+  factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
+        date: json["date"],
+        day: json["day"],
+        time: json["time"],
       );
 }
 
