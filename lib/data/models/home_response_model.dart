@@ -1,71 +1,64 @@
 import 'dart:convert';
 
-HomeResponse homeResponseFromJson(String str) => HomeResponse.fromJson(json.decode(str));
+HomeResponseModel homeResponseModelFromJson(String str) =>
+    HomeResponseModel.fromJson(json.decode(str));
 
-String homeResponseToJson(HomeResponse data) => json.encode(data.toJson());
-
-class HomeResponse {
+class HomeResponseModel {
   final bool? success;
   final String? message;
-  final Data? data;
+  final HomeData? data;
 
-  HomeResponse({
+  HomeResponseModel({
     this.success,
     this.message,
     this.data,
   });
 
-  HomeResponse copyWith({
+  HomeResponseModel copyWith({
     bool? success,
     String? message,
-    Data? data,
+    HomeData? data,
   }) =>
-      HomeResponse(
+      HomeResponseModel(
         success: success ?? this.success,
         message: message ?? this.message,
         data: data ?? this.data,
       );
 
-  factory HomeResponse.fromJson(Map<String, dynamic> json) => HomeResponse(
-    success: json["success"],
-    message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
-    "data": data?.toJson(),
-  };
+  factory HomeResponseModel.fromJson(Map<String, dynamic> json) =>
+      HomeResponseModel(
+        success: json["success"],
+        message: json["message"],
+        data: json["data"] == null ? null : HomeData.fromJson(json["data"]),
+      );
 }
 
-class Data {
+class HomeData {
   final Podcast? podcast;
   final List<SubscriptionPlan>? subscriptionPlans;
 
-  Data({
+  HomeData({
     this.podcast,
     this.subscriptionPlans,
   });
 
-  Data copyWith({
+  HomeData copyWith({
     Podcast? podcast,
     List<SubscriptionPlan>? subscriptionPlans,
   }) =>
-      Data(
+      HomeData(
         podcast: podcast ?? this.podcast,
         subscriptionPlans: subscriptionPlans ?? this.subscriptionPlans,
       );
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    podcast: json["podcast"] == null ? null : Podcast.fromJson(json["podcast"]),
-    subscriptionPlans: json["subscriptionPlans"] == null ? [] : List<SubscriptionPlan>.from(json["subscriptionPlans"]!.map((x) => SubscriptionPlan.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "podcast": podcast?.toJson(),
-    "subscriptionPlans": subscriptionPlans == null ? [] : List<dynamic>.from(subscriptionPlans!.map((x) => x.toJson())),
-  };
+  factory HomeData.fromJson(Map<String, dynamic> json) => HomeData(
+        podcast:
+            json["podcast"] == null ? null : Podcast.fromJson(json["podcast"]),
+        subscriptionPlans: json["subscriptionPlans"] == null
+            ? []
+            : List<SubscriptionPlan>.from(json["subscriptionPlans"]!
+                .map((x) => SubscriptionPlan.fromJson(x))),
+      );
 }
 
 class Podcast {
@@ -115,63 +108,58 @@ class Podcast {
       );
 
   factory Podcast.fromJson(Map<String, dynamic> json) => Podcast(
-    id: json["_id"],
-    primaryUser: json["primaryUser"],
-    participant1: json["participant1"] == null ? null : Participant.fromJson(json["participant1"]),
-    participant2: json["participant2"] == null ? null : Participant.fromJson(json["participant2"]),
-    participant3: json["participant3"] == null ? null : Participant.fromJson(json["participant3"]),
-    selectedUser: json["selectedUser"],
-    status: json["status"],
-    recordingUrl: json["recordingUrl"],
-    v: json["__v"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "primaryUser": primaryUser,
-    "participant1": participant1?.toJson(),
-    "participant2": participant2?.toJson(),
-    "participant3": participant3?.toJson(),
-    "selectedUser": selectedUser,
-    "status": status,
-    "recordingUrl": recordingUrl,
-    "__v": v,
-  };
+        id: json["_id"],
+        primaryUser: json["primaryUser"],
+        participant1: json["participant1"] == null
+            ? null
+            : Participant.fromJson(json["participant1"]),
+        participant2: json["participant2"] == null
+            ? null
+            : Participant.fromJson(json["participant2"]),
+        participant3: json["participant3"] == null
+            ? null
+            : Participant.fromJson(json["participant3"]),
+        selectedUser: json["selectedUser"],
+        status: json["status"],
+        recordingUrl: json["recordingUrl"],
+        v: json["__v"],
+      );
 }
 
 class Participant {
   final String? id;
+  final String? name;
   final String? bio;
   final List<dynamic>? interests;
 
   Participant({
     this.id,
+    this.name,
     this.bio,
     this.interests,
   });
 
   Participant copyWith({
     String? id,
+    String? name,
     String? bio,
     List<dynamic>? interests,
   }) =>
       Participant(
         id: id ?? this.id,
+        name: name ?? this.name,
         bio: bio ?? this.bio,
         interests: interests ?? this.interests,
       );
 
   factory Participant.fromJson(Map<String, dynamic> json) => Participant(
-    id: json["_id"],
-    bio: json["bio"],
-    interests: json["interests"] == null ? [] : List<dynamic>.from(json["interests"]!.map((x) => x)),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "bio": bio,
-    "interests": interests == null ? [] : List<dynamic>.from(interests!.map((x) => x)),
-  };
+        id: json["_id"],
+        name: json["name"],
+        bio: json["bio"],
+        interests: json["interests"] == null
+            ? []
+            : List<dynamic>.from(json["interests"]!.map((x) => x)),
+      );
 }
 
 class SubscriptionPlan {
@@ -216,27 +204,20 @@ class SubscriptionPlan {
         v: v ?? this.v,
       );
 
-  factory SubscriptionPlan.fromJson(Map<String, dynamic> json) => SubscriptionPlan(
-    id: json["_id"],
-    name: json["name"],
-    description: json["description"] == null ? [] : List<Description>.from(json["description"]!.map((x) => Description.fromJson(x))),
-    unitAmount: json["unitAmount"],
-    interval: json["interval"],
-    productId: json["productId"],
-    priceId: json["priceId"],
-    v: json["__v"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "name": name,
-    "description": description == null ? [] : List<dynamic>.from(description!.map((x) => x.toJson())),
-    "unitAmount": unitAmount,
-    "interval": interval,
-    "productId": productId,
-    "priceId": priceId,
-    "__v": v,
-  };
+  factory SubscriptionPlan.fromJson(Map<String, dynamic> json) =>
+      SubscriptionPlan(
+        id: json["_id"],
+        name: json["name"],
+        description: json["description"] == null
+            ? []
+            : List<Description>.from(
+                json["description"]!.map((x) => Description.fromJson(x))),
+        unitAmount: json["unitAmount"],
+        interval: json["interval"],
+        productId: json["productId"],
+        priceId: json["priceId"],
+        v: json["__v"],
+      );
 }
 
 class Description {
@@ -262,14 +243,8 @@ class Description {
       );
 
   factory Description.fromJson(Map<String, dynamic> json) => Description(
-    key: json["key"],
-    details: json["details"],
-    id: json["_id"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "key": key,
-    "details": details,
-    "_id": id,
-  };
+        key: json["key"],
+        details: json["details"],
+        id: json["_id"],
+      );
 }

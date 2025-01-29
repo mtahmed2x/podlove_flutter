@@ -31,6 +31,7 @@ dependencies:
   geocoding: ^3.0.0
   image_picker: ^1.1.2
   flutter_html: ^3.0.0-beta.2
+  zego_uikit_prebuilt_call: ^4.16.21
 
 dev_dependencies:
   flutter_test:

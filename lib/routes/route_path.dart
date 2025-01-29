@@ -44,11 +44,9 @@ class RouterPath {
 
   static const String compatibalityQuestion = '/compatibality-question';
 
-  static const String homeBefore = '/home-before';
-  static const String homeAfter = '/home-after';
+  static const String home = "/home";
 
-  static const String homeContentBefore = '/home-content-before';
-  static const String homeContentAfter = '/home-content-after';
+  static const String homeContent = '/home-content';
 
   static const String profile = '/profile';
   static const String editProfile = '/edit-profile';
@@ -60,4 +58,6 @@ class RouterPath {
 
   static const String settings = '/settings';
   static const String changePassword = '/change-password';
+
+  static const String podcast = '/podcast';
 }

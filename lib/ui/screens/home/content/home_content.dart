@@ -6,6 +6,7 @@ import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/data/models/home_response_model.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_image_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/reuseable_header.dart';
@@ -14,16 +15,16 @@ import 'package:podlove_flutter/utils/logger.dart';
 
 class HomeContent extends ConsumerWidget {
   final VoidCallback onMenuTap;
-  final HomeContentType type;
 
-  const HomeContent(
-      {required this.onMenuTap, this.type = HomeContentType.before, super.key});
+  const HomeContent({
+    required this.onMenuTap,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
-
     final homeData = ref.watch(homeProvider);
 
     return SafeArea(
@@ -44,7 +45,7 @@ class HomeContent extends ConsumerWidget {
                 children: [
                   homeData.when(
                     data: (data) {
-                      logger.i(data.data!.subscriptionPlans);
+                      logger.i(data.subscriptionPlans);
                       return Column(
                         children: [
                           // Matches section
@@ -59,20 +60,20 @@ class HomeContent extends ConsumerWidget {
                               const SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Image.asset(type == HomeContentType.before
+                                  Image.asset(data.podcast!.status != "Done"
                                       ? "assets/images/match-1.png"
                                       : "assets/images/match-revealed.png"),
                                   Image.asset("assets/images/match-2.png"),
                                   Image.asset("assets/images/match-3.png"),
                                 ],
                               ),
-                              if (type == HomeContentType.after) ...[
+                              if (data.podcast!.status == "Done") ...[
                                 const SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     CustomImageButton(
                                       imagePath: "assets/images/btn-active.png",
@@ -81,13 +82,13 @@ class HomeContent extends ConsumerWidget {
                                     ),
                                     CustomImageButton(
                                       imagePath:
-                                      "assets/images/btn-inactive.png",
+                                          "assets/images/btn-inactive.png",
                                       text: "Chat",
                                       onPressed: () {},
                                     ),
                                     CustomImageButton(
                                       imagePath:
-                                      "assets/images/btn-inactive.png",
+                                          "assets/images/btn-inactive.png",
                                       text: "Chat",
                                       onPressed: () {},
                                     ),
@@ -123,7 +124,7 @@ class HomeContent extends ConsumerWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       const Spacer(),
                                       Text(
@@ -146,25 +147,22 @@ class HomeContent extends ConsumerWidget {
                                       const SizedBox(height: 25),
                                       Padding(
                                         padding:
-                                        const EdgeInsets.only(bottom: 20.0),
+                                            const EdgeInsets.only(bottom: 20.0),
                                         child: SizedBox(
                                           width: double.infinity,
                                           height: 50,
                                           child: ElevatedButton(
-                                            onPressed: () =>
-                                                context.push(
-                                                    type ==
-                                                        HomeContentType.before
-                                                        ? '/podcast-play'
-                                                        : '/second-podcast-play'),
+                                            onPressed: () => context.push(
+                                              RouterPath.podcast,
+                                            ),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: AppColors.accent,
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(20),
+                                                    BorderRadius.circular(20),
                                               ),
                                               padding:
-                                              const EdgeInsets.symmetric(
+                                                  const EdgeInsets.symmetric(
                                                 horizontal: 40,
                                                 vertical: 15,
                                               ),
@@ -187,17 +185,17 @@ class HomeContent extends ConsumerWidget {
                           ),
                           const SizedBox(height: 30),
                           _buildSubscriptionPlansSection(
-                              data.data!.subscriptionPlans!, userState.user
-                              .subscription.plan),
+                            data.subscriptionPlans!,
+                            userState.user.subscription.plan,
+                          ),
                         ],
                       );
                     },
                     loading: () => Center(child: CircularProgressIndicator()),
-                    error: (error, stack) =>
-                        Center(
-                            child: Text(
-                                'Failed to load home data: ${error
-                                    .toString()}')),
+                    error: (error, stack) => Center(
+                      child:
+                          Text('Failed to load home data: ${error.toString()}'),
+                    ),
                   ),
                 ],
               ),
@@ -222,17 +220,20 @@ class HomeContent extends ConsumerWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: subscriptionPlans.map((first) {
-              bool isCurrentPlan = subscriptionName == first.name;
-              List<String> parts = first.name?.split(':') ?? ["", ""];
+            children: subscriptionPlans.map((subscriptionPlan) {
+              bool isCurrentPlan = subscriptionName == subscriptionPlan.name;
+              List<String> parts =
+                  subscriptionPlan.name?.split(':') ?? ["", ""];
 
               return Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: _buildSubscriptionPlanCard(
                   title: parts[0],
                   subtitle: parts[1].trim(),
-                  price: first.unitAmount == "0" ? "Free" : first.unitAmount!,
-                  features: first.description!
+                  price: subscriptionPlan.unitAmount == "0"
+                      ? "Free / ${subscriptionPlan.interval}"
+                      : "${subscriptionPlan.unitAmount!} / ${subscriptionPlan.interval}",
+                  features: subscriptionPlan.description!
                       .map((desc) => desc.key ?? '')
                       .take(3) // Limit to the first 4 features
                       .toList(),

@@ -31,7 +31,7 @@ class _SignInState extends ConsumerState<SignIn> {
 
     ref.listen(signInProvider, (prev, current) {
       if (current.isSuccess == true) {
-        context.go(RouterPath.homeBefore);
+        context.go(RouterPath.home);
       }
     });
 

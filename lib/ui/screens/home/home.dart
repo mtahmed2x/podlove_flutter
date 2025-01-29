@@ -10,9 +10,7 @@ import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends ConsumerStatefulWidget {
-  final HomePageType type;
-
-  const Home({super.key, this.type = HomePageType.before});
+  const Home({super.key});
 
   @override
   ConsumerState<Home> createState() => _HomePageState();
@@ -31,9 +29,6 @@ class _HomePageState extends ConsumerState<Home> {
       Consumer(
         builder: (context, ref, child) {
           return HomeContent(
-            type: widget.type == HomePageType.before
-                ? HomeContentType.before
-                : HomeContentType.after,
             onMenuTap: () => _scaffoldKey.currentState?.openDrawer(),
           );
         },
@@ -47,7 +42,6 @@ class _HomePageState extends ConsumerState<Home> {
   Future<void> _logOut() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('accessToken');
-
   }
 
   void _onItemTapped(int index) {
@@ -99,12 +93,12 @@ class _HomePageState extends ConsumerState<Home> {
             ),
             const Expanded(child: SizedBox()),
             ListTile(
-              leading: Image.asset("assets/images/logout.png"),
-              title: const Text('Logout'),
-              onTap: () async {
-                 await _logOut().whenComplete(() => context.go(RouterPath.signIn));
-              }
-            ),
+                leading: Image.asset("assets/images/logout.png"),
+                title: const Text('Logout'),
+                onTap: () async {
+                  await _logOut()
+                      .whenComplete(() => context.go(RouterPath.signIn));
+                }),
             const SizedBox(height: 30),
           ],
         ),

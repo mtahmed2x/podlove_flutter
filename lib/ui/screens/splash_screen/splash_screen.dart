@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     } else {
       if (mounted) {
-        GoRouter.of(context).go(RouterPath.homeBefore);
+        GoRouter.of(context).go(RouterPath.home);
       }
     }
   }

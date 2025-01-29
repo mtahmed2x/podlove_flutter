@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/data/models/home_response_model.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
 import 'package:podlove_flutter/ui/screens/home/home.dart';
+import 'package:podlove_flutter/ui/screens/home/podcast.dart';
 import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
 import 'package:podlove_flutter/ui/screens/home/settings/change_password.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/faq.dart';
@@ -170,25 +172,13 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: RouterPath.homeBefore,
-        builder: (context, state) => const Home(type: HomePageType.before),
+        path: RouterPath.home,
+        builder: (context, state) => const Home(),
       ),
       GoRoute(
-        path: RouterPath.homeAfter,
-        builder: (context, state) => const Home(type: HomePageType.after),
-      ),
-      GoRoute(
-        path: RouterPath.homeContentBefore,
+        path: RouterPath.homeContent,
         builder: (context, state) => HomeContent(
           onMenuTap: () => Scaffold.of(context).openDrawer(),
-          type: HomeContentType.before,
-        ),
-      ),
-      GoRoute(
-        path: RouterPath.homeContentAfter,
-        builder: (context, state) => HomeContent(
-          onMenuTap: () => Scaffold.of(context).openDrawer(),
-          type: HomeContentType.after,
         ),
       ),
       GoRoute(
@@ -223,6 +213,10 @@ class AppRouter {
         path: RouterPath.changePassword,
         builder: (context, state) => const ChangePassword(),
       ),
+      GoRoute(
+        path: RouterPath.podcast,
+        builder: (context, state) => const PodcastPage(),
+      )
     ],
   );
 }
