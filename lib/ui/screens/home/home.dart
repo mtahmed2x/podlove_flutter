@@ -7,6 +7,7 @@ import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/matches_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/notification_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends ConsumerStatefulWidget {
   final HomePageType type;
@@ -43,6 +44,12 @@ class _HomePageState extends ConsumerState<Home> {
     ];
   }
 
+  Future<void> _logOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('accessToken');
+
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -73,7 +80,7 @@ class _HomePageState extends ConsumerState<Home> {
             _buildDrawerItem(
               icon: "assets/images/support.png",
               title: 'Help Center',
-              routeName: 'help',
+              routeName: RouterPath.help,
             ),
             _buildDrawerItem(
               icon: "assets/images/encrypted.png",
@@ -91,12 +98,13 @@ class _HomePageState extends ConsumerState<Home> {
               routeName: RouterPath.settings,
             ),
             const Expanded(child: SizedBox()),
-            if (widget.type == HomePageType.after)
-              ListTile(
-                leading: Image.asset("assets/images/logout.png"),
-                title: const Text('Logout'),
-                onTap: () => context.go('/login'),
-              ),
+            ListTile(
+              leading: Image.asset("assets/images/logout.png"),
+              title: const Text('Logout'),
+              onTap: () async {
+                 await _logOut().whenComplete(() => context.go(RouterPath.signIn));
+              }
+            ),
             const SizedBox(height: 30),
           ],
         ),

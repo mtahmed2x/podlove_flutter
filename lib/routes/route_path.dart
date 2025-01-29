@@ -56,6 +56,7 @@ class RouterPath {
   static const String privacy = '/privacy';
   static const String terms = '/termsconditions';
   static const String faqs = '/faqs';
+  static const String help = '/help';
 
   static const String settings = '/settings';
   static const String changePassword = '/change-password';

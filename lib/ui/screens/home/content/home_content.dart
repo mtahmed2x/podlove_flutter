@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/ui/widgets/custom_image_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/reuseable_header.dart';
@@ -17,14 +18,18 @@ class HomeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final userState = ref.watch(userProvider);
+    final userNotifier = ref.read(userProvider.notifier);
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           children: [
             ReusableHeader(
-              name: "Ronald Richards",
+              name: userState!.user.name,
               greeting: "Hello!",
-              url: "assets/images/profile-avatar.png",
+              url: userState.user.avatar,
               onMenuTap: onMenuTap,
             ),
             const SizedBox(height: 20),

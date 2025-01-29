@@ -34,7 +34,7 @@ class ReusableHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(radius: 30.0, backgroundImage: AssetImage(url)),
+              CircleAvatar(radius: 30.0, backgroundImage: NetworkImage(url)),
               const SizedBox(width: 12.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

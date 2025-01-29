@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
+import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
+import 'package:podlove_flutter/providers/help_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
@@ -16,127 +17,62 @@ class Help extends ConsumerStatefulWidget {
   const Help({super.key});
 
   @override
-  ConsumerState<Help> createState() => _SignUpState();
+  ConsumerState<Help> createState() => _HelpState();
 }
 
-class _SignUpState extends ConsumerState<Help> {
+class _HelpState extends ConsumerState<Help> {
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final signUpState = ref.watch(signUpProvider);
-    final signUpNotifier = ref.read(signUpProvider.notifier);
-
-    ref.listen<SignUpState>(signUpProvider, (previous, current) {
-      if (current.isSuccess == true) {
-        GoRouter.of(context).go(
-          RouterPath.verifyCode,
-          extra: {
-            "status": AppStrings.emailActivationVerify,
-            "title": AppStrings.verifyEmail,
-            "instructionText": AppStrings.verifyCodeInstruction,
-            "phoneNumber": current.phoneNumber,
-            "email": current.email,
-          },
-        );
-      }
-      if (current.isSuccess != true && current.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(current.error!),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    });
+    final helpState = ref.watch(helpProvider);
+    final helpNotifier = ref.read(helpProvider.notifier);
 
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.signUp),
+      appBar: CustomAppBar(title: "Help Center"),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w)
-              .copyWith(top: 20.h, bottom: 44.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(
+            top: 30.h,
+            bottom: 44.h,
+          ),
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CustomTextField(
-                  fieldType: TextFieldType.email,
-                  label: AppStrings.email,
-                  hint: AppStrings.emailHint,
-                  controller: signUpNotifier.emailController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.enterEmailError;
-                    }
-                    return null;
-                  },
+                CustomText(
+                  text: "Message Us",
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w500,
                 ),
+                SizedBox(height: 20.h),
                 CustomTextField(
                   fieldType: TextFieldType.text,
-                  label: AppStrings.phoneNumber,
-                  hint: AppStrings.phoneNumberHint,
-                  controller: signUpNotifier.phoneController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.enterPhoneNumberError;
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextField(
-                  fieldType: TextFieldType.text,
-                  label: "Description of the issue",
+                  label: "",
                   hint: "Enter your description here",
-                  controller: signUpNotifier.phoneController,
+                  maxLines: 5,
+                  controller: helpNotifier.issueController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return AppStrings.enterPhoneNumberError;
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextField(
-                  fieldType: TextFieldType.password,
-                  label: AppStrings.confirmPassword,
-                  hint: AppStrings.confirmPasswordHint,
-                  controller: signUpNotifier.confirmPasswordController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.confirmPasswordError;
-                    }
-                    if (value != signUpNotifier.passwordController.text) {
-                      return AppStrings.passwordMismatchError;
                     }
                     return null;
                   },
                 ),
                 SizedBox(height: 30.h),
                 CustomRoundButton(
-                  text: signUpState.isLoading
-                      ? AppStrings.signingUp
-                      : AppStrings.signUp,
-                  onPressed: signUpState.isLoading
+                  text: helpState.isLoading ? "Submitting..." : "Submit",
+                  onPressed: helpState.isLoading
                       ? null
-                      : () {
+                      : () async {
                           if (_formKey.currentState?.validate() ?? false) {
-                            signUpNotifier.signUp();
+                            helpNotifier.submitHelp();
+                            helpNotifier.issueController.text = "";
                           }
                         },
                 ),
                 SizedBox(height: 20.h),
-                // Sign In Link
-                Center(
-                  child: GestureDetector(
-                    onTap: () =>
-                        Navigator.pushNamed(context, RouterPath.signIn),
-                    child: CustomText(
-                      text: AppStrings.signInPrompt,
-                      color: AppColors.accent,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

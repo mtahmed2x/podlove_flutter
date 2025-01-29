@@ -9,6 +9,7 @@ import 'package:podlove_flutter/ui/screens/home/home.dart';
 import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
 import 'package:podlove_flutter/ui/screens/home/settings/change_password.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/faq.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/help.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/privacy_policty.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/settings.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/terms_conditions.dart';
@@ -209,6 +210,10 @@ class AppRouter {
       GoRoute(
         path: RouterPath.faqs,
         builder: (context, state) => const FAQ(),
+      ),
+      GoRoute(
+        path: RouterPath.help,
+        builder: (context, state) => const Help(),
       ),
       GoRoute(
         path: RouterPath.settings,

@@ -8,8 +8,14 @@ class ApiEndpoints {
   static String forgotPassword = "/auth/forgot-password";
   static String emailRecoveryVerify = "/auth/recovery-verification";
   static String resetPassword = "/auth/reset-password";
+  static String changePassword = "/auth/change-password";
+
+  static String home = "/home";
 
   static String privacy = "/privacy";
   static String terms = "/tac";
   static String faq = "/faq";
+  static String help = "/support/create";
+
+  static String deleteAccount = "/auth/delete";
 }

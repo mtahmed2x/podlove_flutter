@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_exceptions.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -8,7 +9,9 @@ class ApiServices {
 
   late Dio _dio;
 
-  void init({required String baseUrl, Map<String, dynamic>? headers}) {
+  void init({required String baseUrl, Map<String, dynamic>? headers}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = await prefs.getString('accessToken');
     BaseOptions options = BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
@@ -38,7 +41,7 @@ class ApiServices {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          // options.headers['Authorization'] = 'Bearer your_token';
+          options.headers['Authorization'] = 'Bearer $token';
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -122,7 +125,7 @@ class ApiServices {
     }
   }
 
-  Future<T> delete<T>(
+  Future<Response<T>> delete<T>(
     String path, {
     data,
     Map<String, dynamic>? queryParameters,
@@ -137,7 +140,7 @@ class ApiServices {
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data!;
+      return response;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
