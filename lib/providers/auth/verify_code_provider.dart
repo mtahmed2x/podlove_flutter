@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/models/Response/verify_code_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/utils/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyCodeState {
   final bool isLoading;
@@ -71,14 +71,20 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
           ApiEndpoints.activate,
           data: verifyCodeData,
         );
-        final verifyCodeResponse = VerifyCodeResponseModel.fromJson(response);
-        logger.i(verifyCodeResponse.data?.user.age);
 
-        ref
-            .read(userProvider.notifier)
-            .initializeFromResponse(verifyCodeResponse);
+        if (response.statusCode == 200) {
+          final accessToken = response.data["data"]["accessToken"];
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('accessToken', accessToken);
 
-        state = state.copyWith(isSuccess: true, isLoading: false);
+          logger.i(prefs.getString('accessToken'));
+
+          final userJson = response.data["data"]["user"];
+          ref
+              .read(userProvider.notifier)
+              .initialize(userJson);
+          state = state.copyWith(isSuccess: true, isLoading: false);
+        }
       }
     } catch (e) {
       state = state.copyWith(
@@ -103,11 +109,3 @@ final verifyCodeProvider =
     return VerifyCodeNotifier(apiService, ref);
   },
 );
-
-// final verifyCodeProvider =
-//     StateNotifierProvider<VerifyCodeNotifier, VerifyCodeState>(
-//   (ref) {
-//     final apiService = ref.read(apiServiceProvider);
-//     return VerifyCodeNotifier(apiService);
-//   },
-// );

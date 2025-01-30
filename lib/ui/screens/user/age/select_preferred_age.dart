@@ -86,7 +86,7 @@ class SelectPreferredAge extends ConsumerWidget {
                                   );
                                   return;
                                 }
-                                logger.i(state?.accessToken);
+
                                 logger.i(state?.user.age);
                                 logger.i(state?.user);
                                 logger.i(state?.user.location.place);

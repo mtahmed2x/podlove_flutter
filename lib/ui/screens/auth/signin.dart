@@ -120,7 +120,7 @@ class _SignInState extends ConsumerState<SignIn> {
                         : AppStrings.signIn,
                     onPressed: signInState.isLoading
                         ? null
-                        : () {
+                        : () async {
                             if (_formKey.currentState!.validate()) {
                               signInNotifier.signIn();
                             }

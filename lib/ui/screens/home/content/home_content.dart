@@ -11,6 +11,7 @@ import 'package:podlove_flutter/ui/widgets/custom_image_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/reuseable_header.dart';
 import 'package:podlove_flutter/ui/widgets/subscription_card.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class HomeContent extends ConsumerWidget {
   final VoidCallback onMenuTap;
@@ -22,33 +23,36 @@ class HomeContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userState = ref.watch(userProvider);
     final homeData = ref.watch(homeProvider);
+    final userState = ref.watch(userProvider);
 
     return SafeArea(
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            ReusableHeader(
-              name: userState!.user.name,
-              greeting: "Hello!",
-              url: userState.user.avatar,
-              onMenuTap: onMenuTap,
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  homeData.when(
-                    data: (data) {
-                      String schedule = "TBD";
-                      if (data.podcast!.schedule!.date != "") {
-                        schedule =
-                            "${data.podcast!.schedule!.date} (${data.podcast!.schedule!.day}) ${data.podcast!.schedule!.time}";
-                      }
-                      return Column(
+        child: homeData.when(
+          data: (data) {
+            String schedule = "TBD";
+            if (data.podcast?.schedule?.date != null &&
+                data.podcast!.schedule!.date != "") {
+              schedule =
+              "${data.podcast!.schedule!.date} (${data.podcast!.schedule!.day}) ${data.podcast!.schedule!.time}";
+            }
+
+            return Column(
+              children: [
+                if (userState != null) // Ensure userState is not null before accessing properties
+                  ReusableHeader(
+                    name: userState.user.name,
+                    greeting: "Hello!",
+                    url: userState.user.avatar,
+                    onMenuTap: onMenuTap,
+                  ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
                         children: [
                           // Matches section
                           Column(
@@ -62,35 +66,38 @@ class HomeContent extends ConsumerWidget {
                               const SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Image.asset(data.podcast!.status != "Done"
-                                      ? "assets/images/match-1.png"
-                                      : "assets/images/match-revealed.png"),
+                                  Image.asset(
+                                    data.podcast?.status != "Done"
+                                        ? "assets/images/match-1.png"
+                                        : "assets/images/match-revealed.png",
+                                  ),
                                   Image.asset("assets/images/match-2.png"),
                                   Image.asset("assets/images/match-3.png"),
                                 ],
                               ),
-                              if (data.podcast!.status == "Done") ...[
+                              if (data.podcast?.status == "Done") ...[
                                 const SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: [
                                     CustomImageButton(
-                                      imagePath: "assets/images/btn-active.png",
+                                      imagePath:
+                                      "assets/images/btn-active.png",
                                       text: "Chat",
                                       onPressed: () => context.push('/chat'),
                                     ),
                                     CustomImageButton(
                                       imagePath:
-                                          "assets/images/btn-inactive.png",
+                                      "assets/images/btn-inactive.png",
                                       text: "Chat",
                                       onPressed: () {},
                                     ),
                                     CustomImageButton(
                                       imagePath:
-                                          "assets/images/btn-inactive.png",
+                                      "assets/images/btn-inactive.png",
                                       text: "Chat",
                                       onPressed: () {},
                                     ),
@@ -117,7 +124,7 @@ class HomeContent extends ConsumerWidget {
                                   height: 250,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
+                                    image: const DecorationImage(
                                       image: AssetImage(
                                         'assets/images/schedule.png',
                                       ),
@@ -127,10 +134,10 @@ class HomeContent extends ConsumerWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     children: [
                                       const Spacer(),
-                                      Text(
+                                      const Text(
                                         'Date & Time:',
                                         style: TextStyle(
                                           color: Colors.white,
@@ -141,7 +148,7 @@ class HomeContent extends ConsumerWidget {
                                       const SizedBox(height: 10),
                                       Text(
                                         schedule,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
@@ -149,28 +156,29 @@ class HomeContent extends ConsumerWidget {
                                       ),
                                       const SizedBox(height: 25),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20.0),
+                                        padding: const EdgeInsets.only(
+                                            bottom: 20.0),
                                         child: SizedBox(
                                           width: double.infinity,
                                           height: 50,
                                           child: ElevatedButton(
-                                            onPressed: () => context.push(
-                                              RouterPath.podcast,
-                                            ),
+                                            onPressed: () =>
+                                                context.push(RouterPath.podcast),
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: AppColors.accent,
-                                              shape: RoundedRectangleBorder(
+                                              backgroundColor:
+                                              AppColors.accent,
+                                              shape:
+                                              RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(20),
+                                                BorderRadius.circular(20),
                                               ),
                                               padding:
-                                                  const EdgeInsets.symmetric(
+                                              const EdgeInsets.symmetric(
                                                 horizontal: 40,
                                                 vertical: 15,
                                               ),
                                             ),
-                                            child: Text(
+                                            child: const Text(
                                               'Join',
                                               style: TextStyle(
                                                 color: Colors.white,
@@ -187,36 +195,35 @@ class HomeContent extends ConsumerWidget {
                             ],
                           ),
                           const SizedBox(height: 30),
-                          _buildSubscriptionPlansSection(
-                            data.subscriptionPlans!,
-                            userState.user.subscription.plan,
-                            context,
-                          ),
+                          if (userState != null)
+                            _buildSubscriptionPlansSection(
+                              data.subscriptionPlans!,
+                              userState.user.subscription.plan,
+                              context,
+                            ),
                         ],
-                      );
-                    },
-                    loading: () => Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    error: (error, stack) => Center(
-                      child:
-                          Text('Failed to load home data: ${error.toString()}'),
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) {
+              print(error);
+              print(stack.toString());
+              return Center(child: Text("Error: ${error.toString()}"));}
         ),
       ),
     );
   }
 
   Widget _buildSubscriptionPlansSection(
-    List<SubscriptionPlan> subscriptionPlans,
-    String subscriptionName,
-    BuildContext context,
-  ) {
+      List<SubscriptionPlan> subscriptionPlans,
+      String subscriptionName,
+      BuildContext context,
+      ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -245,7 +252,7 @@ class HomeContent extends ConsumerWidget {
                       : "${subscriptionPlan.unitAmount!} / ${subscriptionPlan.interval}",
                   features: subscriptionPlan.description!
                       .map((desc) => desc.key ?? '')
-                      .take(3) // Limit to the first 4 features
+                      .take(3)
                       .toList(),
                   isCurrentPlan: isCurrentPlan,
                   context: context,
@@ -275,16 +282,9 @@ class HomeContent extends ConsumerWidget {
           subtitle: subtitle,
           price: price,
           features: features,
-          onViewDetails: () => {},
+          onViewDetails: () {},
           isCurrentPlan: isCurrentPlan,
-          onPressed: () {
-            isCurrentPlan
-                ? null
-                : () async {
-                    purchaseNotifier.purchase(id);
-                    // context.push(RouterPath.purchase, extra: checkoutUrl);
-                  };
-          },
+          onPressed: () {},
         );
       },
     );

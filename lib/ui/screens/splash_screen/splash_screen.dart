@@ -22,15 +22,15 @@ class _SplashScreenState extends State<SplashScreen> {
     if (isFirstTime) {
       await prefs.setBool("isFirstTime", false);
       if (mounted) {
-        GoRouter.of(context).go(RouterPath.approachToLove);
+        context.push(RouterPath.approachToLove);
       }
     } else if (accessToken != null) {
       if (mounted) {
-        GoRouter.of(context).go(RouterPath.home);
+        context.push(RouterPath.home);
       }
     } else {
       if (mounted) {
-        GoRouter.of(context).go(RouterPath.signIn);
+        context.push(RouterPath.signIn);
       }
     }
   }

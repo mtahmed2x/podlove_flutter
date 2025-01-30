@@ -9,10 +9,9 @@ import 'package:podlove_flutter/routes/app_router.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
 final apiServiceProvider = Provider<ApiServices>((ref) {
-  final apiService = ApiServices.instance;
-  apiService.init(baseUrl: ApiEndpoints.baseUrl);
-  return apiService;
+  return ApiServices.instance;
 });
+
 final routerProvider = Provider<GoRouter>((ref) => AppRouter.appRouter);
 final themeProvider = Provider<ThemeData>((ref) => AppThemes.themeData);
 final loggerProvider = Provider<Logger>((ref) => logger);

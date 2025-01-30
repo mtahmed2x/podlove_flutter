@@ -39,7 +39,7 @@ class VerifyCode extends ConsumerWidget {
       verifyCodeProvider,
       (previous, current) {
         if (current.isSuccess == true) {
-          GoRouter.of(context).go(RouterPath.locationAccess);
+          context.push(RouterPath.locationAccess);
         }
       },
     );

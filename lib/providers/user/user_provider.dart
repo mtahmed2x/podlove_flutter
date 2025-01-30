@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:podlove_flutter/data/models/Response/sign_in_response_model.dart';
-import 'package:podlove_flutter/data/models/Response/verify_code_response_model.dart';
 import 'package:podlove_flutter/data/models/auth_model.dart';
 import 'package:podlove_flutter/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -12,16 +10,12 @@ import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
 class UserState {
-  final String accessToken;
-  final AuthModel auth;
   final UserModel user;
   final bool isLoading;
   final bool? isSuccess;
   final String? error;
 
   UserState({
-    required this.accessToken,
-    required this.auth,
     required this.user,
     this.isLoading = false,
     this.isSuccess,
@@ -37,8 +31,6 @@ class UserState {
     String? error,
   }) {
     return UserState(
-      accessToken: accessToken ?? this.accessToken,
-      auth: auth ?? this.auth,
       user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
@@ -52,22 +44,10 @@ class UserNotifier extends StateNotifier<UserState?> {
 
   UserNotifier(this.apiService) : super(null);
 
-  void initializeFromResponse(dynamic response) {
-    if (response is VerifyCodeResponseModel) {
-      state = UserState(
-        accessToken: response.data!.accessToken,
-        auth: response.data!.auth,
-        user: response.data!.user,
-      );
-    } else if (response is SignInResponseModel) {
-      state = UserState(
-        accessToken: response.data!.accessToken,
-        auth: response.data!.auth,
-        user: response.data!.user,
-      );
-    } else {
-      throw Exception("Unsupported response type");
-    }
+  void initialize(Map<String, dynamic> json) {
+    state = UserState(
+      user: UserModel.fromJson(json),
+    );
   }
 
   void _updateUser(UserModel newUser) {
@@ -323,9 +303,9 @@ class UserNotifier extends StateNotifier<UserState?> {
       );
 
       logger.i(response);
-      logger.i(response["data"]);
+      logger.i(response.data["data"]);
 
-      final userResponse = UserModel.fromJson(response["data"]);
+      final userResponse = UserModel.fromJson(response.data["data"]);
       logger.i(userResponse.name);
 
       state = state!.copyWith(

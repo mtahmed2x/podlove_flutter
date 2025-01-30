@@ -1,10 +1,12 @@
+import 'package:podlove_flutter/data/models/auth_model.dart';
+
 class UserModel {
+  final Auth auth;
   final Personality personality;
   final Location location;
   final Preferences preferences;
   final Subscription subscription;
   final String id;
-  final String auth;
   final String name;
   final String phoneNumber;
   final String address;
@@ -13,18 +15,18 @@ class UserModel {
   final String bodyType;
   final String ethnicity;
   final String bio;
-  final List<dynamic> interests;
   final String avatar;
+  final List<String> interests;
   final List<String> compatibility;
-  final List<dynamic> survey;
+  final List<String> survey;
 
   UserModel({
+    required this.auth,
     required this.personality,
     required this.location,
     required this.preferences,
     required this.subscription,
     required this.id,
-    required this.auth,
     required this.name,
     required this.phoneNumber,
     required this.address,
@@ -40,12 +42,12 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+        auth: Auth.fromJson(json["auth"]),
         personality: Personality.fromJson(json["personality"]),
         location: Location.fromJson(json["location"]),
         preferences: Preferences.fromJson(json["preferences"]),
         subscription: Subscription.fromJson(json["subscription"]),
         id: json["_id"],
-        auth: json["auth"],
         name: json["name"],
         phoneNumber: json["phoneNumber"],
         address: json["address"],
@@ -54,10 +56,10 @@ class UserModel {
         bodyType: json["bodyType"],
         ethnicity: json["ethnicity"],
         bio: json["bio"],
-        interests: List<dynamic>.from(json["interests"].map((x) => x)),
         avatar: json["avatar"],
+        interests: List<String>.from(json["interests"].map((x) => x)),
         compatibility: List<String>.from(json["compatibility"].map((x) => x)),
-        survey: List<dynamic>.from(json["survey"].map((x) => x)),
+        survey: List<String>.from(json["survey"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -73,19 +75,19 @@ class UserModel {
         "bodyType": bodyType,
         "ethnicity": ethnicity,
         "bio": bio,
-        "interests": List<dynamic>.from(interests.map((x) => x)),
         "avatar": avatar,
+        "interests": List<String>.from(interests.map((x) => x)),
         "compatibility": List<String>.from(compatibility.map((x) => x)),
-        "survey": List<dynamic>.from(survey.map((x) => x)),
+        "survey": List<String>.from(survey.map((x) => x)),
       };
 
   UserModel copyWith({
+    Auth? auth,
     Personality? personality,
     Location? location,
     Preferences? preferences,
     Subscription? subscription,
     String? id,
-    String? auth,
     String? name,
     String? phoneNumber,
     String? address,
@@ -94,18 +96,18 @@ class UserModel {
     String? bodyType,
     String? ethnicity,
     String? bio,
-    List<dynamic>? interests,
     String? avatar,
+    List<String>? interests,
     List<String>? compatibility,
-    List<dynamic>? survey,
+    List<String>? survey,
   }) {
     return UserModel(
+      auth: auth ?? this.auth,
       personality: personality ?? this.personality,
       location: location ?? this.location,
       preferences: preferences ?? this.preferences,
       subscription: subscription ?? this.subscription,
       id: id ?? this.id,
-      auth: auth ?? this.auth,
       name: name ?? this.name,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       address: address ?? this.address,
@@ -114,13 +116,29 @@ class UserModel {
       bodyType: bodyType ?? this.bodyType,
       ethnicity: ethnicity ?? this.ethnicity,
       bio: bio ?? this.bio,
-      interests: interests ?? this.interests,
       avatar: avatar ?? this.avatar,
+      interests: interests ?? this.interests,
       compatibility: compatibility ?? this.compatibility,
       survey: survey ?? this.survey,
     );
   }
 }
+
+class Auth {
+  final String id;
+  final String email;
+
+  Auth({
+    required this.id,
+    required this.email,
+  });
+
+  factory Auth.fromJson(Map<String, dynamic> json) => Auth(
+    id: json["_id"],
+    email: json["email"],
+  );
+}
+
 
 class Location {
   final String place;

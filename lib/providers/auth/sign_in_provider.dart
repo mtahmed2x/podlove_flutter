@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/models/Response/sign_in_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
-import 'package:podlove_flutter/providers/user/user_provider.dart';
-import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInState {
@@ -62,17 +59,11 @@ class SignInNotifier extends StateNotifier<SignInState> {
         ApiEndpoints.signIn,
         data: signInData,
       );
-      logger.i(response);
-      final SignInResponseModel signInResponse =
-          SignInResponseModel.fromJson(response);
-
-      if (signInResponse.success == true) {
+      if (response.statusCode == 200) {
+        String accessToken = response.data["data"]["accessToken"];
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('accessToken', signInResponse.data!.accessToken);
-
-        ref.read(userProvider.notifier).initializeFromResponse(signInResponse);
-        logger.i(ref.read(userProvider)!.user.age);
-        state = state.copyWith(isLoading: false, isSuccess: true);
+        await prefs.setString('accessToken', accessToken);
+        state = state.copyWith(isSuccess: true);
       }
     } catch (e) {
       state = state.copyWith(

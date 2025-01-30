@@ -48,7 +48,7 @@ class ProfileContent extends ConsumerWidget {
                       ),
                       const SizedBox(height: 5),
                       CustomText(
-                        text: userState.auth.email,
+                        text: userState.user.auth.email,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

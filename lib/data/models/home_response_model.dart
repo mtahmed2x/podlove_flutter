@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:podlove_flutter/data/models/user_model.dart';
+
 HomeResponseModel homeResponseModelFromJson(String str) =>
     HomeResponseModel.fromJson(json.decode(str));
 

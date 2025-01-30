@@ -29,7 +29,7 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     ref.listen<SignUpState>(signUpProvider, (previous, current) {
       if (current.isSuccess == true) {
-        GoRouter.of(context).go(
+        context.push(
           RouterPath.verifyCode,
           extra: {
             "status": AppStrings.emailActivationVerify,
@@ -161,7 +161,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                 Center(
                   child: GestureDetector(
                     onTap: () =>
-                        Navigator.pushNamed(context, RouterPath.signIn),
+                        context.push(RouterPath.signIn),
                     child: CustomText(
                       text: AppStrings.signInPrompt,
                       color: AppColors.accent,

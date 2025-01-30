@@ -5,9 +5,12 @@ import 'package:device_preview/device_preview.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'constants/api_endpoints.dart';
+import 'data/services/api_services.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await ApiServices.instance.init(baseUrl: ApiEndpoints.baseUrl);
   final prefs = await SharedPreferences.getInstance();
   if (!prefs.containsKey('isFirstTime')) {
     await prefs.setBool('isFirstTime', true);
