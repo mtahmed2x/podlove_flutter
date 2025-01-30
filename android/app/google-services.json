@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "5923503744",
+    "project_id": "podlove-8cea9",
+    "storage_bucket": "podlove-8cea9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5923503744:android:b4ebfa9674274eec013065",
+        "android_client_info": {
+          "package_name": "com.sta.podlove_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI8suyWB116J_brddtzh1wtijkx4A7_So"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

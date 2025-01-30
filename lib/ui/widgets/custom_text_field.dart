@@ -8,6 +8,7 @@ class CustomTextField extends StatefulWidget {
   final TextFieldType fieldType;
   final dynamic label;
   final Color? labelTextColor;
+  final int? labelSize;
   final String? hint;
   final Color? hintTextColor;
   final TextInputType? keyboardType;
@@ -28,6 +29,7 @@ class CustomTextField extends StatefulWidget {
     this.fieldType = TextFieldType.text,
     this.label,
     this.labelTextColor,
+    this.labelSize,
     this.hint,
     this.hintTextColor,
     this.keyboardType,
@@ -66,7 +68,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ? Text(
                 widget.label,
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  fontSize: (widget.labelSize ?? 16).sp,
                   fontWeight: FontWeight.w400,
                   color: widget.labelTextColor ??
                       const Color.fromARGB(255, 51, 51, 51),

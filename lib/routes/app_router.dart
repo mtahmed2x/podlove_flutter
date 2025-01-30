@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
+import 'package:podlove_flutter/ui/screens/home/chat.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
 import 'package:podlove_flutter/ui/screens/home/home.dart';
@@ -15,6 +16,7 @@ import 'package:podlove_flutter/ui/screens/home/sidebar/help.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/privacy_policty.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/settings.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/terms_conditions.dart';
+import 'package:podlove_flutter/ui/screens/home/survey.dart';
 import 'package:podlove_flutter/ui/screens/match/finding_match.dart';
 import 'package:podlove_flutter/ui/screens/match/match_results.dart';
 import 'package:podlove_flutter/ui/screens/match/matched_profile.dart';
@@ -49,7 +51,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.initialScreen,
+    initialLocation: RouterPath.survey,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -250,6 +252,22 @@ class AppRouter {
       GoRoute(
         path: RouterPath.podcastDetails,
         builder: (context, state) => const PodcastDetails(),
+      ),
+      GoRoute(
+        path: RouterPath.chat,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, String>?;
+
+          final userId = extra?["userId"] ?? "tanim";
+          final receiverId = extra?["receiverId"] ?? "naketa";
+          final name = extra?["name"] ?? "Chat";
+
+          return Chat(userId: receiverId, receiverId: userId, name: name);
+        },
+      ),
+      GoRoute(
+        path: RouterPath.survey,
+        builder: (context, state) => const Survey(),
       ),
     ],
   );

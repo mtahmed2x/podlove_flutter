@@ -69,4 +69,8 @@ class RouterPath {
   static const String matchedProfile = '/matched-profile';
 
   static const String podcastDetails = '/podcast-details';
+
+  static const String chat = "/chat";
+
+  static const String survey = "/survey";
 }
