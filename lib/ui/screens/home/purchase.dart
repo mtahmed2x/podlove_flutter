@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Purchase extends StatefulWidget {
@@ -35,15 +36,24 @@ class _PurchaseState extends State<Purchase> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Payment Successful"),
-        content: const Text("Your payment was completed successfully!"),
+        title: const Center(child: Text("Payment Successful")), // Center title
+        content: const Text(
+          "Your payment was completed successfully!",
+          textAlign: TextAlign.center, // Center content text
+        ),
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text("OK"),
+          Center( // Center the button
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.background,
+                backgroundColor: AppColors.accent,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              child: const Text("OK"),
+            ),
           ),
         ],
       ),
@@ -53,13 +63,6 @@ class _PurchaseState extends State<Purchase> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Stripe Checkout"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       body: WebViewWidget(controller: _controller),
     );
   }

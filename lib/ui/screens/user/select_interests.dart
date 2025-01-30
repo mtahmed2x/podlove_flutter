@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
@@ -129,7 +131,7 @@ class SelectInterests extends ConsumerWidget {
                             userNotifier
                                 .updateInterests(selectedInterests.toList());
                             userNotifier.update();
-                            // GoRouter.of(context).go(RouterPath.homeBefore);
+                            context.push(RouterPath.home);
                           },
                   );
                 },

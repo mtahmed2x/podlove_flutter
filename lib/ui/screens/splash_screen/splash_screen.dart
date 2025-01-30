@@ -24,13 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
       if (mounted) {
         GoRouter.of(context).go(RouterPath.approachToLove);
       }
-    } else if (accessToken == null) {
+    } else if (accessToken != null) {
       if (mounted) {
-        GoRouter.of(context).go(RouterPath.signIn);
+        GoRouter.of(context).go(RouterPath.home);
       }
     } else {
       if (mounted) {
-        GoRouter.of(context).go(RouterPath.home);
+        GoRouter.of(context).go(RouterPath.signIn);
       }
     }
   }
@@ -38,49 +38,51 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigate();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/background.png"),
-            fit: BoxFit.cover,
+      body: GestureDetector(
+        onTap: _navigate,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/background.png"),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Image.asset(
-                "assets/images/podLove.png",
-                width: 301.w,
-                height: 64.h,
-                fit: BoxFit.contain,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Image.asset(
+                  "assets/images/podLove.png",
+                  width: 301.w,
+                  height: 64.h,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              "Deeper Connection",
-              style: TextStyle(
-                fontSize: 24.sp,
-                color: Color.fromARGB(255, 255, 161, 117),
+              SizedBox(height: 20.h),
+              Text(
+                "Deeper Connection",
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  color: Color.fromARGB(255, 255, 161, 117),
+                ),
               ),
-            ),
-            SizedBox(height: 15.h),
-            Text(
-              "Begins Here",
-              style: TextStyle(
-                fontSize: 20.sp,
-                color: Color.fromARGB(255, 39, 87, 166),
+              SizedBox(height: 15.h),
+              Text(
+                "Begins Here",
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  color: Color.fromARGB(255, 39, 87, 166),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

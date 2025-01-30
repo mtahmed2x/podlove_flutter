@@ -25,7 +25,6 @@ class _FAQPageState extends ConsumerState<FAQ> {
             return const Center(child: Text("No FAQs available"));
           }
 
-          // Initialize the expansion state list if not already initialized
           _isExpandedList = List<bool>.filled(faqs.length, false);
 
           return SingleChildScrollView(

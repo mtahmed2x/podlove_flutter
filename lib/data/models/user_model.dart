@@ -274,7 +274,7 @@ class Age {
 
 class Subscription {
   final String plan;
-  final int fee;
+  final String fee;
   final String status;
   final DateTime startedAt;
 
@@ -301,7 +301,7 @@ class Subscription {
 
   Subscription copyWith({
     String? plan,
-    int? fee,
+    String? fee,
     String? status,
     DateTime? startedAt,
   }) {
