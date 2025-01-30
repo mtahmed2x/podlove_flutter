@@ -44,7 +44,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.initialScreen,
+    initialLocation: RouterPath.selectPersonalityTraits,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,

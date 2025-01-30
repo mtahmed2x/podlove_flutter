@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
@@ -24,7 +26,8 @@ class SelectPersonalityTraits extends ConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w)
+                .copyWith(top: 20.h, bottom: 44.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -32,12 +35,8 @@ class SelectPersonalityTraits extends ConsumerWidget {
                 Center(
                   child: Column(
                     children: [
-                      Image.asset(
-                        "assets/images/podLove.png",
-                        width: 250.w,
-                        height: 50.h,
-                      ),
-                      SizedBox(height: 25.h),
+                      AppWidgets.podLoveLogo,
+                      SizedBox(height: 30.h),
                       CustomText(
                         text: "Rate yourself on the",
                         color: const Color.fromARGB(255, 51, 51, 51),
@@ -50,7 +49,7 @@ class SelectPersonalityTraits extends ConsumerWidget {
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(height: 20.h),
+                      SizedBox(height: 40.h),
                       Consumer(
                         builder: (context, ref, _) {
                           return Column(
@@ -188,13 +187,13 @@ class _CustomScaleState extends State<_CustomScale> {
                 widget.onValueChanged(index);
               },
               child: Container(
-                width: 30.w,
-                height: 12.h,
+                width: 35.w,
+                height: 10.h,
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 decoration: BoxDecoration(
                   color: widget.pillColors[index],
                   border: Border.all(
-                    color: isSelected ? Colors.black : widget.pillColors[index],
+                    color: isSelected ? AppColors.accent : widget.pillColors[index],
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(10.r),

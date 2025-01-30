@@ -159,8 +159,7 @@ class _SignInState extends ConsumerState<SignIn> {
                             fontWeight: FontWeight.w400,
                           ),
                           GestureDetector(
-                            onTap: () =>
-                                GoRouter.of(context).go(RouterPath.signUp),
+                            onTap: () => context.push(RouterPath.signUp),
                             child: CustomText(
                               text: AppStrings.signUpLink,
                               fontSize: 14.sp,

@@ -31,7 +31,7 @@ class PurchaseNotifier extends StateNotifier<PurchaseState> {
 
   PurchaseNotifier(this.apiService) : super(PurchaseState());
 
-  Future<void> purchase(String id) async {
+  Future<String> purchase(String id) async {
     final purchaseData = {
       "planId": id,
     };
@@ -41,9 +41,11 @@ class PurchaseNotifier extends StateNotifier<PurchaseState> {
       data: purchaseData,
     );
     if (response.statusCode == 200) {
-      logger.i(response.data);
-      logger.i(response.data["data"]);
+      final url = response.data["data"];
+      return url;
     }
+
+    return "";
   }
 }
 
