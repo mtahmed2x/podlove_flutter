@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 
 class MatchesContent extends ConsumerWidget {
@@ -10,6 +13,7 @@ class MatchesContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeData = ref.watch(homeProvider);
+    final userData = ref.watch(userProvider);
 
     return Scaffold(
       appBar: CustomAppBar(title: "Matches"),
@@ -24,7 +28,12 @@ class MatchesContent extends ConsumerWidget {
                 return Column(
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        if (userData!.user.subscription.plan ==
+                            "Seeker: Connection Builder") {
+                          context.push(RouterPath.matchedProfile, extra: 1);
+                        }
+                      },
                       child: ImageTextCard(
                         imageUrl: data.podcast!.status != "Done"
                             ? "assets/images/hidden-match.png"
@@ -37,18 +46,34 @@ class MatchesContent extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    ImageTextCard(
-                      imageUrl: "assets/images/hidden-match.png",
-                      text: "Match-2",
-                      textBackgroundColor: AppColors.accent,
-                      isNetworkImage: false,
+                    GestureDetector(
+                      onTap: () {
+                        if (userData!.user.subscription.plan ==
+                            "Seeker: Connection Builder") {
+                          context.push(RouterPath.matchedProfile, extra: 2);
+                        }
+                      },
+                      child: ImageTextCard(
+                        imageUrl: "assets/images/hidden-match.png",
+                        text: "Match-2",
+                        textBackgroundColor: AppColors.accent,
+                        isNetworkImage: false,
+                      ),
                     ),
                     const SizedBox(height: 30),
-                    ImageTextCard(
-                      imageUrl: "assets/images/hidden-match.png",
-                      text: "Match-3",
-                      textBackgroundColor: AppColors.accent,
-                      isNetworkImage: false,
+                    GestureDetector(
+                      onTap: () {
+                        if (userData!.user.subscription.plan ==
+                            "Seeker: Connection Builder") {
+                          context.push(RouterPath.matchedProfile, extra: 3);
+                        }
+                      },
+                      child: ImageTextCard(
+                        imageUrl: "assets/images/hidden-match.png",
+                        text: "Match-3",
+                        textBackgroundColor: AppColors.accent,
+                        isNetworkImage: false,
+                      ),
                     ),
                   ],
                 );

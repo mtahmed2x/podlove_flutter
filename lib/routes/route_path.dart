@@ -61,4 +61,12 @@ class RouterPath {
 
   static const String podcast = '/podcast';
   static const String purchase = '/purchase';
+
+  static const String findingMatch = '/finding-match';
+  static const String matchResults = '/match-results';
+  static const String matches = '/matches';
+
+  static const String matchedProfile = '/matched-profile';
+
+  static const String podcastDetails = '/podcast-details';
 }

@@ -6,6 +6,7 @@ import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/profile_content.dart';
 import 'package:podlove_flutter/ui/screens/home/home.dart';
 import 'package:podlove_flutter/ui/screens/home/podcast.dart';
+import 'package:podlove_flutter/ui/screens/home/podcast_details.dart';
 import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
 import 'package:podlove_flutter/ui/screens/home/purchase.dart';
 import 'package:podlove_flutter/ui/screens/home/settings/change_password.dart';
@@ -14,6 +15,10 @@ import 'package:podlove_flutter/ui/screens/home/sidebar/help.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/privacy_policty.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/settings.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/terms_conditions.dart';
+import 'package:podlove_flutter/ui/screens/match/finding_match.dart';
+import 'package:podlove_flutter/ui/screens/match/match_results.dart';
+import 'package:podlove_flutter/ui/screens/match/matched_profile.dart';
+import 'package:podlove_flutter/ui/screens/match/matches.dart';
 import 'package:podlove_flutter/ui/screens/onboarding/connection_pathway.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/initial_screen.dart';
 import 'package:podlove_flutter/ui/screens/splash_screen/splash_screen.dart';
@@ -44,7 +49,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.selectPersonalityTraits,
+    initialLocation: RouterPath.initialScreen,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -222,6 +227,29 @@ class AppRouter {
           final url = state.extra as String? ?? "https://fallback-url.com";
           return Purchase(url: url);
         },
+      ),
+      GoRoute(
+        path: RouterPath.findingMatch,
+        builder: (context, state) => const FindingMatch(),
+      ),
+      GoRoute(
+        path: RouterPath.matchResults,
+        builder: (context, state) => const MatchResults(),
+      ),
+      GoRoute(
+        path: RouterPath.matches,
+        builder: (context, state) => const Matches(),
+      ),
+      GoRoute(
+        path: RouterPath.matchedProfile,
+        builder: (context, state) {
+          final index = state.extra as int? ?? 1;
+          return MatchedProfile(index: index);
+        },
+      ),
+      GoRoute(
+        path: RouterPath.podcastDetails,
+        builder: (context, state) => const PodcastDetails(),
       ),
     ],
   );

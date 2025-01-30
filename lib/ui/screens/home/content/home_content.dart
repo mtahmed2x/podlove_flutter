@@ -124,8 +124,10 @@ class HomeContent extends ConsumerWidget {
                                   ),
                                   const SizedBox(height: 20),
                                   GestureDetector(
-                                    onTap: () =>
-                                        context.push('/podcast-details'),
+                                    onTap: () => data.podcast!.status != "Done"
+                                        ? context
+                                            .push(RouterPath.podcastDetails)
+                                        : null,
                                     child: Container(
                                       width: 400,
                                       height: 250,
@@ -248,15 +250,12 @@ class HomeContent extends ConsumerWidget {
           child: Row(
             children: subscriptionPlans.map((subscriptionPlan) {
               bool isCurrentPlan = subscriptionName == subscriptionPlan.name;
-              List<String> parts =
-                  subscriptionPlan.name?.split(':') ?? ["", ""];
 
               return Padding(
                 padding: const EdgeInsets.only(right: 15),
                 child: _buildSubscriptionPlanCard(
                   id: subscriptionPlan.id!,
-                  title: parts[0],
-                  subtitle: parts[1].trim(),
+                  plan: subscriptionPlan.name!,
                   price: subscriptionPlan.unitAmount == "0"
                       ? "Free / ${subscriptionPlan.interval}"
                       : "${subscriptionPlan.unitAmount!} / ${subscriptionPlan.interval}",
@@ -265,6 +264,7 @@ class HomeContent extends ConsumerWidget {
                       .take(3)
                       .toList(),
                   isCurrentPlan: isCurrentPlan,
+                  subscriptionPlan: subscriptionPlan,
                   context: context,
                 ),
               );
@@ -277,22 +277,33 @@ class HomeContent extends ConsumerWidget {
 
   Widget _buildSubscriptionPlanCard({
     required String id,
-    required String title,
-    required String subtitle,
+    required String plan,
     required String price,
     required List<String> features,
     required bool isCurrentPlan,
+    required SubscriptionPlan subscriptionPlan,
     required BuildContext context,
   }) {
+    List<String> parts = plan.split(':') ?? ["", ""];
     return Consumer(
       builder: (context, ref, _) {
         final purchaseNotifier = ref.read(purchaseProvider.notifier);
         return SubscriptionCard(
-          title: title,
-          subtitle: subtitle,
+          title: parts[0],
+          subtitle: parts[1].trim(),
           price: price,
           features: features,
-          onViewDetails: () {},
+          onViewDetails: () => showSubscriptionDetails(
+            context,
+            plan,
+            price,
+            subscriptionPlan.description!
+                .map((desc) => {
+                      "key": desc.key ?? "",
+                      "details": desc.details ?? "",
+                    })
+                .toList(),
+          ),
           isCurrentPlan: isCurrentPlan,
           onPressed: isCurrentPlan
               ? () {}
@@ -307,4 +318,107 @@ class HomeContent extends ConsumerWidget {
       },
     );
   }
+}
+
+void showSubscriptionDetails(
+  BuildContext context,
+  String title,
+  String price,
+  List<Map<String, String>> features,
+) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Close button (top right corner)
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.close, color: Colors.orange),
+                ),
+              ),
+
+              // Title
+              Center(
+                child: Text(
+                  "Details",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Subscription Name & Price
+              Text(
+                "$title ($price)",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Description Title
+              Text(
+                "Everything in the Listener package, plus:",
+                style: TextStyle(fontSize: 14),
+              ),
+
+              const SizedBox(height: 8),
+
+              // Features List (Bold key + Normal details)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: features.map((feature) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("• ", style: TextStyle(fontSize: 16)),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: "${feature['key']}: ",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: feature['details'],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
