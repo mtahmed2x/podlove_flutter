@@ -33,199 +33,199 @@ class HomeContent extends ConsumerWidget {
         },
         child: SingleChildScrollView(
           child: homeData.when(
-              data: (data) {
-                String schedule = "TBD";
-                if (data.podcast?.schedule?.date != null &&
-                    data.podcast!.schedule!.date != "") {
-                  schedule =
-                      "${data.podcast!.schedule!.date} (${data.podcast!.schedule!.day}) ${data.podcast!.schedule!.time}";
-                }
-
-                return Column(
-                  children: [
-                    if (userState !=
-                        null) // Ensure userState is not null before accessing properties
-                      ReusableHeader(
-                        name: userState.user.name,
-                        greeting: "Hello!",
-                        url: userState.user.avatar,
-                        onMenuTap: onMenuTap,
-                      ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              // Matches section
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomText(
-                                    text: "Your Matches",
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  const SizedBox(height: 20),
+            data: (data) {
+              String schedule = "TBD";
+              if (data.podcast?.schedule?.date != null &&
+                  data.podcast!.schedule!.date != "") {
+                schedule =
+                    "${data.podcast!.schedule!.date} (${data.podcast!.schedule!.day}) ${data.podcast!.schedule!.time}";
+              }
+              return Column(
+                children: [
+                  if (userState != null)
+                    ReusableHeader(
+                      name: userState.user.name,
+                      greeting: "Hello!",
+                      url: userState.user.avatar,
+                      onMenuTap: onMenuTap,
+                    ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            // Matches section
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: "Your Matches",
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Image.asset(
+                                      data.podcast?.status != "Done"
+                                          ? "assets/images/match-1.png"
+                                          : "assets/images/match-revealed.png",
+                                    ),
+                                    Image.asset("assets/images/match-2.png"),
+                                    Image.asset("assets/images/match-3.png"),
+                                  ],
+                                ),
+                                if (data.podcast?.status == "Done") ...[
+                                  const SizedBox(height: 10),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Image.asset(
-                                        data.podcast?.status != "Done"
-                                            ? "assets/images/match-1.png"
-                                            : "assets/images/match-revealed.png",
+                                      CustomImageButton(
+                                        imagePath:
+                                            "assets/images/btn-active.png",
+                                        text: "Chat",
+                                        onPressed: () =>
+                                            context.push(RouterPath.chat),
                                       ),
-                                      Image.asset("assets/images/match-2.png"),
-                                      Image.asset("assets/images/match-3.png"),
+                                      CustomImageButton(
+                                        imagePath:
+                                            "assets/images/btn-inactive.png",
+                                        text: "Chat",
+                                        onPressed: () {},
+                                      ),
+                                      CustomImageButton(
+                                        imagePath:
+                                            "assets/images/btn-inactive.png",
+                                        text: "Chat",
+                                        onPressed: () {},
+                                      ),
                                     ],
                                   ),
-                                  if (data.podcast?.status == "Done") ...[
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        CustomImageButton(
-                                          imagePath:
-                                              "assets/images/btn-active.png",
-                                          text: "Chat",
-                                          onPressed: () =>
-                                              context.push('/chat'),
+                                ]
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+                            // Podcast Schedules Section
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  text: "Podcast Schedules",
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                const SizedBox(height: 20),
+                                GestureDetector(
+                                  onTap: () => data.podcast!.status != "Done"
+                                      ? context.push(RouterPath.podcastDetails)
+                                      : null,
+                                  child: Container(
+                                    width: 400,
+                                    height: 250,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      image: const DecorationImage(
+                                        image: AssetImage(
+                                          'assets/images/schedule.png',
                                         ),
-                                        CustomImageButton(
-                                          imagePath:
-                                              "assets/images/btn-inactive.png",
-                                          text: "Chat",
-                                          onPressed: () {},
-                                        ),
-                                        CustomImageButton(
-                                          imagePath:
-                                              "assets/images/btn-inactive.png",
-                                          text: "Chat",
-                                          onPressed: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  ]
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              // Podcast Schedules Section
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomText(
-                                    text: "Podcast Schedules",
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  GestureDetector(
-                                    onTap: () => data.podcast!.status != "Done"
-                                        ? context
-                                            .push(RouterPath.podcastDetails)
-                                        : null,
-                                    child: Container(
-                                      width: 400,
-                                      height: 250,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        image: const DecorationImage(
-                                          image: AssetImage(
-                                            'assets/images/schedule.png',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
+                                        fit: BoxFit.cover,
                                       ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Spacer(),
-                                          const Text(
-                                            'Date & Time:',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const Spacer(),
+                                        const Text(
+                                          'Date & Time:',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            schedule,
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          schedule,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
                                           ),
-                                          const SizedBox(height: 25),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                              bottom: 20.0,
-                                            ),
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              height: 50,
-                                              child: ElevatedButton(
-                                                onPressed: () => context
-                                                    .push(RouterPath.podcast),
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      AppColors.accent,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 40,
-                                                    vertical: 15,
+                                        ),
+                                        const SizedBox(height: 25),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 20.0,
+                                          ),
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            height: 50,
+                                            child: ElevatedButton(
+                                              onPressed: () => {
+                                                context.push(RouterPath.podcast)
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    AppColors.accent,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20,
                                                   ),
                                                 ),
-                                                child: const Text(
-                                                  'Join',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                  ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 40,
+                                                  vertical: 15,
                                                 ),
+                                              ),
+                                              child: CustomText(
+                                                text: data.podcast!.status ==
+                                                        "Scheduled"
+                                                    ? "Join"
+                                                    : "Schedule",
+                                                fontSize: 16,
+                                                color: Colors.white,
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              if (userState != null)
-                                _buildSubscriptionPlansSection(
-                                  data.subscriptionPlans!,
-                                  userState.user.subscription.plan,
-                                  context,
                                 ),
-                            ],
-                          ),
-                        ],
-                      ),
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+                            if (userState != null)
+                              _buildSubscriptionPlansSection(
+                                data.subscriptionPlans!,
+                                userState.user.subscription.plan,
+                                context,
+                              ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) {
-                print(error);
-                print(stack.toString());
-                return Center(child: Text("Error: ${error.toString()}"));
-              }),
+                  ),
+                ],
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) {
+              print(error);
+              print(stack.toString());
+              return Center(child: Text("Error: ${error.toString()}"));
+            },
+          ),
         ),
       ),
     );

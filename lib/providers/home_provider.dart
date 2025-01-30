@@ -9,17 +9,15 @@ final homeProvider = FutureProvider<HomeData>((ref) async {
   final apiService = ref.read(apiServiceProvider);
 
   final response = await apiService.get(ApiEndpoints.home);
+  logger.i(response);
 
   if (response.statusCode == 200) {
     final userJson = response.data["data"]["user"];
-    ref
-        .read(userProvider.notifier)
-        .initialize(userJson);
+    ref.read(userProvider.notifier).initialize(userJson);
 
     final homeResponse = HomeResponseModel.fromJson(response.data);
     logger.i(homeResponse);
     return homeResponse.data!;
-
   } else {
     throw Exception('Failed to load home data');
   }

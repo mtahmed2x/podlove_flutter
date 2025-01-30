@@ -51,7 +51,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.survey,
+    initialLocation: RouterPath.initialScreen,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -245,8 +245,20 @@ class AppRouter {
       GoRoute(
         path: RouterPath.matchedProfile,
         builder: (context, state) {
-          final index = state.extra as int? ?? 1;
-          return MatchedProfile(index: index);
+          final extra = state.extra as Map<String, dynamic>?;
+          final index = extra?["index"] ?? 1;
+          final id = extra?["id"] ?? "id";
+          final name = extra?["name"] ?? "Name";
+          final bio = extra?["bio"] ?? "bio";
+          final interests = extra?["interests"] ??
+              [
+                'Photography',
+                'Travelling',
+                'Art & Crafts',
+                'Cooking',
+              ];
+          return MatchedProfile(
+              index: index, id: id, name: name, bio: bio, interests: interests);
         },
       ),
       GoRoute(
@@ -255,16 +267,25 @@ class AppRouter {
       ),
       GoRoute(
         path: RouterPath.chat,
-        builder: (context, state) {
-          final extra = state.extra as Map<String, String>?;
-
-          final userId = extra?["userId"] ?? "tanim";
-          final receiverId = extra?["receiverId"] ?? "naketa";
-          final name = extra?["name"] ?? "Chat";
-
-          return Chat(userId: receiverId, receiverId: userId, name: name);
-        },
+        builder: (context, state) => const Chat(),
       ),
+      // GoRoute(
+      //   path: RouterPath.chat,
+      //   builder: (context, state) {
+      //     final extra = state.extra;
+      //     if (extra is Map<String, dynamic>) {
+      //       final userId = extra["userId"]?.toString() ?? "tanim";
+      //       final receiverId = extra["receiverId"]?.toString() ?? "naketa";
+      //       final name = extra["name"]?.toString() ?? "Chat";
+
+      //       return Chat(userId: receiverId, receiverId: userId, name: name);
+      //     } else {
+      //       // Handle the case where state.extra is null or invalid
+      //       return const Chat(
+      //           userId: "default", receiverId: "default", name: "Chat");
+      //     }
+      //   },
+      // ),
       GoRoute(
         path: RouterPath.survey,
         builder: (context, state) => const Survey(),

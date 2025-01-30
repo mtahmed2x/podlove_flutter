@@ -16,6 +16,13 @@ import 'package:podlove_flutter/utils/logger.dart';
 class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
 
+  String getLastTwoParts(String input) {
+    List<String> parts = input.split(',').map((e) => e.trim()).toList();
+    return parts.length >= 2
+        ? '${parts[parts.length - 2]}, ${parts.last}'
+        : input;
+  }
+
   @override
   ConsumerState<EditProfile> createState() => _EditProfileState();
 }
@@ -38,7 +45,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       _bioController.text = user.bio;
       _ageController.text = user.age.toString();
       _genderPreferenceController.text = user.preferences.gender;
-      _locationController.text = user.location.latitude.toString();
+      _locationController.text = widget.getLastTwoParts(user.location.place);
     }
   }
 

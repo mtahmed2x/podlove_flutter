@@ -10,6 +10,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class ProfileContent extends ConsumerWidget {
   const ProfileContent({super.key});
 
+  String getLastTwoParts(String input) {
+    List<String> parts = input.split(',').map((e) => e.trim()).toList();
+    return parts.length >= 2
+        ? '${parts[parts.length - 2]}, ${parts.last}'
+        : input;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userState = ref.watch(userProvider);
@@ -19,7 +26,7 @@ class ProfileContent extends ConsumerWidget {
         title: "Profile",
         imageUrl: "assets/images/edit-icon.png",
         onImageTap: () {
-          GoRouter.of(context).go(RouterPath.editProfile);
+          context.push(RouterPath.editProfile);
         },
       ),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
@@ -149,7 +156,7 @@ class ProfileContent extends ConsumerWidget {
                         ),
                         const SizedBox(width: 10),
                         CustomText(
-                          text: userState.user.location.latitude.toString(),
+                          text: getLastTwoParts(userState.user.location.place),
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),

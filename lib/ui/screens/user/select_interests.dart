@@ -44,7 +44,10 @@ class SelectInterests extends ConsumerWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color.fromARGB(12, 255, 161, 117), Color.fromARGB(110, 255, 255, 255)], // Two colors
+              colors: [
+                Color.fromARGB(12, 255, 161, 117),
+                Color.fromARGB(110, 255, 255, 255)
+              ], // Two colors
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -95,9 +98,10 @@ class SelectInterests extends ConsumerWidget {
                         child: Container(
                           decoration: BoxDecoration(
                             color: AppColors.background,
-
                             border: Border.all(
-                              color: isSelected ? AppColors.accent : AppColors.background,
+                              color: isSelected
+                                  ? AppColors.accent
+                                  : AppColors.background,
                             ),
                             borderRadius: BorderRadius.circular(60.r),
                           ),
@@ -128,7 +132,7 @@ class SelectInterests extends ConsumerWidget {
                               userNotifier
                                   .updateInterests(selectedInterests.toList());
                               userNotifier.update();
-                              context.push(RouterPath.home);
+                              context.push(RouterPath.findingMatch);
                             },
                     );
                   },

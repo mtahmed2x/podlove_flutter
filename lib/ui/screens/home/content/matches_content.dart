@@ -31,7 +31,13 @@ class MatchesContent extends ConsumerWidget {
                       onTap: () {
                         if (userData!.user.subscription.plan ==
                             "Seeker: Connection Builder") {
-                          context.push(RouterPath.matchedProfile, extra: 1);
+                          context.push(RouterPath.matchedProfile, extra: {
+                            "index": 1,
+                            "id": data.podcast!.participant1!.id,
+                            "name": data.podcast!.participant1!.name,
+                            "bio": data.podcast!.participant1!.bio,
+                            "interests": data.podcast!.participant1!.interests,
+                          });
                         }
                       },
                       child: ImageTextCard(
@@ -50,7 +56,13 @@ class MatchesContent extends ConsumerWidget {
                       onTap: () {
                         if (userData!.user.subscription.plan ==
                             "Seeker: Connection Builder") {
-                          context.push(RouterPath.matchedProfile, extra: 2);
+                          context.push(RouterPath.matchedProfile, extra: {
+                            "index": 2,
+                            "id": data.podcast!.participant2!.id,
+                            "name": data.podcast!.participant2!.name,
+                            "bio": data.podcast!.participant2!.bio,
+                            "interests": data.podcast!.participant2!.interests,
+                          });
                         }
                       },
                       child: ImageTextCard(
@@ -65,7 +77,13 @@ class MatchesContent extends ConsumerWidget {
                       onTap: () {
                         if (userData!.user.subscription.plan ==
                             "Seeker: Connection Builder") {
-                          context.push(RouterPath.matchedProfile, extra: 3);
+                          context.push(RouterPath.matchedProfile, extra: {
+                            "index": 3,
+                            "id": data.podcast!.participant3!.id,
+                            "name": data.podcast!.participant3!.name,
+                            "bio": data.podcast!.participant3!.bio,
+                            "interests": data.podcast!.participant3!.interests,
+                          });
                         }
                       },
                       child: ImageTextCard(
