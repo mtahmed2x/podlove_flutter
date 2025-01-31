@@ -13,9 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ApiServices.instance.init(baseUrl: ApiEndpoints.baseUrl);
   final prefs = await SharedPreferences.getInstance();
-  if (!prefs.containsKey('isFirstTime')) {
-    await prefs.setBool('isFirstTime', true);
-  }
+  await prefs.setBool('isFirstTime', true);
+  // if (!prefs.containsKey('isFirstTime')) {
+
+  // }
   await Firebase.initializeApp();
   runApp(
     DevicePreview(

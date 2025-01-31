@@ -60,7 +60,7 @@ class DistancePreference extends ConsumerWidget {
                     userNotifier.updateDistancePreference(value.toInt());
                   },
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: 80.h),
                 Consumer(
                   builder: (context, ref, _) {
                     final currentState = ref.watch(userProvider);

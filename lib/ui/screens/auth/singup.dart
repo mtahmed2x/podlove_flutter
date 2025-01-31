@@ -75,7 +75,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                             fontSize: 22.sp,
                             fontWeight: FontWeight.w500,
                           ),
-                          SizedBox(height: 55.h),
+                          SizedBox(height: 30.h),
                         ],
                       ),
                     ),

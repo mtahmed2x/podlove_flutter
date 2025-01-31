@@ -79,7 +79,7 @@ class SelectGender extends ConsumerWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 100.h),
+                SizedBox(height: 40.h),
                 Consumer(
                   builder: (context, ref, _) {
                     final state = ref.watch(userProvider);

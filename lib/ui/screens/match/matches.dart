@@ -27,8 +27,7 @@ class Matches extends ConsumerWidget {
       appBar: CustomAppBar(title: "Matches"),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10)
-              .copyWith(top: 20, bottom: 44),
+          padding: EdgeInsets.symmetric(horizontal: 10).copyWith(bottom: 44),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -82,7 +81,7 @@ class Matches extends ConsumerWidget {
                           Image.asset("assets/images/match-3.png"),
                         ],
                       ),
-                      const SizedBox(height: 200),
+                      const SizedBox(height: 100),
                       CustomText(
                         text:
                             "The schedule for your podcast\nepisodes will be shared with you\nsoon.",
