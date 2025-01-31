@@ -29,7 +29,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       forgotPasswordProvider,
       (previous, current) {
         if (current.isSuccess == true) {
-          GoRouter.of(context).go(
+         context.push(
             RouterPath.verifyCode,
             extra: {
               "status": AppStrings.emailRecoveryVerify,

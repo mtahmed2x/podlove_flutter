@@ -71,11 +71,7 @@ class HomeContent extends ConsumerWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Image.asset(
-                                      data.podcast?.status != "Done"
-                                          ? "assets/images/match-1.png"
-                                          : "assets/images/match-revealed.png",
-                                    ),
+                                    Image.asset("assets/images/match-1.png"),
                                     Image.asset("assets/images/match-2.png"),
                                     Image.asset("assets/images/match-3.png"),
                                   ],
@@ -122,7 +118,8 @@ class HomeContent extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: 20),
                                 GestureDetector(
-                                  onTap: () => data.podcast!.status != "Done"
+                                  onTap: () => data.podcast!.status ==
+                                          "Scheduled"
                                       ? context.push(RouterPath.podcastDetails)
                                       : null,
                                   child: Container(
@@ -153,7 +150,9 @@ class HomeContent extends ConsumerWidget {
                                         ),
                                         const SizedBox(height: 10),
                                         Text(
-                                          schedule,
+                                          data.podcast!.status == "Scheduled"
+                                              ? schedule
+                                              : "TBD",
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -318,6 +317,35 @@ class HomeContent extends ConsumerWidget {
       },
     );
   }
+}
+
+void _showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Center(child: Text("Podcast Schedule")),
+      content: const Text(
+        "You will be soon notified about the podcast schedule",
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        Center(
+          // Center the button
+          child: TextButton(
+            onPressed: () {
+              context.push(RouterPath.home);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.background,
+              backgroundColor: AppColors.accent,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            child: const Text("OK"),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 void showSubscriptionDetails(

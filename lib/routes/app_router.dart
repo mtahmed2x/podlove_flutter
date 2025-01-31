@@ -242,25 +242,29 @@ class AppRouter {
         path: RouterPath.matches,
         builder: (context, state) => const Matches(),
       ),
-      GoRoute(
-        path: RouterPath.matchedProfile,
-        builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          final index = extra?["index"] ?? 1;
-          final id = extra?["id"] ?? "id";
-          final name = extra?["name"] ?? "Name";
-          final bio = extra?["bio"] ?? "bio";
-          final interests = extra?["interests"] ??
-              [
-                'Photography',
-                'Travelling',
-                'Art & Crafts',
-                'Cooking',
-              ];
-          return MatchedProfile(
-              index: index, id: id, name: name, bio: bio, interests: interests);
-        },
-      ),
+      GoRoute(path: RouterPath.matchedProfile, builder: (context, state) {
+        final index = state.extra as int? ?? 1;
+        return MatchedProfile(index: index);
+      }),
+      // GoRoute(
+      //   path: RouterPath.matchedProfile,
+      //   builder: (context, state) {
+      //     final extra = state.extra as Map<String, dynamic>?;
+      //     final index = extra?["index"] ?? 1;
+      //     final id = extra?["id"] ?? "id";
+      //     final name = extra?["name"] ?? "Name";
+      //     final bio = extra?["bio"] ?? "bio";
+      //     final interests = extra?["interests"] ??
+      //         [
+      //           'Photography',
+      //           'Travelling',
+      //           'Art & Crafts',
+      //           'Cooking',
+      //         ];
+      //     return MatchedProfile(
+      //         index: index, id: id, name: name, bio: bio, interests: interests);
+      //   },
+      // ),
       GoRoute(
         path: RouterPath.podcastDetails,
         builder: (context, state) => const PodcastDetails(),

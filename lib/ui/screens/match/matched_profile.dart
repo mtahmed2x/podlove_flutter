@@ -12,18 +12,10 @@ import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 
 class MatchedProfile extends ConsumerWidget {
   final int index;
-  final String? id;
-  final String? name;
-  final String? bio;
-  final List<String>? interests;
 
   const MatchedProfile({
     super.key,
-    required this.id,
     required this.index,
-    required this.bio,
-    required this.name,
-    required this.interests,
   });
 
   @override
@@ -31,7 +23,7 @@ class MatchedProfile extends ConsumerWidget {
     final userData = ref.watch(userProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(title: "$name Bio"),
+      appBar: CustomAppBar(title: "Match 1 Bio"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -57,7 +49,7 @@ class MatchedProfile extends ConsumerWidget {
                         AppWidgets.podLoveLogo,
                         const SizedBox(height: 20),
                         Text(
-                          "$name",
+                          "Alexa",
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
@@ -78,7 +70,8 @@ class MatchedProfile extends ConsumerWidget {
                     CustomTextField(
                       label: "",
                       maxLines: 5,
-                      hint: bio,
+                      hint:
+                          "I’m 40 years old, a proud parent of two and a grandparent of one. I teach 8th grade and have a passion for reading—this year alone, I finished 200 books!",
                     ),
                     const SizedBox(height: 20),
                     CustomText(
@@ -88,17 +81,18 @@ class MatchedProfile extends ConsumerWidget {
                     ),
                     const SizedBox(height: 20),
                     InterestGrid(
-                      interests: interests!,
+                      interests: [
+                        'Photography',
+                        'Travelling',
+                        'Art & Crafts',
+                        'Cooking',
+                      ],
                     ),
                     const SizedBox(height: 40),
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          context.push(RouterPath.chat, extra: {
-                            "userId": userData!.user.id,
-                            "receiverId": id,
-                            "name": name
-                          });
+                          context.push(RouterPath.chat);
                         },
                         child: Container(
                           width: 64,

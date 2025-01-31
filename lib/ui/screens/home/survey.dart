@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
@@ -290,7 +293,9 @@ class Survey extends StatelessWidget {
                   maxLines: 5,
                 ),
                 SizedBox(height: 15),
-                CustomRoundButton(text: "Continue", onPressed: () {}),
+                CustomRoundButton(text: "Continue", onPressed: () {
+                  _showSuccessDialog(context);
+                },),
                 const SizedBox(height: 30),
               ],
             ),
@@ -299,6 +304,34 @@ class Survey extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Center(child: Text("Survey Submitted")),
+      content: const Text(
+        "Thank you for filling out the survey! Your feedback helps us improve.",
+        textAlign: TextAlign.center, // Center content text
+      ),
+      actions: [
+        Center( // Center the button
+          child: TextButton(
+            onPressed: () {
+              context.push(RouterPath.home);
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.background,
+              backgroundColor: AppColors.accent,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            child: const Text("OK"),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class QuestionWidget extends StatefulWidget {
@@ -375,6 +408,8 @@ class _QuestionWidgetState extends State<QuestionWidget> {
     );
   }
 }
+
+
 
 class CustomRadioButton extends StatelessWidget {
   final bool isSelected;

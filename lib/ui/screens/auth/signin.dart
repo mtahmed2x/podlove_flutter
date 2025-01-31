@@ -103,7 +103,7 @@ class _SignInState extends ConsumerState<SignIn> {
                       const Spacer(),
                       GestureDetector(
                         onTap: () =>
-                            GoRouter.of(context).go(RouterPath.forgotPassword),
+                            context.push(RouterPath.forgotPassword),
                         child: CustomText(
                           text: AppStrings.forgotPassword,
                           color: const Color.fromARGB(255, 43, 79, 111),

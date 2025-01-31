@@ -31,14 +31,21 @@ class MatchesContent extends ConsumerWidget {
                       onTap: () {
                         if (userData!.user.subscription.plan ==
                             "Seeker: Connection Builder") {
-                          context.push(RouterPath.matchedProfile, extra: {
-                            "index": 1,
-                            "id": data.podcast!.participant1!.id,
-                            "name": data.podcast!.participant1!.name,
-                            "bio": data.podcast!.participant1!.bio,
-                            "interests": data.podcast!.participant1!.interests,
-                          });
+                          context.push(
+                            RouterPath.matchedProfile,
+                            extra: 1,
+                          );
                         }
+                        // if (userData!.user.subscription.plan ==
+                        //     "Seeker: Connection Builder") {
+                        //   context.push(RouterPath.matchedProfile, extra: {
+                        //     "index": 1,
+                        //     "id": data.podcast!.participant1!.id,
+                        //     "name": data.podcast!.participant1!.name,
+                        //     "bio": data.podcast!.participant1!.bio,
+                        //     "interests": data.podcast!.participant1!.interests,
+                        //   });
+                        // }
                       },
                       child: ImageTextCard(
                         imageUrl: data.podcast!.status != "Done"
@@ -56,13 +63,10 @@ class MatchesContent extends ConsumerWidget {
                       onTap: () {
                         if (userData!.user.subscription.plan ==
                             "Seeker: Connection Builder") {
-                          context.push(RouterPath.matchedProfile, extra: {
-                            "index": 2,
-                            "id": data.podcast!.participant2!.id,
-                            "name": data.podcast!.participant2!.name,
-                            "bio": data.podcast!.participant2!.bio,
-                            "interests": data.podcast!.participant2!.interests,
-                          });
+                          context.push(
+                            RouterPath.matchedProfile,
+                            extra: 2,
+                          );
                         }
                       },
                       child: ImageTextCard(
@@ -77,13 +81,10 @@ class MatchesContent extends ConsumerWidget {
                       onTap: () {
                         if (userData!.user.subscription.plan ==
                             "Seeker: Connection Builder") {
-                          context.push(RouterPath.matchedProfile, extra: {
-                            "index": 3,
-                            "id": data.podcast!.participant3!.id,
-                            "name": data.podcast!.participant3!.name,
-                            "bio": data.podcast!.participant3!.bio,
-                            "interests": data.podcast!.participant3!.interests,
-                          });
+                          context.push(
+                            RouterPath.matchedProfile,
+                            extra: 3,
+                          );
                         }
                       },
                       child: ImageTextCard(

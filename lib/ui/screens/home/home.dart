@@ -90,6 +90,11 @@ class _HomePageState extends ConsumerState<Home> {
               title: 'Settings',
               routeName: RouterPath.settings,
             ),
+            _buildDrawerItem(
+              icon: "assets/images/quiz.png",
+              title: 'Surveys',
+              routeName: RouterPath.survey,
+            ),
             const Expanded(child: SizedBox()),
             ListTile(
                 leading: Image.asset("assets/images/logout.png"),
