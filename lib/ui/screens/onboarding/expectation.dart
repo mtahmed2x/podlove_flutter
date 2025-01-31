@@ -15,10 +15,10 @@ class Expectation extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: "What to Expect"),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -84,14 +84,11 @@ class Expectation extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 50.h),
                 CustomRoundButton(
                   text: "Next",
-                  backgroundColor: const Color.fromARGB(255, 39, 87, 166),
-                  onPressed: () =>
-                      GoRouter.of(context).go(RouterPath.termsOfUse),
+                  onPressed: () => context.push(RouterPath.termsOfUse),
                 ),
-                SizedBox(height: 44.h),
               ],
             ),
           ),

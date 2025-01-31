@@ -58,53 +58,55 @@ class _HomePageState extends ConsumerState<Home> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.white),
-              child: Image.asset("assets/images/podLove.png"),
-            ),
-            _buildDrawerItem(
-              icon: "assets/images/quiz.png",
-              title: 'FAQs',
-              routeName: RouterPath.faqs,
-            ),
-            _buildDrawerItem(
-              icon: "assets/images/support.png",
-              title: 'Help Center',
-              routeName: RouterPath.help,
-            ),
-            _buildDrawerItem(
-              icon: "assets/images/encrypted.png",
-              title: 'Terms & Conditions',
-              routeName: RouterPath.terms,
-            ),
-            _buildDrawerItem(
-              icon: "assets/images/encrypted.png",
-              title: 'Privacy Policy',
-              routeName: RouterPath.privacy,
-            ),
-            _buildDrawerItem(
-              icon: "assets/images/settings.png",
-              title: 'Settings',
-              routeName: RouterPath.settings,
-            ),
-            _buildDrawerItem(
-              icon: "assets/images/quiz.png",
-              title: 'Surveys',
-              routeName: RouterPath.survey,
-            ),
-            const Expanded(child: SizedBox()),
-            ListTile(
-                leading: Image.asset("assets/images/logout.png"),
-                title: const Text('Logout'),
-                onTap: () async {
-                  await _logOut()
-                      .whenComplete(() => context.go(RouterPath.signIn));
-                }),
-            const SizedBox(height: 30),
-          ],
+      drawer: SafeArea(
+        child: Drawer(
+          child: Column(
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(color: Colors.white),
+                child: Image.asset("assets/images/podLove.png"),
+              ),
+              _buildDrawerItem(
+                icon: "assets/images/quiz.png",
+                title: 'FAQs',
+                routeName: RouterPath.faqs,
+              ),
+              _buildDrawerItem(
+                icon: "assets/images/support.png",
+                title: 'Help Center',
+                routeName: RouterPath.help,
+              ),
+              _buildDrawerItem(
+                icon: "assets/images/encrypted.png",
+                title: 'Terms & Conditions',
+                routeName: RouterPath.terms,
+              ),
+              _buildDrawerItem(
+                icon: "assets/images/encrypted.png",
+                title: 'Privacy Policy',
+                routeName: RouterPath.privacy,
+              ),
+              _buildDrawerItem(
+                icon: "assets/images/settings.png",
+                title: 'Settings',
+                routeName: RouterPath.settings,
+              ),
+              _buildDrawerItem(
+                icon: "assets/images/quiz.png",
+                title: 'Surveys',
+                routeName: RouterPath.survey,
+              ),
+              const Expanded(child: SizedBox()),
+              ListTile(
+                  leading: Image.asset("assets/images/logout.png"),
+                  title: const Text('Logout'),
+                  onTap: () async {
+                    await _logOut()
+                        .whenComplete(() => context.go(RouterPath.signIn));
+                  }),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
       body: _screens[_selectedIndex],

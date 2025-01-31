@@ -45,9 +45,10 @@ class _UploadPhotoState extends ConsumerState<UploadPhoto> {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.uploadPhotoTitle),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -157,7 +158,7 @@ class _UploadPhotoState extends ConsumerState<UploadPhoto> {
                                           );
                                           return;
                                         }
-                                        GoRouter.of(context).go(
+                                        context.push(
                                             '${RouterPath.compatibalityQuestion}/1');
                                       }
                                     });

@@ -21,10 +21,10 @@ class DistancePreference extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(title: "Distance Preferences"),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -60,7 +60,7 @@ class DistancePreference extends ConsumerWidget {
                     userNotifier.updateDistancePreference(value.toInt());
                   },
                 ),
-                SizedBox(height: 400.h),
+                SizedBox(height: 40.h),
                 Consumer(
                   builder: (context, ref, _) {
                     final currentState = ref.watch(userProvider);
@@ -68,7 +68,7 @@ class DistancePreference extends ConsumerWidget {
                       text: "Continue",
                       onPressed: () {
                         if (currentState?.user.preferences.distance != null) {
-                          GoRouter.of(context).go(RouterPath.selectAge);
+                          context.push(RouterPath.selectAge);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

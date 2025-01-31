@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/data/models/home_response_model.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
@@ -24,8 +24,6 @@ class HomeContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final homeData = ref.watch(homeProvider);
-    final userState = ref.watch(userProvider);
-
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -34,6 +32,7 @@ class HomeContent extends ConsumerWidget {
         child: SingleChildScrollView(
           child: homeData.when(
             data: (data) {
+              final userState = ref.watch(userProvider);
               String schedule = "TBD";
               if (data.podcast?.schedule?.date != null &&
                   data.podcast!.schedule!.date != "") {

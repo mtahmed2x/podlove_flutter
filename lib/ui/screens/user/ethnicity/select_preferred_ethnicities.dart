@@ -36,10 +36,10 @@ class SelectPreferredEthnicities extends ConsumerWidget {
       appBar: CustomAppBar(title: "Cultural & Ethnic Background"),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 30.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 30.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

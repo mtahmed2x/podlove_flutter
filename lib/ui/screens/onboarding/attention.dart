@@ -57,10 +57,8 @@ class Attention extends StatelessWidget {
                 SizedBox(height: 20.h), // Responsive spacing
                 CustomRoundButton(
                   text: "I Understood",
-                  backgroundColor: const Color.fromARGB(255, 39, 87, 166),
-                  onPressed: () => GoRouter.of(context).go(RouterPath.signUp),
+                  onPressed: () => context.push(RouterPath.signUp),
                 ),
-
               ],
             ),
           ),

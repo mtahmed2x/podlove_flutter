@@ -22,10 +22,10 @@ class LocationAccess extends ConsumerWidget {
       appBar: CustomAppBar(title: AppStrings.locationAccessTitle),
       backgroundColor: AppColors.backgroundAlt,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 SizedBox(height: 15.h),

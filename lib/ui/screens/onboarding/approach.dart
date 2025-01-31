@@ -33,7 +33,6 @@ class Approach extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.w500,
-
                 ),
               ),
               SizedBox(height: 30.h),
@@ -47,13 +46,11 @@ class Approach extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: 30.h),
               CustomRoundButton(
                 text: "Next",
-                backgroundColor: const Color(0xFF2757A6),
-                onPressed: () => GoRouter.of(context).go(RouterPath.expectationFromApp),
+                onPressed: () => context.push(RouterPath.expectationFromApp),
               ),
-              SizedBox(height: 44.h),
             ],
           ),
         ),

@@ -63,43 +63,49 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: "${widget.name}"),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: getMessages(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10).copyWith(top: 20),
+          child: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: getMessages(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
 
-                if (!snapshot.hasData) {
-                  print("❌ No messages found in Firestore.");
-                  return Center(child: Text("No messages yet"));
-                }
+                    if (!snapshot.hasData) {
+                      print("❌ No messages found in Firestore.");
+                      return Center(child: Text("No messages yet"));
+                    }
 
-                var messages = snapshot.data!.docs;
-                print("🔥 Messages loaded: ${messages.length}");
+                    var messages = snapshot.data!.docs;
+                    print("🔥 Messages loaded: ${messages.length}");
 
-                return ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    var msg = messages[index];
-                    bool isSentByMe = msg['senderId'] == widget.userId;
+                    return ListView.builder(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+                      itemCount: messages.length,
+                      itemBuilder: (context, index) {
+                        var msg = messages[index];
+                        bool isSentByMe = msg['senderId'] == widget.userId;
 
-                    return ChatBubble(
-                      message: msg['message'],
-                      isSentByMe: isSentByMe,
-                      time: "Now", // Placeholder for timestamp
+                        return ChatBubble(
+                          message: msg['message'],
+                          isSentByMe: isSentByMe,
+                          time: "Now", // Placeholder for timestamp
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+              _buildMessageInput(),
+            ],
           ),
-          _buildMessageInput(),
-        ],
+        ),
       ),
     );
   }

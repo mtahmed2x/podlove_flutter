@@ -37,10 +37,10 @@ class SelectPreferredGender extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.genderPreferenceTitle),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 SizedBox(height: 15.h),
@@ -81,36 +81,30 @@ class SelectPreferredGender extends ConsumerWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 100.h),
+                SizedBox(height: 30.h),
                 Consumer(
                   builder: (context, ref, _) {
                     final state = ref.watch(userProvider);
-                    return Container(
-                      padding: EdgeInsets.symmetric(vertical: 15.h),
-                      color: AppColors.background,
-                      child: Center(
-                        child: CustomRoundButton(
-                          text: state?.isLoading == true
-                              ? AppStrings.saving
-                              : AppStrings.continueButton,
-                          onPressed: state?.isLoading == true
-                              ? null
-                              : () {
-                                  if (state?.user.preferences.gender == null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                            'Please select your preferred gender'),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  logger.i(state?.user.preferences.gender);
-                                  context.go(RouterPath.selectBodyType);
-                                },
-                        ),
-                      ),
+                    return CustomRoundButton(
+                      text: state?.isLoading == true
+                          ? AppStrings.saving
+                          : AppStrings.continueButton,
+                      onPressed: state?.isLoading == true
+                          ? null
+                          : () {
+                              if (state?.user.preferences.gender == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Please select your preferred gender'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+                              logger.i(state?.user.preferences.gender);
+                              context.go(RouterPath.selectBodyType);
+                            },
                     );
                   },
                 ),

@@ -38,10 +38,10 @@ class _SignInState extends ConsumerState<SignIn> {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.welcome),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
@@ -102,8 +102,7 @@ class _SignInState extends ConsumerState<SignIn> {
                       ),
                       const Spacer(),
                       GestureDetector(
-                        onTap: () =>
-                            context.push(RouterPath.forgotPassword),
+                        onTap: () => context.push(RouterPath.forgotPassword),
                         child: CustomText(
                           text: AppStrings.forgotPassword,
                           color: const Color.fromARGB(255, 43, 79, 111),

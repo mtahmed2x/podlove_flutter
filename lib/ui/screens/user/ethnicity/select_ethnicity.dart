@@ -35,10 +35,10 @@ class SelectEthnicity extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(title: "Ethnicity"),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 30.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 30.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -185,7 +185,6 @@ class SelectEthnicity extends ConsumerWidget {
                     );
                   },
                 ),
-
               ],
             ),
           ),

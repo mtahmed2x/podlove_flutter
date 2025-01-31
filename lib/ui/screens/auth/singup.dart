@@ -53,122 +53,123 @@ class _SignUpState extends ConsumerState<SignUp> {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.signUp),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
               .copyWith(top: 20.h, bottom: 44.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: SizedBox(
-                    width: 203.w,
-                    child: Column(
-                      children: [
-                        AppWidgets.podLoveLogo,
-                        SizedBox(height: 40.h),
-                        CustomText(
-                          text: AppStrings.welcome,
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        SizedBox(height: 55.h),
-                      ],
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      width: 203.w,
+                      child: Column(
+                        children: [
+                          AppWidgets.podLoveLogo,
+                          SizedBox(height: 40.h),
+                          CustomText(
+                            text: AppStrings.welcome,
+                            color: const Color.fromARGB(255, 51, 51, 51),
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          SizedBox(height: 55.h),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                // Form Fields
-                CustomTextField(
-                  fieldType: TextFieldType.text,
-                  label: AppStrings.fullName,
-                  hint: AppStrings.fullNameHint,
-                  controller: signUpNotifier.nameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.enterFullNameError;
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextField(
-                  fieldType: TextFieldType.email,
-                  label: AppStrings.email,
-                  hint: AppStrings.emailHint,
-                  controller: signUpNotifier.emailController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.enterEmailError;
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextField(
-                  fieldType: TextFieldType.text,
-                  label: AppStrings.phoneNumber,
-                  hint: AppStrings.phoneNumberHint,
-                  controller: signUpNotifier.phoneController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.enterPhoneNumberError;
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextField(
-                  fieldType: TextFieldType.password,
-                  label: AppStrings.password,
-                  hint: AppStrings.passwordHint,
-                  controller: signUpNotifier.passwordController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.enterPasswordError;
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextField(
-                  fieldType: TextFieldType.password,
-                  label: AppStrings.confirmPassword,
-                  hint: AppStrings.confirmPasswordHint,
-                  controller: signUpNotifier.confirmPasswordController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return AppStrings.confirmPasswordError;
-                    }
-                    if (value != signUpNotifier.passwordController.text) {
-                      return AppStrings.passwordMismatchError;
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 30.h),
-                CustomRoundButton(
-                  text: signUpState.isLoading
-                      ? AppStrings.signingUp
-                      : AppStrings.signUp,
-                  onPressed: signUpState.isLoading
-                      ? null
-                      : () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            signUpNotifier.signUp();
-                          }
-                        },
-                ),
-                SizedBox(height: 20.h),
-                // Sign In Link
-                Center(
-                  child: GestureDetector(
-                    onTap: () =>
-                        context.push(RouterPath.signIn),
-                    child: CustomText(
-                      text: AppStrings.signInPrompt,
-                      color: AppColors.accent,
+                  // Form Fields
+                  CustomTextField(
+                    fieldType: TextFieldType.text,
+                    label: AppStrings.fullName,
+                    hint: AppStrings.fullNameHint,
+                    controller: signUpNotifier.nameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.enterFullNameError;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    fieldType: TextFieldType.email,
+                    label: AppStrings.email,
+                    hint: AppStrings.emailHint,
+                    controller: signUpNotifier.emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.enterEmailError;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    fieldType: TextFieldType.text,
+                    label: AppStrings.phoneNumber,
+                    hint: AppStrings.phoneNumberHint,
+                    controller: signUpNotifier.phoneController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.enterPhoneNumberError;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    fieldType: TextFieldType.password,
+                    label: AppStrings.password,
+                    hint: AppStrings.passwordHint,
+                    controller: signUpNotifier.passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.enterPasswordError;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextField(
+                    fieldType: TextFieldType.password,
+                    label: AppStrings.confirmPassword,
+                    hint: AppStrings.confirmPasswordHint,
+                    controller: signUpNotifier.confirmPasswordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.confirmPasswordError;
+                      }
+                      if (value != signUpNotifier.passwordController.text) {
+                        return AppStrings.passwordMismatchError;
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 30.h),
+                  CustomRoundButton(
+                    text: signUpState.isLoading
+                        ? AppStrings.signingUp
+                        : AppStrings.signUp,
+                    onPressed: signUpState.isLoading
+                        ? null
+                        : () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              signUpNotifier.signUp();
+                            }
+                          },
+                  ),
+                  SizedBox(height: 20.h),
+                  // Sign In Link
+                  Center(
+                    child: GestureDetector(
+                      onTap: () => context.push(RouterPath.signIn),
+                      child: CustomText(
+                        text: AppStrings.signInPrompt,
+                        color: AppColors.accent,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

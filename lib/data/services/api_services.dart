@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api_exceptions.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -10,7 +11,8 @@ class ApiServices {
   late Dio _dio;
   bool _isInitialized = false; // Track if _dio is initialized
 
-  Future<void> init({required String baseUrl, Map<String, dynamic>? headers}) async {
+  Future<void> init(
+      {required String baseUrl, Map<String, dynamic>? headers}) async {
     if (_isInitialized) return; // Prevent multiple initializations
 
     final prefs = await SharedPreferences.getInstance();
@@ -20,9 +22,10 @@ class ApiServices {
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
-      headers: headers ?? {
-        'Content-Type': 'application/json',
-      },
+      headers: headers ??
+          {
+            'Content-Type': 'application/json',
+          },
       validateStatus: (status) {
         return status! < 500;
       },
@@ -40,8 +43,16 @@ class ApiServices {
     ));
 
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
+      onRequest: (options, handler) async {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('accessToken') ?? "No Token Found";
+
         options.headers['Authorization'] = 'Bearer $token';
+
+        logger.i("🔑 Sending Request with Access Token: $token"); // Log token
+        logger.i("📤 Request URL: ${options.uri}");
+        logger.i("📦 Request Headers: ${options.headers}");
+
         return handler.next(options);
       },
       onResponse: (response, handler) {
@@ -60,12 +71,12 @@ class ApiServices {
   }
 
   Future<Response<T>> get<T>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onReceiveProgress,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
     try {
       return await dio.get<T>(
         path,
@@ -80,14 +91,14 @@ class ApiServices {
   }
 
   Future<Response<T>> post<T>(
-      String path, {
-        data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-      }) async {
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
     try {
       return await dio.post<T>(
         path,
@@ -104,14 +115,14 @@ class ApiServices {
   }
 
   Future<Response<T>> patch<T>(
-      String path, {
-        data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-      }) async {
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
     try {
       return await dio.patch<T>(
         path,
@@ -128,12 +139,12 @@ class ApiServices {
   }
 
   Future<Response<T>> delete<T>(
-      String path, {
-        data,
-        Map<String, dynamic>? queryParameters,
-        Options? options,
-        CancelToken? cancelToken,
-      }) async {
+    String path, {
+    data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) async {
     try {
       return await dio.delete<T>(
         path,
@@ -157,7 +168,8 @@ class ApiServices {
         return TimeoutException("Connection Timeout with API server");
       case DioExceptionType.badResponse:
         int? statusCode = error.response?.statusCode;
-        String message = error.response?.statusMessage ?? "Something went wrong";
+        String message =
+            error.response?.statusMessage ?? "Something went wrong";
         switch (statusCode) {
           case 400:
             return BadRequestException(message);

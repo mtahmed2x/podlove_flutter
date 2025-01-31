@@ -24,10 +24,10 @@ class SelectPersonalityTraits extends ConsumerWidget {
       appBar: CustomAppBar(title: "Personality Traits"),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -123,7 +123,7 @@ class SelectPersonalityTraits extends ConsumerWidget {
                     onPressed: state?.isLoading == true
                         ? null
                         : () {
-                            GoRouter.of(context).go(RouterPath.selectInterests);
+                            context.push(RouterPath.selectInterests);
                           },
                   );
                 }),
@@ -193,7 +193,9 @@ class _CustomScaleState extends State<_CustomScale> {
                 decoration: BoxDecoration(
                   color: widget.pillColors[index],
                   border: Border.all(
-                    color: isSelected ? AppColors.accent : widget.pillColors[index],
+                    color: isSelected
+                        ? AppColors.accent
+                        : widget.pillColors[index],
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(10.r),

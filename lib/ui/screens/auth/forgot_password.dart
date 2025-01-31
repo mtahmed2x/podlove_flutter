@@ -29,7 +29,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
       forgotPasswordProvider,
       (previous, current) {
         if (current.isSuccess == true) {
-         context.push(
+          context.push(
             RouterPath.verifyCode,
             extra: {
               "status": AppStrings.emailRecoveryVerify,
@@ -45,10 +45,10 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.forgotPassword),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w)
-                .copyWith(top: 20.h, bottom: 44.h),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

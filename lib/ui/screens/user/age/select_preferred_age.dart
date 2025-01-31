@@ -32,77 +32,80 @@ class SelectPreferredAge extends ConsumerWidget {
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.ageRangeTitle),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w)
-                    .copyWith(top: 56.h, bottom: 44.h),
-                child: Column(
-                  children: [
-                    SizedBox(height: 15.h),
-                    Center(
-                      child: Column(
-                        children: [
-                          AppWidgets.podLoveLogo,
-                          SizedBox(height: 30.h),
-                          CustomText(
-                            text: AppStrings.ageRangeQuestion,
-                            color: AppColors.primaryText,
-                            fontSize: 22.sp,
-                            textAlign: TextAlign.center,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          SizedBox(height: 40.h),
-                          _AgeRangeDropdown(
-                            minInitialAge: initialMin,
-                            maxInitialAge: initialMax,
-                            onAgeChanged: (min, max) {
-                              ref
-                                  .read(userProvider.notifier)
-                                  .updatePreferencesAgeRange(min, max);
-                            },
-                          ),
-                          SizedBox(height: 50.h),
-                          Consumer(builder: (context, ref, _) {
-                            final state = ref.watch(userProvider);
-                            return CustomRoundButton(
-                              text: state?.isLoading == true
-                                  ? AppStrings.saving
-                                  : AppStrings.continueButton,
-                              onPressed: state?.isLoading == true
-                                  ? null
-                                  : () {
-                                final prefs = state?.user.preferences.age;
-                                if (prefs?.min == null ||
-                                    prefs?.max == null) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Please select valid age range'),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                logger.i(state?.user.age);
-                                logger.i(state?.user);
-                                logger.i(state?.user.location.place);
-                                logger.i(state?.user.location.latitude);
-                                context.go(RouterPath.selectGender);
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w)
+              .copyWith(top: 20.h, bottom: 44.h),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 15.h),
+                      Center(
+                        child: Column(
+                          children: [
+                            AppWidgets.podLoveLogo,
+                            SizedBox(height: 30.h),
+                            CustomText(
+                              text: AppStrings.ageRangeQuestion,
+                              color: AppColors.primaryText,
+                              fontSize: 22.sp,
+                              textAlign: TextAlign.center,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            SizedBox(height: 40.h),
+                            _AgeRangeDropdown(
+                              minInitialAge: initialMin,
+                              maxInitialAge: initialMax,
+                              onAgeChanged: (min, max) {
+                                ref
+                                    .read(userProvider.notifier)
+                                    .updatePreferencesAgeRange(min, max);
                               },
-                            );
-                          }),
-                        ],
+                            ),
+                            SizedBox(height: 50.h),
+                            Consumer(builder: (context, ref, _) {
+                              final state = ref.watch(userProvider);
+                              return CustomRoundButton(
+                                text: state?.isLoading == true
+                                    ? AppStrings.saving
+                                    : AppStrings.continueButton,
+                                onPressed: state?.isLoading == true
+                                    ? null
+                                    : () {
+                                        final prefs =
+                                            state?.user.preferences.age;
+                                        if (prefs?.min == null ||
+                                            prefs?.max == null) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Please select valid age range'),
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        logger.i(state?.user.age);
+                                        logger.i(state?.user);
+                                        logger.i(state?.user.location.place);
+                                        logger.i(state?.user.location.latitude);
+                                        context.go(RouterPath.selectGender);
+                                      },
+                              );
+                            }),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -181,14 +184,17 @@ class _AgeRangeDropdownState extends State<_AgeRangeDropdown> {
         _AgeDropdown(
           value: _minAge,
           label: AppStrings.minimumAge,
-          items: _ageOptions.where((age) => age >= 35 && age < _maxAge), // Ensure minimum age starts at 35
+          items: _ageOptions.where((age) =>
+              age >= 35 && age < _maxAge), // Ensure minimum age starts at 35
           onChanged: (value) => _updateAges(minAge: value),
         ),
         SizedBox(width: 40.w),
         _AgeDropdown(
           value: _maxAge,
           label: AppStrings.maximumAge,
-          items: _ageOptions.where((age) => age > _minAge && age <= 55), // Ensure maximum age is above minimum and <= 55
+          items: _ageOptions.where((age) =>
+              age > _minAge &&
+              age <= 55), // Ensure maximum age is above minimum and <= 55
           onChanged: (value) => _updateAges(maxAge: value),
         ),
       ],
@@ -242,9 +248,9 @@ class _AgeDropdown extends StatelessWidget {
             ),
             items: items
                 .map((age) => DropdownMenuItem(
-              value: age,
-              child: Text("$age"),
-            ))
+                      value: age,
+                      child: Text("$age"),
+                    ))
                 .toList(),
             onChanged: (value) => value != null ? onChanged(value) : null,
           ),
