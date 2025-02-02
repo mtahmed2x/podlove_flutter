@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +11,6 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:podlove_flutter/utils/logger.dart';
-import 'package:http/http.dart' as http;
 
 class UploadPhoto extends ConsumerStatefulWidget {
   const UploadPhoto({super.key});

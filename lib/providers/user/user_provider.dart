@@ -112,9 +112,9 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
-  void updatePreferredGender(String newPreferredGender) {
+  void updatePreferredGender(List<String> preferredGenders) {
     final newPreferences =
-        state!.user.preferences.copyWith(gender: newPreferredGender);
+        state!.user.preferences.copyWith(gender: preferredGenders);
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
     _updateUser(updatedUser);
   }
@@ -126,11 +126,11 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
-  void updatePreferredBodyType(String newPreferredBodyType) {
+  void updatePreferredBodyType(List<String> preferredBodyType) {
     if (state == null) return;
 
     final newPreferences =
-        state!.user.preferences.copyWith(bodyType: newPreferredBodyType);
+        state!.user.preferences.copyWith(bodyType: preferredBodyType);
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
 
     _updateUser(updatedUser);
@@ -142,11 +142,11 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
-  void updatePreferredEthnicity(String newPreferredEthnicity) {
+  void updatePreferredEthnicity(List<String> preferredEthnicity) {
     if (state == null) return;
 
     final newPreferences =
-        state!.user.preferences.copyWith(ethnicity: newPreferredEthnicity);
+        state!.user.preferences.copyWith(ethnicity: preferredEthnicity);
     final updatedUser = state!.user.copyWith(preferences: newPreferences);
 
     _updateUser(updatedUser);

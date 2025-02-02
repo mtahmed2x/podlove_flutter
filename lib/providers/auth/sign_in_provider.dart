@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/services/api_services.dart';
+import 'package:podlove_flutter/data/services/api_exceptions.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,55 +38,42 @@ class SignInState {
 }
 
 class SignInNotifier extends StateNotifier<SignInState> {
-  final ApiServices apiService;
   final Ref ref;
 
-  SignInNotifier(this.apiService, this.ref) : super(SignInState());
+  SignInNotifier(this.ref) : super(SignInState.initial());
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  Future<void> signIn(String email, String password) async {
+    final apiService = ref.read(apiServiceProvider);
 
-  Future<void> signIn() async {
     final signInData = {
-      "email": emailController.text,
-      "password": passwordController.text,
+      "email": email,
+      "password": password,
     };
-
+    state = state.copyWith(isLoading: true);
     try {
-      state = state.copyWith(isLoading: true);
-
       final response = await apiService.post(
         ApiEndpoints.signIn,
         data: signInData,
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == StatusCode.OK) {
         String accessToken = response.data["data"]["accessToken"];
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
         state = state.copyWith(isSuccess: true);
       }
+    } on ApiException catch (e) {
+      state = state.copyWith(isSuccess: false, error: e.message);
     } catch (e) {
-      state = state.copyWith(
-        isSuccess: false,
-        error: "An unexpected error occurred. Please try again.",
-        isLoading: false,
-      );
+      state =
+          state.copyWith(isSuccess: false, error: "An unknown error occurred.");
     } finally {
       state = state.copyWith(isLoading: false);
     }
-  }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
   }
 }
 
 final signInProvider = StateNotifierProvider<SignInNotifier, SignInState>(
   (ref) {
-    final apiService = ref.read(apiServiceProvider);
-    return SignInNotifier(apiService, ref);
+    return SignInNotifier(ref);
   },
 );

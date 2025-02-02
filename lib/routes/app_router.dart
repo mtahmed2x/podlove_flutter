@@ -51,7 +51,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.initialScreen,
+    initialLocation: RouterPath.selectBodyType,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -242,10 +242,12 @@ class AppRouter {
         path: RouterPath.matches,
         builder: (context, state) => const Matches(),
       ),
-      GoRoute(path: RouterPath.matchedProfile, builder: (context, state) {
-        final index = state.extra as int? ?? 1;
-        return MatchedProfile(index: index);
-      }),
+      GoRoute(
+          path: RouterPath.matchedProfile,
+          builder: (context, state) {
+            final index = state.extra as int? ?? 1;
+            return MatchedProfile(index: index);
+          }),
       // GoRoute(
       //   path: RouterPath.matchedProfile,
       //   builder: (context, state) {

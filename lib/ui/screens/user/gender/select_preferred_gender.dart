@@ -8,21 +8,46 @@ import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
-import 'package:podlove_flutter/ui/widgets/custom_circle_group.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
-class SelectPreferredGender extends ConsumerWidget {
+class SelectPreferredGender extends ConsumerStatefulWidget {
   const SelectPreferredGender({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SelectPreferredGender> createState() =>
+      _SelectPreferredGenderState();
+}
+
+class _SelectPreferredGenderState extends ConsumerState<SelectPreferredGender> {
+  final List<String> genderOptions = [
+    AppStrings.female,
+    AppStrings.male,
+    AppStrings.nonBinary,
+    AppStrings.transgender,
+    AppStrings.genderFluid,
+    AppStrings.openToAll,
+  ];
+
+  List<String> selectedGenders = [];
+
+  void toggleSelection(String gender) {
+    setState(() {
+      if (selectedGenders.contains(gender)) {
+        selectedGenders.remove(gender);
+      } else {
+        selectedGenders.add(gender);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
     final error = userState?.error;
-
     if (error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,26 +81,13 @@ class SelectPreferredGender extends ConsumerWidget {
                         fontWeight: FontWeight.w500,
                       ),
                       SizedBox(height: 40.h),
-                      CustomCircleGroup(
-                        labels: [
-                          AppStrings.female,
-                          AppStrings.male,
-                          AppStrings.nonBinary,
-                          AppStrings.transgender,
-                          AppStrings.genderFluid,
-                          AppStrings.openToAll,
-                        ],
-                        onCircleSelected: (index) {
-                          // Update the preferred gender in the state
-                          final preferredGender = [
-                            AppStrings.female,
-                            AppStrings.male,
-                            AppStrings.nonBinary,
-                            AppStrings.transgender,
-                            AppStrings.genderFluid,
-                            AppStrings.openToAll,
-                          ][index];
-                          userNotifier.updatePreferredGender(preferredGender);
+                      SelectableCircleGroup(
+                        labels: genderOptions,
+                        selectedItems: selectedGenders,
+                        onSelectionChanged: (selected) {
+                          setState(() {
+                            selectedGenders = selected;
+                          });
                         },
                       ),
                     ],
@@ -92,18 +104,20 @@ class SelectPreferredGender extends ConsumerWidget {
                       onPressed: state?.isLoading == true
                           ? null
                           : () {
-                              if (state?.user.preferences.gender == null) {
+                              if (selectedGenders.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
-                                        'Please select your preferred gender'),
+                                        'Please select at least one preferred gender'),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
                                 return;
                               }
-                              logger.i(state?.user.preferences.gender);
-                              context.go(RouterPath.selectBodyType);
+                              userNotifier
+                                  .updatePreferredGender(selectedGenders);
+                              logger.i(selectedGenders);
+                              context.push(RouterPath.selectBodyType);
                             },
                     );
                   },
@@ -113,6 +127,62 @@ class SelectPreferredGender extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SelectableCircleGroup extends StatelessWidget {
+  final List<String> labels;
+  final List<String> selectedItems;
+  final Function(List<String>) onSelectionChanged;
+
+  const SelectableCircleGroup({
+    super.key,
+    required this.labels,
+    required this.selectedItems,
+    required this.onSelectionChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 12.w,
+      runSpacing: 12.h,
+      alignment: WrapAlignment.center,
+      children: labels.map((label) {
+        final isActive = selectedItems.contains(label);
+        return GestureDetector(
+          onTap: () {
+            List<String> updatedSelection = List.from(selectedItems);
+            if (isActive) {
+              updatedSelection.remove(label);
+            } else {
+              updatedSelection.add(label);
+            }
+            onSelectionChanged(updatedSelection);
+          },
+          child: Container(
+            width: 100.w,
+            height: 100.w,
+            decoration: BoxDecoration(
+              color: isActive
+                  ? const Color.fromARGB(255, 0, 0, 255)
+                  : const Color.fromRGBO(255, 161, 117, 1),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

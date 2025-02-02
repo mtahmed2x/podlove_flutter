@@ -12,7 +12,20 @@
           "package_name": "com.sta.podlove_flutter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "5923503744-d7g878679a27n2m2icp0bbespuh6si9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sta.podlove_flutter",
+            "certificate_hash": "6bed69b38becba8e378ee00fc976a92107f1081a"
+          }
+        },
+        {
+          "client_id": "5923503744-8e9fmi6g3scjama2vpbj76e8qfb3td6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCI8suyWB116J_brddtzh1wtijkx4A7_So"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5923503744-8e9fmi6g3scjama2vpbj76e8qfb3td6j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "5923503744-nnijaeoqe26528mu59cvbo5k7pl6mqkc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sta.podloveFlutter"
+              }
+            }
+          ]
         }
       }
     }

@@ -1,35 +1,44 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'constants/api_endpoints.dart';
-import 'data/services/api_services.dart';
+import 'package:podlove_flutter/constants/api_endpoints.dart';
+import 'package:podlove_flutter/data/services/api_services.dart';
+import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:podlove_flutter/utils/global_error_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ApiServices.instance.init(baseUrl: ApiEndpoints.baseUrl);
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('isFirstTime', true);
-  // if (!prefs.containsKey('isFirstTime')) {
 
-  // }
+  final prefs = await SharedPreferences.getInstance();
+  if (!prefs.containsKey('isFirstTime')) {
+    await prefs.setBool('isFirstTime', true);
+  }
+
   await Firebase.initializeApp();
+
+  final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
   runApp(
     DevicePreview(
       enabled: true,
       builder: (context) {
-        return const ProviderScope(child: MyApp());
+        return ProviderScope(
+          observers: [GlobalErrorHandler(scaffoldMessengerKey)],
+          child: MyApp(scaffoldMessengerKey: scaffoldMessengerKey),
+        );
       },
     ),
   );
 }
 
 class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
+
+  const MyApp({super.key, required this.scaffoldMessengerKey});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,6 +56,7 @@ class MyApp extends ConsumerWidget {
           routerConfig: appRouter,
           locale: DevicePreview.locale(context),
           builder: DevicePreview.appBuilder,
+          scaffoldMessengerKey: scaffoldMessengerKey,
         );
       },
     );

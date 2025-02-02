@@ -8,21 +8,40 @@ import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
-import 'package:podlove_flutter/ui/widgets/custom_circle_group.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
-class SelectGender extends ConsumerWidget {
+class SelectGender extends ConsumerStatefulWidget {
   const SelectGender({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SelectGender> createState() => _SelectGenderState();
+}
+
+class _SelectGenderState extends ConsumerState<SelectGender> {
+  final List<String> genderOptions = [
+    AppStrings.female,
+    AppStrings.male,
+    AppStrings.nonBinary,
+    AppStrings.transgender,
+    AppStrings.genderFluid,
+  ];
+
+  String? selectedGender;
+
+  void selectGender(String gender) {
+    setState(() {
+      selectedGender = gender;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
     final error = userState?.error;
-
     if (error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,61 +75,89 @@ class SelectGender extends ConsumerWidget {
                         fontWeight: FontWeight.w500,
                       ),
                       SizedBox(height: 40.h),
-                      CustomCircleGroup(
-                        labels: [
-                          AppStrings.female,
-                          AppStrings.male,
-                          AppStrings.nonBinary,
-                          AppStrings.transgender,
-                          AppStrings.genderFluid,
-                        ],
-                        onCircleSelected: (index) {
-                          // Update the selected gender in the state
-                          final selectedGender = [
-                            AppStrings.female,
-                            AppStrings.male,
-                            AppStrings.nonBinary,
-                            AppStrings.transgender,
-                            AppStrings.genderFluid,
-                          ][index];
-                          userNotifier.updateGender(selectedGender);
-                        },
+                      GenderSelectionGroup(
+                        labels: genderOptions,
+                        selectedGender: selectedGender,
+                        onGenderSelected: selectGender,
                       ),
                     ],
                   ),
                 ),
                 SizedBox(height: 40.h),
-                Consumer(
-                  builder: (context, ref, _) {
-                    final state = ref.watch(userProvider);
-                    return CustomRoundButton(
-                      text: state?.isLoading == true
-                          ? AppStrings.saving
-                          : AppStrings.continueButton,
-                      onPressed: state?.isLoading == true
-                          ? null
-                          : () {
-                              if (state?.user.gender == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please select your gender'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                                return;
-                              }
-                              logger.i(state?.user.gender);
-                              context.go(RouterPath
-                                  .selectPreferredGender); // Navigate to the next screen
-                            },
-                    );
-                  },
+                CustomRoundButton(
+                  text: userState?.isLoading == true
+                      ? AppStrings.saving
+                      : AppStrings.continueButton,
+                  onPressed: userState?.isLoading == true
+                      ? null
+                      : () {
+                          if (selectedGender == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please select your gender'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          userNotifier.updateGender(selectedGender!);
+                          logger.i(selectedGender);
+                          context.push(RouterPath.selectPreferredGender);
+                        },
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class GenderSelectionGroup extends StatelessWidget {
+  final List<String> labels;
+  final String? selectedGender;
+  final Function(String) onGenderSelected;
+
+  const GenderSelectionGroup({
+    super.key,
+    required this.labels,
+    required this.selectedGender,
+    required this.onGenderSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 12.w,
+      runSpacing: 12.h,
+      alignment: WrapAlignment.center,
+      children: labels.map((label) {
+        final isActive = selectedGender == label;
+        return GestureDetector(
+          onTap: () => onGenderSelected(label),
+          child: Container(
+            width: 100.w,
+            height: 100.w,
+            decoration: BoxDecoration(
+              color: isActive
+                  ? const Color.fromARGB(255, 0, 0, 255)
+                  : const Color.fromRGBO(255, 161, 117, 1),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }

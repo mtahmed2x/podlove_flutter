@@ -6,21 +6,47 @@ import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
-import 'package:podlove_flutter/ui/widgets/custom_check_box.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
-class SelectPreferredBodyType extends ConsumerWidget {
+class SelectPreferredBodyType extends ConsumerStatefulWidget {
   const SelectPreferredBodyType({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SelectPreferredBodyType> createState() =>
+      _SelectPreferredBodyTypeState();
+}
+
+class _SelectPreferredBodyTypeState
+    extends ConsumerState<SelectPreferredBodyType> {
+  final List<String> bodyTypeOptions = [
+    "Athletic",
+    "Curvy",
+    "Slim",
+    "Average",
+    "Plus-size",
+    "Muscular"
+  ];
+
+  List<String> selectedBodyTypes = [];
+
+  void toggleBodyType(String bodyType) {
+    setState(() {
+      if (selectedBodyTypes.contains(bodyType)) {
+        selectedBodyTypes.remove(bodyType);
+      } else {
+        selectedBodyTypes.add(bodyType);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
     final error = userState?.error;
-
     if (error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,7 +76,7 @@ class SelectPreferredBodyType extends ConsumerWidget {
                       SizedBox(height: 25.h),
                       CustomText(
                         text: "What body type are you looking for?",
-                        color: Color.fromARGB(255, 51, 51, 51),
+                        color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 22.sp,
                         textAlign: TextAlign.center,
                         fontWeight: FontWeight.w500,
@@ -58,8 +84,8 @@ class SelectPreferredBodyType extends ConsumerWidget {
                       SizedBox(height: 20.h),
                       CustomText(
                         text:
-                            "Choose the option that best represents your preference",
-                        color: Color.fromARGB(255, 51, 51, 51),
+                            "Choose the option(s) that best represent your preference",
+                        color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         textAlign: TextAlign.center,
@@ -68,114 +94,85 @@ class SelectPreferredBodyType extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 30.h),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: "Please select one",
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Athletic",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredBodyType("Athletic");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Curvy",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredBodyType("Curvy");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Slim",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredBodyType("Slim");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Average",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredBodyType("Average");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Plus-size",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredBodyType("Plus-size");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Muscular",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredBodyType("Muscular");
-                        }
-                      },
-                    ),
-                  ],
+                CustomText(
+                  text: "Please select at least one",
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                SizedBox(height: 15.h),
+                CustomCheckboxGroup(
+                  labels: bodyTypeOptions,
+                  selectedItems: selectedBodyTypes,
+                  onItemSelected: toggleBodyType,
                 ),
                 SizedBox(height: 30.h),
-                Consumer(
-                  builder: (context, ref, _) {
-                    final state = ref.watch(userProvider);
-                    return CustomRoundButton(
-                      text: state?.isLoading == true ? "Saving" : "Continue",
-                      onPressed: state?.isLoading == true
-                          ? null
-                          : () {
-                              if (state?.user.preferences.bodyType == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Please select your preferred body type'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                                return;
-                              }
-                              logger.i(state?.user.preferences.bodyType);
-                              context.go(RouterPath
-                                  .selectEthnicity); // Navigate to the next screen
-                            },
-                    );
-                  },
+                CustomRoundButton(
+                  text: userState?.isLoading == true ? "Saving" : "Continue",
+                  onPressed: userState?.isLoading == true
+                      ? null
+                      : () {
+                          if (selectedBodyTypes.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Please select at least one preferred body type'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          userNotifier
+                              .updatePreferredBodyType(selectedBodyTypes);
+                          logger.i(selectedBodyTypes);
+                          context.push(RouterPath.selectEthnicity);
+                        },
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomCheckboxGroup extends StatelessWidget {
+  final List<String> labels;
+  final List<String> selectedItems;
+  final Function(String) onItemSelected;
+
+  const CustomCheckboxGroup({
+    super.key,
+    required this.labels,
+    required this.selectedItems,
+    required this.onItemSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: labels.map((label) {
+        return GestureDetector(
+          onTap: () => onItemSelected(label),
+          child: Row(
+            children: [
+              Checkbox(
+                value: selectedItems.contains(label),
+                activeColor: const Color.fromRGBO(255, 161, 117, 1),
+                checkColor: Colors.white,
+                onChanged: (value) => onItemSelected(label),
+              ),
+              Expanded(
+                child: CustomText(
+                  text: label,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

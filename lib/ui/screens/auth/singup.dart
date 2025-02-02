@@ -21,34 +21,44 @@ class SignUp extends ConsumerStatefulWidget {
 
 class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final signUpState = ref.watch(signUpProvider);
     final signUpNotifier = ref.read(signUpProvider.notifier);
 
-    ref.listen<SignUpState>(signUpProvider, (previous, current) {
-      if (current.isSuccess == true) {
-        context.push(
-          RouterPath.verifyCode,
-          extra: {
-            "status": AppStrings.emailActivationVerify,
-            "title": AppStrings.verifyEmail,
-            "instructionText": AppStrings.verifyCodeInstruction,
-            "phoneNumber": current.phoneNumber,
-            "email": current.email,
-          },
-        );
-      }
-      if (current.isSuccess != true && current.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(current.error!),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    });
+    ref.listen<SignUpState>(
+      signUpProvider,
+      (previous, current) {
+        if (current.isSuccess == true) {
+          context.push(
+            RouterPath.verifyCode,
+            extra: {
+              "status": AppStrings.emailActivationVerify,
+              "title": AppStrings.verifyEmail,
+              "instructionText": AppStrings.verifyCodeInstruction,
+              "phoneNumber": current.phoneNumber,
+              "email": current.email,
+            },
+          );
+        }
+      },
+    );
 
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.signUp),
@@ -85,7 +95,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     fieldType: TextFieldType.text,
                     label: AppStrings.fullName,
                     hint: AppStrings.fullNameHint,
-                    controller: signUpNotifier.nameController,
+                    controller: nameController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.enterFullNameError;
@@ -97,7 +107,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     fieldType: TextFieldType.email,
                     label: AppStrings.email,
                     hint: AppStrings.emailHint,
-                    controller: signUpNotifier.emailController,
+                    controller: emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.enterEmailError;
@@ -109,7 +119,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     fieldType: TextFieldType.text,
                     label: AppStrings.phoneNumber,
                     hint: AppStrings.phoneNumberHint,
-                    controller: signUpNotifier.phoneController,
+                    controller: phoneController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.enterPhoneNumberError;
@@ -121,7 +131,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                     fieldType: TextFieldType.password,
                     label: AppStrings.password,
                     hint: AppStrings.passwordHint,
-                    controller: signUpNotifier.passwordController,
+                    controller: passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.enterPasswordError;
@@ -133,12 +143,12 @@ class _SignUpState extends ConsumerState<SignUp> {
                     fieldType: TextFieldType.password,
                     label: AppStrings.confirmPassword,
                     hint: AppStrings.confirmPasswordHint,
-                    controller: signUpNotifier.confirmPasswordController,
+                    controller: confirmPasswordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.confirmPasswordError;
                       }
-                      if (value != signUpNotifier.passwordController.text) {
+                      if (value != passwordController.text) {
                         return AppStrings.passwordMismatchError;
                       }
                       return null;
@@ -151,9 +161,14 @@ class _SignUpState extends ConsumerState<SignUp> {
                         : AppStrings.signUp,
                     onPressed: signUpState.isLoading
                         ? null
-                        : () {
+                        : () async {
                             if (_formKey.currentState?.validate() ?? false) {
-                              signUpNotifier.signUp();
+                              signUpNotifier.signUp(
+                                nameController.text,
+                                emailController.text,
+                                phoneController.text,
+                                passwordController.text,
+                              );
                             }
                           },
                   ),

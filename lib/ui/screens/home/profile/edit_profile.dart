@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -44,7 +43,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       _phoneController.text = user.phoneNumber;
       _bioController.text = user.bio;
       _ageController.text = user.age.toString();
-      _genderPreferenceController.text = user.preferences.gender;
+      // _genderPreferenceController.text = user.preferences.gender;
       _locationController.text = widget.getLastTwoParts(user.location.place);
     }
   }
@@ -169,12 +168,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     userNotifier.updateGender(selectedValue);
                   },
                 ),
-                SizedBox(height: 25.h),
-                CustomTextField(
-                  fieldType: TextFieldType.text,
-                  label: "Gender Preference",
-                  controller: _genderPreferenceController,
-                ),
+                // SizedBox(height: 25.h),
+                // CustomTextField(
+                //   fieldType: TextFieldType.text,
+                //   label: "Gender Preference",
+                //   controller: _genderPreferenceController,
+                // ),
                 SizedBox(height: 5.h),
                 CustomTextField(
                   fieldType: TextFieldType.text,
@@ -194,8 +193,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     userNotifier.updateAge(int.tryParse(_ageController.text) ??
                         userState.user.age);
                     userNotifier.updateGender(_genderPreferenceController.text);
-                    userNotifier.updatePreferredGender(
-                        _genderPreferenceController.text);
+                    // userNotifier.updatePreferredGender(
+                    //     _genderPreferenceController.text);
                     userNotifier.updateLocation(
                         userState.user.location.latitude,
                         userState.user.location.longitude,
@@ -203,7 +202,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
                     try {
                       await userNotifier.update();
-                      context.go(RouterPath.profile);
+                      context.push(RouterPath.profile);
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("Failed to update profile: $e")),

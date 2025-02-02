@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:podlove_flutter/data/services/api_exceptions.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'api_exceptions.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class ApiServices {
@@ -9,26 +9,20 @@ class ApiServices {
   static final ApiServices instance = ApiServices._privateConstructor();
 
   late Dio _dio;
-  bool _isInitialized = false; // Track if _dio is initialized
+  bool _isInitialized = false;
 
-  Future<void> init(
-      {required String baseUrl, Map<String, dynamic>? headers}) async {
-    if (_isInitialized) return; // Prevent multiple initializations
-
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('accessToken');
+  Future<void> init({
+    required String baseUrl,
+    Map<String, dynamic>? headers,
+  }) async {
+    if (_isInitialized) return;
 
     BaseOptions options = BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
-      headers: headers ??
-          {
-            'Content-Type': 'application/json',
-          },
-      validateStatus: (status) {
-        return status! < 500;
-      },
+      headers: headers ?? {'Content-Type': 'application/json'},
+      validateStatus: (status) => status! < 500,
     );
 
     _dio = Dio(options);
@@ -46,10 +40,9 @@ class ApiServices {
       onRequest: (options, handler) async {
         final prefs = await SharedPreferences.getInstance();
         final token = prefs.getString('accessToken') ?? "No Token Found";
-
         options.headers['Authorization'] = 'Bearer $token';
 
-        logger.i("🔑 Sending Request with Access Token: $token"); // Log token
+        logger.i("🔑 Sending Request with Access Token: $token");
         logger.i("📤 Request URL: ${options.uri}");
         logger.i("📦 Request Headers: ${options.headers}");
 
@@ -74,19 +67,15 @@ class ApiServices {
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onReceiveProgress,
   }) async {
     try {
       return await dio.get<T>(
         path,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
-        onReceiveProgress: onReceiveProgress,
       );
     } on DioException catch (e) {
-      throw _handleDioError(e);
+      throw ApiExceptionHandler.handleDioError(e);
     }
   }
 
@@ -95,9 +84,6 @@ class ApiServices {
     data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
   }) async {
     try {
       return await dio.post<T>(
@@ -105,12 +91,9 @@ class ApiServices {
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress,
       );
     } on DioException catch (e) {
-      throw _handleDioError(e);
+      throw ApiExceptionHandler.handleDioError(e);
     }
   }
 
@@ -119,9 +102,6 @@ class ApiServices {
     data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
   }) async {
     try {
       return await dio.patch<T>(
@@ -129,12 +109,9 @@ class ApiServices {
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress,
       );
     } on DioException catch (e) {
-      throw _handleDioError(e);
+      throw ApiExceptionHandler.handleDioError(e);
     }
   }
 
@@ -143,7 +120,6 @@ class ApiServices {
     data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
   }) async {
     try {
       return await dio.delete<T>(
@@ -151,42 +127,9 @@ class ApiServices {
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
       );
     } on DioException catch (e) {
-      throw _handleDioError(e);
-    }
-  }
-
-  ApiException _handleDioError(DioException error) {
-    switch (error.type) {
-      case DioExceptionType.cancel:
-        return ApiException("Request to API server was cancelled");
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-        return TimeoutException("Connection Timeout with API server");
-      case DioExceptionType.badResponse:
-        int? statusCode = error.response?.statusCode;
-        String message =
-            error.response?.statusMessage ?? "Something went wrong";
-        switch (statusCode) {
-          case 400:
-            return BadRequestException(message);
-          case 401:
-          case 403:
-            return UnauthorizedException(message);
-          case 404:
-            return NotFoundException(message);
-          case 500:
-            return InternalServerException(message);
-          default:
-            return ApiException(message);
-        }
-      case DioExceptionType.badCertificate:
-      case DioExceptionType.connectionError:
-      case DioExceptionType.unknown:
-        return NoInternetException("No Internet connection");
+      throw ApiExceptionHandler.handleDioError(e);
     }
   }
 }

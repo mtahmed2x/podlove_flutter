@@ -6,21 +6,43 @@ import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
-import 'package:podlove_flutter/ui/widgets/custom_check_box.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
-class SelectEthnicity extends ConsumerWidget {
+class SelectEthnicity extends ConsumerStatefulWidget {
   const SelectEthnicity({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SelectEthnicity> createState() => _SelectEthnicityState();
+}
+
+class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
+  final List<String> ethnicityOptions = [
+    "African American/Black",
+    "Asian",
+    "Caucasian/White",
+    "Hispanic/Latino",
+    "Middle Eastern",
+    "Native American",
+    "Pacific Islander",
+    "Other"
+  ];
+
+  String? selectedEthnicity;
+
+  void selectEthnicity(String ethnicity) {
+    setState(() {
+      selectedEthnicity = ethnicity;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
     final error = userState?.error;
-
     if (error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -50,7 +72,7 @@ class SelectEthnicity extends ConsumerWidget {
                       SizedBox(height: 25.h),
                       CustomText(
                         text: "What is your ethnicity?",
-                        color: Color.fromARGB(255, 51, 51, 51),
+                        color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 22.sp,
                         textAlign: TextAlign.center,
                         fontWeight: FontWeight.w500,
@@ -59,137 +81,83 @@ class SelectEthnicity extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 30.h),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: "Please select at least one",
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "African American/Black ",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier
-                              .updateEthnicity("African American/Black");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Asian",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Asian");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Caucasian/White",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Caucasian/White");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Hispanic/Latino",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Hispanic/Latino");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Middle Eastern",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Middle Eastern");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Native American",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Native American");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Pacific Islander",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Pacific Islander");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Other",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updateEthnicity("Other");
-                        }
-                      },
-                    ),
-                  ],
+                CustomText(
+                  text: "Please select one",
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                SizedBox(height: 15.h),
+                CustomCheckboxGroup(
+                  labels: ethnicityOptions,
+                  selectedItem: selectedEthnicity,
+                  onItemSelected: selectEthnicity,
                 ),
                 SizedBox(height: 30.h),
-                Consumer(
-                  builder: (context, ref, _) {
-                    final state = ref.watch(userProvider);
-                    return CustomRoundButton(
-                      text: state?.isLoading == true ? "Saving" : "Continue",
-                      onPressed: state?.isLoading == true
-                          ? null
-                          : () {
-                              if (state?.user.ethnicity == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Please select your ethnicity'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                                return;
-                              }
-                              logger.i(state?.user.ethnicity);
-                              context.go(RouterPath
-                                  .selectPreferredEthnicities); // Navigate to the next screen
-                            },
-                    );
-                  },
+                CustomRoundButton(
+                  text: userState?.isLoading == true ? "Saving" : "Continue",
+                  onPressed: userState?.isLoading == true
+                      ? null
+                      : () {
+                          if (selectedEthnicity == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please select your ethnicity'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          userNotifier.updateEthnicity(selectedEthnicity!);
+                          logger.i(selectedEthnicity);
+                          context.push(RouterPath.selectPreferredEthnicities);
+                        },
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomCheckboxGroup extends StatelessWidget {
+  final List<String> labels;
+  final String? selectedItem;
+  final Function(String) onItemSelected;
+
+  const CustomCheckboxGroup({
+    super.key,
+    required this.labels,
+    required this.selectedItem,
+    required this.onItemSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: labels.map((label) {
+        return GestureDetector(
+          onTap: () => onItemSelected(label),
+          child: Row(
+            children: [
+              Checkbox(
+                value: selectedItem == label,
+                activeColor: const Color.fromRGBO(255, 161, 117, 1),
+                checkColor: Colors.white,
+                onChanged: (value) => onItemSelected(label),
+              ),
+              Expanded(
+                child: CustomText(
+                  text: label,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

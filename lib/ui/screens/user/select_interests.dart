@@ -17,7 +17,6 @@ class SelectInterests extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
     final selectedInterests = ref.watch(selectedInterestsProvider);
     final selectedInterestsNotifier =

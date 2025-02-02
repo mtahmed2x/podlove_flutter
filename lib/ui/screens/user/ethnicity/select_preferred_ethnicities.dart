@@ -6,21 +6,49 @@ import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
-import 'package:podlove_flutter/ui/widgets/custom_check_box.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
-class SelectPreferredEthnicities extends ConsumerWidget {
+class SelectPreferredEthnicities extends ConsumerStatefulWidget {
   const SelectPreferredEthnicities({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SelectPreferredEthnicities> createState() =>
+      _SelectPreferredEthnicitiesState();
+}
+
+class _SelectPreferredEthnicitiesState
+    extends ConsumerState<SelectPreferredEthnicities> {
+  final List<String> ethnicityOptions = [
+    "African American/Black",
+    "Asian",
+    "Caucasian/White",
+    "Hispanic/Latino",
+    "Middle Eastern",
+    "Native American",
+    "Pacific Islander",
+    "Other"
+  ];
+
+  List<String> selectedEthnicities = [];
+
+  void toggleEthnicity(String ethnicity) {
+    setState(() {
+      if (selectedEthnicities.contains(ethnicity)) {
+        selectedEthnicities.remove(ethnicity);
+      } else {
+        selectedEthnicities.add(ethnicity);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
     final error = userState?.error;
-
     if (error != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -52,7 +80,7 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                       CustomText(
                         text:
                             "At PodLove, we believe love can flourish across all backgrounds. Are there any cultural or ethnic preferences that are important for you in a partner?",
-                        color: Color.fromARGB(255, 51, 51, 51),
+                        color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 18.sp,
                         textAlign: TextAlign.center,
                         fontWeight: FontWeight.w500,
@@ -61,137 +89,38 @@ class SelectPreferredEthnicities extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(height: 30.h),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      text: "Please select at least one",
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "African American/Black",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredEthnicity(
-                              "African American/Black");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Asian",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Asian");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Caucasian/White",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier
-                              .updatePreferredEthnicity("Caucasian/White");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Hispanic/Latino",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier
-                              .updatePreferredEthnicity("Hispanic/Latino");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Middle Eastern",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier
-                              .updatePreferredEthnicity("Middle Eastern");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Native American",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier
-                              .updatePreferredEthnicity("Native American");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Pacific Islander",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier
-                              .updatePreferredEthnicity("Pacific Islander");
-                        }
-                      },
-                    ),
-                    SizedBox(height: 15.h),
-                    CustomCheckbox(
-                      label: "Other",
-                      labelFontSize: 18.sp,
-                      labelFontWeight: FontWeight.w400,
-                      onChanged: (value) {
-                        if (value == true) {
-                          userNotifier.updatePreferredEthnicity("Other");
-                        }
-                      },
-                    ),
-                  ],
+                CustomText(
+                  text: "Please select at least one",
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+                SizedBox(height: 15.h),
+                CustomCheckboxGroup(
+                  labels: ethnicityOptions,
+                  selectedItems: selectedEthnicities,
+                  onItemSelected: toggleEthnicity,
                 ),
                 SizedBox(height: 50.h),
-                Consumer(
-                  builder: (context, ref, _) {
-                    final state = ref.watch(userProvider);
-                    return CustomRoundButton(
-                      text: state?.isLoading == true ? "Saving" : "Continue",
-                      onPressed: state?.isLoading == true
-                          ? null
-                          : () {
-                              if (state?.user.preferences.ethnicity == null ||
-                                  state!.user.preferences.ethnicity.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Please select at least one preference'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                                return;
-                              }
-                              logger.i(state.user.preferences.ethnicity);
-                              context.go(RouterPath
-                                  .addBio); // Navigate to the next screen
-                            },
-                    );
-                  },
+                CustomRoundButton(
+                  text: userState?.isLoading == true ? "Saving" : "Continue",
+                  onPressed: userState?.isLoading == true
+                      ? null
+                      : () {
+                          if (selectedEthnicities.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Please select at least one preference'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          userNotifier
+                              .updatePreferredEthnicity(selectedEthnicities);
+                          logger.i(selectedEthnicities);
+                          context.go(RouterPath.addBio);
+                        },
                 ),
                 SizedBox(height: 50.h),
               ],
@@ -199,6 +128,47 @@ class SelectPreferredEthnicities extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomCheckboxGroup extends StatelessWidget {
+  final List<String> labels;
+  final List<String> selectedItems;
+  final Function(String) onItemSelected;
+
+  const CustomCheckboxGroup({
+    super.key,
+    required this.labels,
+    required this.selectedItems,
+    required this.onItemSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: labels.map((label) {
+        return GestureDetector(
+          onTap: () => onItemSelected(label),
+          child: Row(
+            children: [
+              Checkbox(
+                value: selectedItems.contains(label),
+                activeColor: const Color.fromRGBO(255, 161, 117, 1),
+                checkColor: Colors.white,
+                onChanged: (value) => onItemSelected(label),
+              ),
+              Expanded(
+                child: CustomText(
+                  text: label,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 }

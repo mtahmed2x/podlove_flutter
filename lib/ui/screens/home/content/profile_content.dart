@@ -129,22 +129,22 @@ class ProfileContent extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomText(
-                          text: "Gender Preference:",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        const SizedBox(width: 10),
-                        CustomText(
-                          text: userState.user.preferences.gender,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     CustomText(
+                    //       text: "Gender Preference:",
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.w500,
+                    //     ),
+                    //     const SizedBox(width: 10),
+                    //     CustomText(
+                    //       text: userState.user.preferences.gender,
+                    //       fontSize: 16,
+                    //       fontWeight: FontWeight.w400,
+                    //     ),
+                    //   ],
+                    // ),
                     const SizedBox(height: 30),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

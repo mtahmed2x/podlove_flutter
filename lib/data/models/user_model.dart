@@ -1,5 +1,3 @@
-import 'package:podlove_flutter/data/models/auth_model.dart';
-
 class UserModel {
   final Auth auth;
   final Personality personality;
@@ -134,11 +132,10 @@ class Auth {
   });
 
   factory Auth.fromJson(Map<String, dynamic> json) => Auth(
-    id: json["_id"],
-    email: json["email"],
-  );
+        id: json["_id"],
+        email: json["email"],
+      );
 }
-
 
 class Location {
   final String place;
@@ -214,9 +211,9 @@ class Personality {
 
 class Preferences {
   final Age age;
-  final String gender;
-  final String bodyType;
-  final String ethnicity;
+  final List<String> gender;
+  final List<String> bodyType;
+  final List<String> ethnicity;
   final int distance;
 
   Preferences({
@@ -229,9 +226,9 @@ class Preferences {
 
   factory Preferences.fromJson(Map<String, dynamic> json) => Preferences(
         age: Age.fromJson(json["age"]),
-        gender: json["gender"],
-        bodyType: json["bodyType"],
-        ethnicity: json["ethnicity"],
+        gender: List<String>.from(json["gender"] ?? []),
+        bodyType: List<String>.from(json["bodyType"] ?? []),
+        ethnicity: List<String>.from(json["ethnicity"] ?? []),
         distance: json["distance"],
       );
 
@@ -245,9 +242,9 @@ class Preferences {
 
   Preferences copyWith({
     Age? age,
-    String? gender,
-    String? bodyType,
-    String? ethnicity,
+    List<String>? gender,
+    List<String>? bodyType,
+    List<String>? ethnicity,
     int? distance,
   }) {
     return Preferences(

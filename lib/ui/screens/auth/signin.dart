@@ -23,6 +23,15 @@ class SignIn extends ConsumerStatefulWidget {
 
 class _SignInState extends ConsumerState<SignIn> {
   final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +40,7 @@ class _SignInState extends ConsumerState<SignIn> {
 
     ref.listen(signInProvider, (prev, current) {
       if (current.isSuccess == true) {
-        context.go(RouterPath.home);
+        context.push(RouterPath.home);
       }
     });
 
@@ -69,7 +78,7 @@ class _SignInState extends ConsumerState<SignIn> {
                     fieldType: TextFieldType.email,
                     label: AppStrings.email,
                     hint: AppStrings.emailHint,
-                    controller: signInNotifier.emailController,
+                    controller: emailController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.enterEmailError;
@@ -81,7 +90,7 @@ class _SignInState extends ConsumerState<SignIn> {
                     fieldType: TextFieldType.password,
                     label: AppStrings.password,
                     hint: AppStrings.passwordHint,
-                    controller: signInNotifier.passwordController,
+                    controller: passwordController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppStrings.enterPasswordError;
@@ -121,7 +130,10 @@ class _SignInState extends ConsumerState<SignIn> {
                         ? null
                         : () async {
                             if (_formKey.currentState!.validate()) {
-                              signInNotifier.signIn();
+                              signInNotifier.signIn(
+                                emailController.text,
+                                passwordController.text,
+                              );
                             }
                           },
                   ),
@@ -170,7 +182,6 @@ class _SignInState extends ConsumerState<SignIn> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30.h),
                 ],
               ),
             ),

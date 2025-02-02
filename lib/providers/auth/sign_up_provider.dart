@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:podlove_flutter/data/models/Response/sign_up_response_model.dart';
-import 'package:podlove_flutter/data/services/api_services.dart';
+import 'package:http_status_code/http_status_code.dart';
+import 'package:podlove_flutter/constants/api_endpoints.dart';
+import 'package:podlove_flutter/data/services/api_exceptions.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 
 class SignUpState {
@@ -10,7 +10,6 @@ class SignUpState {
   final String? error;
   final String? phoneNumber;
   final String? email;
-  final SignUpResponseModel? response;
 
   SignUpState({
     this.isLoading = false,
@@ -18,7 +17,6 @@ class SignUpState {
     this.error,
     this.phoneNumber,
     this.email,
-    this.response,
   });
 
   factory SignUpState.initial() {
@@ -28,7 +26,6 @@ class SignUpState {
       error: null,
       phoneNumber: null,
       email: null,
-      response: null,
     );
   }
 
@@ -38,92 +35,76 @@ class SignUpState {
     String? error,
     String? phoneNumber,
     String? email,
-    SignUpResponseModel? response,
   }) {
     return SignUpState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      phoneNumber: phoneNumber ?? phoneNumber,
-      email: email ?? email,
-      error: error ?? error,
-      response: response ?? response,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      email: email ?? this.email,
+      error: error ?? this.error,
     );
   }
 }
 
 class SignUpNotifier extends StateNotifier<SignUpState> {
-  final ApiServices apiService;
+  final Ref ref;
 
-  SignUpNotifier(this.apiService) : super(SignUpState());
+  SignUpNotifier(this.ref) : super(SignUpState.initial());
 
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  Future<void> signUp(
+    String name,
+    String email,
+    String phone,
+    String password,
+  ) async {
+    final apiService = ref.read(apiServiceProvider);
 
-  Future<void> signUp() async {
     final signUpData = {
-      "name": nameController.text,
-      "email": emailController.text,
-      "role": "USER",
-      "phoneNumber": phoneController.text,
-      "password": passwordController.text,
-      "confirmPassword": passwordController.text,
+      "name": name,
+      "email": email,
+      "phoneNumber": phone,
+      "password": password,
+      "confirmPassword": password,
     };
 
+    state = state.copyWith(isLoading: true);
+
     try {
-      state = state.copyWith(isLoading: true);
+      final response =
+          await apiService.post(ApiEndpoints.signUp, data: signUpData);
 
-      final response = await apiService.post(
-        "/auth/register",
-        data: signUpData,
-      );
-      final signUpResponse = SignUpResponseModel.fromJson(response);
-
-      if (signUpResponse.statusCode == 201) {
+      if (response.statusCode == StatusCode.CREATED) {
         state = state.copyWith(
-            isSuccess: true,
-            error: null,
-            isLoading: false,
-            phoneNumber: signUpData["phoneNumber"],
-            email: signUpData["email"]);
-      } else if (signUpResponse.statusCode == 400) {
-        state = state.copyWith(
-          isSuccess: false,
-          error: "Signup failed : ${signUpResponse.message}",
-          isLoading: false,
+          isSuccess: true,
+          phoneNumber: signUpData["phoneNumber"],
+          email: signUpData["email"],
         );
-      } else if (signUpResponse.statusCode == 409) {
-        final error = signUpResponse.data?.isVerified == true
+      } else if (response.statusCode == StatusCode.BAD_REQUEST) {
+        final errorMessage =
+            response.data['data']?['message'] ?? "Signup failed.";
+        state = state.copyWith(isSuccess: false, error: errorMessage);
+      } else if (response.statusCode == StatusCode.CONFLICT) {
+        final error = response.data['data']?['isVerified'] == true
             ? "Your account already exists. Please login."
             : "Your account already exists. Please verify.";
-        state =
-            state.copyWith(isSuccess: false, error: error, isLoading: false);
+        state = state.copyWith(isSuccess: false, error: error);
+      } else {
+        state = state.copyWith(
+            isSuccess: false, error: "Unexpected error occurred.");
       }
+    } on ApiException catch (e) {
+      state = state.copyWith(isSuccess: false, error: e.message);
     } catch (e) {
-      state = state.copyWith(
-        isSuccess: false,
-        error: "An unexpected error occurred. Please try again.",
-        isLoading: false,
-      );
+      state =
+          state.copyWith(isSuccess: false, error: "An unknown error occurred.");
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    phoneController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
   }
 }
 
 final signUpProvider = StateNotifierProvider<SignUpNotifier, SignUpState>(
   (ref) {
-    final apiService = ref.read(apiServiceProvider);
-    return SignUpNotifier(apiService);
+    return SignUpNotifier(ref);
   },
 );

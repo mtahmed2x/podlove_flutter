@@ -15,10 +15,8 @@ class SelectPersonalityTraits extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userState = ref.watch(userProvider);
     final userNotifier = ref.read(userProvider.notifier);
 
-    final isLoading = userState?.isLoading ?? false;
 
     return Scaffold(
       appBar: CustomAppBar(title: "Personality Traits"),
