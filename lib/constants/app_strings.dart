@@ -2,8 +2,10 @@ class AppStrings {
   static const String signUp = "Sign Up";
   static const String emailActivationVerify = "EmailActivationVerify";
   static const String verifyEmail = "Verify Email";
-  static const String verifyCodeInstruction =
+  static const String verifyEmailInstruction =
       "Please enter the six digit code we sent you to your email";
+  static const String verifyPhoneInstruction =
+      "Please enter the six digit code we sent you to your phone";
   static const String podLoveLogoPath = "assets/images/podLove.png";
   static const String welcome = "Welcome!";
   static const String fullName = "Full Name";

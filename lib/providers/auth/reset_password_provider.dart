@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/models/Response/reset_password_response_model.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/utils/logger.dart';
@@ -39,17 +38,17 @@ class ResetPasswordState {
 }
 
 class ResetPasswordNotifier extends StateNotifier<ResetPasswordState> {
-  final ApiServices apiService;
+  final Ref ref;
 
-  ResetPasswordNotifier(this.apiService) : super(ResetPasswordState());
+  ResetPasswordNotifier(this.ref) : super(ResetPasswordState.initial());
 
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
-  Future<void> resetPassword() async {
+  Future<void> resetPassword(
+      String email, String password, String confirmPassword) async {
+    final apiService = ref.read(apiServiceProvider);
     final resetPasswordData = {
-      "password": passwordController.text,
-      "confirmPassword": confirmPasswordController.text
+      "email": email,
+      "password": password,
+      "confirmPassword": confirmPassword
     };
 
     try {
@@ -60,12 +59,6 @@ class ResetPasswordNotifier extends StateNotifier<ResetPasswordState> {
         data: resetPasswordData,
       );
       logger.i(response);
-      final ResetPasswordResponseModel resetPasswordResponse =
-          ResetPasswordResponseModel.fromJson(response);
-
-      if (resetPasswordResponse.success == true) {
-        state = state.copyWith(isSuccess: true);
-      }
     } catch (e) {
       state = state.copyWith(
         isSuccess: false,
@@ -76,19 +69,11 @@ class ResetPasswordNotifier extends StateNotifier<ResetPasswordState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
-  @override
-  void dispose() {
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
-  }
 }
 
 final resetPasswordProvider =
     StateNotifierProvider<ResetPasswordNotifier, ResetPasswordState>(
   (ref) {
-    final apiService = ref.read(apiServiceProvider);
-    return ResetPasswordNotifier(apiService);
+    return ResetPasswordNotifier(ref);
   },
 );

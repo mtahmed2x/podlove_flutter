@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
@@ -49,10 +50,7 @@ class _SignUpState extends ConsumerState<SignUp> {
           context.push(
             RouterPath.verifyCode,
             extra: {
-              "status": AppStrings.emailActivationVerify,
-              "title": AppStrings.verifyEmail,
-              "instructionText": AppStrings.verifyCodeInstruction,
-              "phoneNumber": current.phoneNumber,
+              "method": Method.emailActivation,
               "email": current.email,
             },
           );

@@ -39,9 +39,13 @@ class _SignInState extends ConsumerState<SignIn> {
     final signInNotifier = ref.read(signInProvider.notifier);
 
     ref.listen(signInProvider, (prev, current) {
-      if (current.isSuccess == true) {
+      if (current.isSuccess == true && current.isProfileComplete == true) {
         context.push(RouterPath.home);
       }
+      if (current.isSuccess == true && current.isProfileComplete == false) {
+        context.push(RouterPath.locationAccess);
+      }
+
     });
 
     return Scaffold(

@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 
 class ChangePasswordState {
@@ -37,24 +35,19 @@ class ChangePasswordState {
 }
 
 class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
-  final ApiServices apiService;
+  final Ref ref;
 
-  ChangePasswordNotifier(this.apiService) : super(ChangePasswordState());
+  ChangePasswordNotifier(this.ref) : super(ChangePasswordState());
 
-  final currentPasswordController = TextEditingController();
-  final newPasswordController = TextEditingController();
-  final retypePasswordController = TextEditingController();
-
-  Future<void> changePassword() async {
+  Future<void> changePassword(String password, String newPassword, String confirmPassword) async {
     final changePasswordData = {
-      "password": currentPasswordController.text,
-      "newPassword": newPasswordController.text,
-      "confirmPassword": retypePasswordController.text,
+      "password": password,
+      "newPassword": newPassword,
+      "confirmPassword": confirmPassword,
     };
-
+    state = state.copyWith(isLoading: true);
     try {
-      state = state.copyWith(isLoading: true);
-
+      final apiService = ref.read(apiServiceProvider);
       final response = await apiService.post(
         ApiEndpoints.changePassword,
         data: changePasswordData,
@@ -75,20 +68,8 @@ class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
-  @override
-  void dispose() {
-    currentPasswordController.dispose();
-    newPasswordController.dispose();
-    retypePasswordController.dispose();
-    super.dispose();
-  }
 }
 
 final changePasswordProvider =
     StateNotifierProvider<ChangePasswordNotifier, ChangePasswordState>(
-  (ref) {
-    final apiService = ref.read(apiServiceProvider);
-    return ChangePasswordNotifier(apiService);
-  },
-);
+        (ref) => ChangePasswordNotifier(ref));

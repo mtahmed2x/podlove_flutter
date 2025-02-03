@@ -17,6 +17,9 @@ void main() async {
   if (!prefs.containsKey('isFirstTime')) {
     await prefs.setBool('isFirstTime', true);
   }
+  if (!prefs.containsKey('isProfileComplete')) {
+    await prefs.setBool('isProfileComplete', false);
+  }
 
   await Firebase.initializeApp();
 

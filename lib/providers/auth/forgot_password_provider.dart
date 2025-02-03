@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
-import 'package:podlove_flutter/data/models/Response/forgot_password_response_model.dart';
-import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
@@ -44,29 +42,25 @@ class ForgotPasswordState {
 }
 
 class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
-  final ApiServices apiService;
+  final Ref ref;
 
-  ForgotPasswordNotifier(this.apiService) : super(ForgotPasswordState());
+  ForgotPasswordNotifier(this.ref) : super(ForgotPasswordState.initial());
 
-  final emailController = TextEditingController();
-
-  Future<void> forgotPassword() async {
+  Future<void> forgotPassword(String email) async {
     final forgotPasswordData = {
-      "email": emailController.text,
+      "email": email,
     };
 
+    state = state.copyWith(isLoading: true);
     try {
-      state = state.copyWith(isLoading: true);
-
+      final apiService = ref.read(apiServiceProvider);
       final response = await apiService.post(
         ApiEndpoints.forgotPassword,
         data: forgotPasswordData,
       );
       logger.i(response);
-      final ForgotPasswordResponseModel forgotPasswordResponse =
-          ForgotPasswordResponseModel.fromJson(response);
 
-      if (forgotPasswordResponse.success == true) {
+      if (response.statusCode == StatusCode.OK) {
         state =
             state.copyWith(isSuccess: true, email: forgotPasswordData["email"]);
       }
@@ -80,18 +74,8 @@ class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    super.dispose();
-  }
 }
 
 final forgotPasswordProvider =
     StateNotifierProvider<ForgotPasswordNotifier, ForgotPasswordState>(
-  (ref) {
-    final apiService = ref.read(apiServiceProvider);
-    return ForgotPasswordNotifier(apiService);
-  },
-);
+        (ref) => ForgotPasswordNotifier(ref));

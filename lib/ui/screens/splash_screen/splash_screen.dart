@@ -16,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     final isFirstTime = prefs.getBool("isFirstTime") ?? true;
     final accessToken = prefs.getString("accessToken");
+    final isProfileComplete = prefs.getBool("isProfileComplete");
 
     if (!mounted) return;
 
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (mounted) {
         context.push(RouterPath.approachToLove);
       }
-    } else if (accessToken != null) {
+    } else if (accessToken != null && isProfileComplete!) {
       if (mounted) {
         context.push(RouterPath.home);
       }

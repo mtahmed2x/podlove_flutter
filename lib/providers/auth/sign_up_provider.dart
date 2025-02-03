@@ -3,6 +3,7 @@ import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/data/services/api_exceptions.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpState {
   final bool isLoading;
@@ -74,6 +75,9 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
           await apiService.post(ApiEndpoints.signUp, data: signUpData);
 
       if (response.statusCode == StatusCode.CREATED) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isProfileComplete', false);
+
         state = state.copyWith(
           isSuccess: true,
           phoneNumber: signUpData["phoneNumber"],

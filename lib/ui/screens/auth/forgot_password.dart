@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/auth/forgot_password_provider.dart';
@@ -19,6 +20,13 @@ class ForgotPassword extends ConsumerStatefulWidget {
 
 class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +40,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
           context.push(
             RouterPath.verifyCode,
             extra: {
-              "status": AppStrings.emailRecoveryVerify,
-              "title": AppStrings.verifyEmailTitle,
-              "instructionText": AppStrings.verifyCodeInstruction,
+              "method": Method.emailRecovery,
               "email": current.email,
             },
           );
@@ -89,7 +95,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                       }
                       return null;
                     },
-                    controller: forgotPasswordNotifier.emailController,
+                    controller: emailController,
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -101,7 +107,7 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                       ? null
                       : () {
                           if (_formKey.currentState!.validate()) {
-                            forgotPasswordNotifier.forgotPassword();
+                            forgotPasswordNotifier.forgotPassword(emailController.text);
                           }
                         },
                 ),

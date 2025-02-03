@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/data/models/auth_model.dart';
 import 'package:podlove_flutter/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/utils/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserState {
   final UserModel user;
@@ -302,17 +304,24 @@ class UserNotifier extends StateNotifier<UserState?> {
         data: userUpdateData,
       );
 
-      logger.i(response);
-      logger.i(response.data["data"]);
+      if(response.statusCode == StatusCode.OK) {
+        logger.i(response);
+        logger.i(response.data["data"]);
+        final userResponse = UserModel.fromJson(response.data["data"]);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isProfileComplete', true);
+        logger.i(userResponse.name);
 
-      final userResponse = UserModel.fromJson(response.data["data"]);
-      logger.i(userResponse.name);
+        state = state!.copyWith(
+          isLoading: false,
+          isSuccess: true,
+          error: null,
+        );
+      }
 
-      state = state!.copyWith(
-        isLoading: false,
-        isSuccess: true,
-        error: null,
-      );
+
+
+
     } catch (e) {
       state = state!.copyWith(
         isLoading: false,

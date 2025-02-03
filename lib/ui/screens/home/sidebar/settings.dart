@@ -14,7 +14,7 @@ class Settings extends ConsumerWidget {
     final deleteAccountState = ref.watch(deleteAccountProvider);
     final deleteAccountNotifier = ref.read(deleteAccountProvider.notifier);
 
-    ref.listen(deleteAccountProvider, (prev, current) {
+    ref.listen<DeleteAccountState>(deleteAccountProvider, (prev, current) {
       if (current.isSuccess == true) {
         context.go(RouterPath.signIn);
       }

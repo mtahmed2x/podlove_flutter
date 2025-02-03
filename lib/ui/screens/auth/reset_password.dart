@@ -5,26 +5,38 @@ import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/providers/auth/reset_password_provider.dart';
+import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
+import 'package:podlove_flutter/ui/widgets/show_success_dialog.dart';
 
 class ResetPassword extends ConsumerStatefulWidget {
-  const ResetPassword({super.key});
+  final String? email;
+
+  const ResetPassword({super.key, required this.email});
+
   @override
   ConsumerState<ResetPassword> createState() => _ResetPasswordState();
 }
 
 class _ResetPasswordState extends ConsumerState<ResetPassword> {
   final _formKey = GlobalKey<FormState>();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final resetPasswordState = ref.watch(resetPasswordProvider);
     final resetPasswordNotifier = ref.watch(resetPasswordProvider.notifier);
 
     ref.listen<ResetPasswordState>(
-        resetPasswordProvider, (previous, current) {});
+        resetPasswordProvider, (previous, current) {
+          if(current.isSuccess == true) {
+            showSuccessDialog(context, "Success", "Password Changed Successfully", RouterPath.signIn);
+          }
+    });
 
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.resetPasswordTitle),
@@ -69,11 +81,13 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                         fieldType: TextFieldType.password,
                         label: AppStrings.enterNewPasswordLabel,
                         hint: AppStrings.enterNewPasswordHint,
+                        controller: passwordController,
                       ),
                       CustomTextField(
                         fieldType: TextFieldType.password,
                         label: AppStrings.confirmNewPasswordLabel,
                         hint: AppStrings.confirmNewPasswordHint,
+                        controller: confirmPasswordController,
                       ),
                       SizedBox(height: 15.h),
                       CustomRoundButton(
@@ -82,9 +96,13 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
                             : AppStrings.resetPassword,
                         onPressed: resetPasswordState.isLoading
                             ? null
-                            : () {
+                            : () async {
                                 if (_formKey.currentState!.validate()) {
-                                  resetPasswordNotifier.resetPassword();
+                                  resetPasswordNotifier.resetPassword(
+                                    widget.email!,
+                                    passwordController.text,
+                                    confirmPasswordController.text,
+                                  );
                                 }
                               },
                       ),

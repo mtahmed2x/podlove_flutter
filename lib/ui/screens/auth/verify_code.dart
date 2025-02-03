@@ -2,50 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-
 import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
-class VerifyCode extends ConsumerWidget {
-  final String status;
-  final String title;
+class VerifyCode extends ConsumerStatefulWidget {
+  final Method? method;
   final String? email;
-  final String? phoneNumber;
-  final String instructionText;
 
-  const VerifyCode({
-    super.key,
-    required this.status,
-    required this.title,
-    required this.email,
-    required this.phoneNumber,
-    required this.instructionText,
-  });
+  const VerifyCode({super.key, required this.method, required this.email});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<VerifyCode> createState() => _VerifyCodeState();
+}
+
+class _VerifyCodeState extends ConsumerState<VerifyCode> {
+  final otpController = TextEditingController();
+
+  @override
+  void dispose() {
+    otpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final verifyCodeState = ref.watch(verifyCodeProvider);
     final verifyCodeNotifier = ref.read(verifyCodeProvider.notifier);
 
     ref.listen<VerifyCodeState>(
       verifyCodeProvider,
       (previous, current) {
-        if (current.isSuccess == true) {
+        if ((widget.method == Method.emailActivation ||
+                widget.method == Method.phoneActivation) &&
+            current.isSuccess == true) {
           context.push(RouterPath.locationAccess);
+        }
+        if ((widget.method == Method.emailRecovery ||
+                widget.method == Method.phoneRecovery) &&
+            current.isSuccess == true) {
+          context.push(RouterPath.resetPass, extra: {
+            "email": widget.email,
+          });
         }
       },
     );
-
-    final contact =
-        status == AppStrings.phoneActivationVerify ? phoneNumber : email;
 
     final defaultPinTheme = PinTheme(
       width: 47.w,
@@ -77,7 +85,11 @@ class VerifyCode extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: CustomAppBar(title: title),
+      appBar: CustomAppBar(
+          title: (widget.method == Method.emailActivation ||
+                  widget.method == Method.emailRecovery)
+              ? "Verify Email"
+              : "Verify Phone Number"),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
@@ -101,7 +113,10 @@ class VerifyCode extends ConsumerWidget {
                       ),
                       SizedBox(height: 15.h),
                       CustomText(
-                        text: (instructionText + contact!),
+                        text: (widget.method == Method.emailActivation ||
+                                widget.method == Method.emailRecovery)
+                            ? AppStrings.verifyEmailInstruction
+                            : AppStrings.verifyPhoneInstruction,
                         color: AppColors.primaryText,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -113,7 +128,7 @@ class VerifyCode extends ConsumerWidget {
                 ),
                 Pinput(
                   length: 6,
-                  controller: verifyCodeNotifier.otpController,
+                  controller: otpController,
                   defaultPinTheme: defaultPinTheme,
                   focusedPinTheme: focusedPinTheme,
                   showCursor: true,
@@ -124,7 +139,12 @@ class VerifyCode extends ConsumerWidget {
                   child: Padding(
                     padding: EdgeInsets.only(top: 15.h, right: 10.w),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: verifyCodeState.isLoading
+                          ? null
+                          : () {
+                              verifyCodeNotifier.resendOTP(
+                                  widget.method!, widget.email!);
+                            },
                       child: CustomText(
                         text: AppStrings.resendOtp,
                         fontSize: 12.sp,
@@ -142,11 +162,12 @@ class VerifyCode extends ConsumerWidget {
                   onPressed: verifyCodeState.isLoading
                       ? null
                       : () {
-                          final otp = verifyCodeNotifier.otpController.text;
+                          final otp = otpController.text;
                           if (otp.length == 6) {
                             verifyCodeNotifier.verifyCode(
-                              status,
-                              email!,
+                              widget.method!,
+                              widget.email!,
+                              otp,
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(

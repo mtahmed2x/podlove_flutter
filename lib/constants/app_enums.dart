@@ -14,6 +14,13 @@ enum Ethnicity {
   other
 }
 
+enum Method {
+  emailActivation,
+  phoneActivation,
+  emailRecovery,
+  phoneRecovery,
+}
+
 enum HomePageType {
   before,
   after,

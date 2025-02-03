@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
@@ -34,43 +35,34 @@ class VerifyCodeState {
     return VerifyCodeState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      error: error ?? error,
+      error: error ?? this.error,
     );
   }
 }
 
 class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
-  final ApiServices apiService;
   final Ref ref;
 
-  VerifyCodeNotifier(this.apiService, this.ref) : super(VerifyCodeState());
+  VerifyCodeNotifier(this.ref) : super(VerifyCodeState.initial());
 
-  final otpController = TextEditingController();
-
-  Future<void> verifyCode(String status, String email) async {
+  Future<void> verifyCode(Method method, String email, String otp) async {
+    final apiService = ref.read(apiServiceProvider);
     state = state.copyWith(isLoading: true);
+
     try {
-      if (status == "EmailRecoveryVerify") {
-        final recoveryCodeData = {
+      if (method == Method.emailActivation ||
+          method == Method.phoneActivation) {
+        final activationData = {
+          "method": method,
           "email": email,
-          "recoveryOTP": otpController.text,
+          "verificationOTP": otp,
         };
 
         final response = await apiService.post(
-          ApiEndpoints.emailRecoveryVerify,
-          data: recoveryCodeData,
+          ApiEndpoints.activation,
+          data: activationData,
         );
         logger.i(response);
-      } else if (status == "EmailActivationVerify") {
-        final verifyCodeData = {
-          "email": email,
-          "verificationOTP": otpController.text,
-        };
-
-        final response = await apiService.post(
-          ApiEndpoints.activate,
-          data: verifyCodeData,
-        );
 
         if (response.statusCode == 200) {
           final accessToken = response.data["data"]["accessToken"];
@@ -80,11 +72,21 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
           logger.i(prefs.getString('accessToken'));
 
           final userJson = response.data["data"]["user"];
-          ref
-              .read(userProvider.notifier)
-              .initialize(userJson);
+          ref.read(userProvider.notifier).initialize(userJson);
           state = state.copyWith(isSuccess: true, isLoading: false);
         }
+      } else if (method == Method.emailRecovery ||
+          method == Method.phoneRecovery) {
+        final recoveryData = {
+          "method": method,
+          "email": email,
+          "recoveryOTP": otp,
+        };
+
+        final response = await apiService.post(
+          ApiEndpoints.recovery,
+          data: recoveryData,
+        );
       }
     } catch (e) {
       state = state.copyWith(
@@ -95,17 +97,13 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
     }
   }
 
-  @override
-  void dispose() {
-    otpController.dispose();
-    super.dispose();
+  Future<void> resendOTP(Method method, String email) async {
+
   }
+
 }
 
 final verifyCodeProvider =
     StateNotifierProvider<VerifyCodeNotifier, VerifyCodeState>(
-  (ref) {
-    final apiService = ref.read(apiServiceProvider);
-    return VerifyCodeNotifier(apiService, ref);
-  },
+  (ref) => VerifyCodeNotifier(ref),
 );

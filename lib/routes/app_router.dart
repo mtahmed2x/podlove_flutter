@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/screens/auth/singup.dart';
 import 'package:podlove_flutter/ui/screens/home/chat.dart';
@@ -10,7 +11,7 @@ import 'package:podlove_flutter/ui/screens/home/podcast.dart';
 import 'package:podlove_flutter/ui/screens/home/podcast_details.dart';
 import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
 import 'package:podlove_flutter/ui/screens/home/purchase.dart';
-import 'package:podlove_flutter/ui/screens/home/settings/change_password.dart';
+import 'package:podlove_flutter/ui/screens/auth/change_password.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/faq.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/help.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/privacy_policty.dart';
@@ -51,7 +52,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.selectBodyType,
+    initialLocation: RouterPath.initialScreen,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -93,12 +94,8 @@ class AppRouter {
         builder: (context, state) {
           final args = state.extra as Map<String, dynamic>?;
           return VerifyCode(
-            status: args?['status'] ?? "PhoneActivation",
-            title: args?['title'] ?? 'Verify Code',
+            method: args?['method'] ?? Method.emailActivation,
             email: args?['email'] ?? 'email',
-            phoneNumber: args?['phoneNumber'] ?? 'password',
-            instructionText: args?['instructionText'] ??
-                'Please enter the six digit code we sent you to your number ',
           );
         },
       ),
@@ -108,7 +105,12 @@ class AppRouter {
       ),
       GoRoute(
         path: RouterPath.resetPass,
-        builder: (context, state) => const ResetPassword(),
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>?;
+          return ResetPassword(
+            email: args?['email'] ?? "email",
+          );
+        },
       ),
       GoRoute(
         path: RouterPath.locationAccess,
