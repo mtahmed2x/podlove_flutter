@@ -1,5 +1,6 @@
 class UserModel {
   final Auth auth;
+  final bool isProfileComplete;
   final Personality personality;
   final Location location;
   final Preferences preferences;
@@ -20,6 +21,7 @@ class UserModel {
 
   UserModel({
     required this.auth,
+    required this.isProfileComplete,
     required this.personality,
     required this.location,
     required this.preferences,
@@ -45,6 +47,7 @@ class UserModel {
         location: Location.fromJson(json["location"]),
         preferences: Preferences.fromJson(json["preferences"]),
         subscription: Subscription.fromJson(json["subscription"]),
+        isProfileComplete: json["isProfileComplete"],
         id: json["_id"],
         name: json["name"],
         phoneNumber: json["phoneNumber"],
@@ -62,6 +65,7 @@ class UserModel {
 
   Map<String, dynamic> toJson() => {
         "name": name,
+        "isProfileComplete" : isProfileComplete,
         "phoneNumber": phoneNumber,
         "personality": personality.toJson(),
         "location": location.toJson(),
@@ -81,6 +85,7 @@ class UserModel {
 
   UserModel copyWith({
     Auth? auth,
+    bool? isProfileComplete,
     Personality? personality,
     Location? location,
     Preferences? preferences,
@@ -101,6 +106,7 @@ class UserModel {
   }) {
     return UserModel(
       auth: auth ?? this.auth,
+      isProfileComplete: isProfileComplete ?? this.isProfileComplete,
       personality: personality ?? this.personality,
       location: location ?? this.location,
       preferences: preferences ?? this.preferences,

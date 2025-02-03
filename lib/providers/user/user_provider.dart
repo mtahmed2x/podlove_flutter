@@ -295,6 +295,9 @@ class UserNotifier extends StateNotifier<UserState?> {
 
     try {
       state = state!.copyWith(isLoading: true, error: null);
+      final updatedUser = state!.user.copyWith(isProfileComplete: true);
+      _updateUser(updatedUser);
+
       final userUpdateData = state!.user.toJson();
 
       logger.i(userUpdateData);
@@ -307,6 +310,7 @@ class UserNotifier extends StateNotifier<UserState?> {
       if(response.statusCode == StatusCode.OK) {
         logger.i(response);
         logger.i(response.data["data"]);
+
         final userResponse = UserModel.fromJson(response.data["data"]);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isProfileComplete', true);

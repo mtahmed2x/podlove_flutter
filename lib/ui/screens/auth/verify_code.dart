@@ -52,6 +52,14 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
             "email": widget.email,
           });
         }
+        if (current.isSuccess == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(current.error.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       },
     );
 
@@ -86,10 +94,11 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
 
     return Scaffold(
       appBar: CustomAppBar(
-          title: (widget.method == Method.emailActivation ||
-                  widget.method == Method.emailRecovery)
-              ? "Verify Email"
-              : "Verify Phone Number"),
+        title: (widget.method == Method.emailActivation ||
+                widget.method == Method.emailRecovery)
+            ? "Verify Email"
+            : "Verify Phone Number",
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)

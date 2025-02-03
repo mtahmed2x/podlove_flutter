@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/data/services/api_services.dart';
@@ -64,7 +65,7 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
         );
         logger.i(response);
 
-        if (response.statusCode == 200) {
+        if (response.statusCode == StatusCode.OK) {
           final accessToken = response.data["data"]["accessToken"];
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('accessToken', accessToken);
@@ -74,6 +75,10 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
           final userJson = response.data["data"]["user"];
           ref.read(userProvider.notifier).initialize(userJson);
           state = state.copyWith(isSuccess: true, isLoading: false);
+        }
+
+        else if(response.statusCode == StatusCode.UNAUTHORIZED) {
+          state = state.copyWith(isSuccess: false, error: response.data["message"]);
         }
       } else if (method == Method.emailRecovery ||
           method == Method.phoneRecovery) {
