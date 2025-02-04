@@ -21,4 +21,6 @@ class ApiEndpoints {
   static String deleteAccount = "/auth/delete";
 
   static String purchase = "/subscription/upgrade";
+
+  static String subscriptionPlan = "/plan";
 }
