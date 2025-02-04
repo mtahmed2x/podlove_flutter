@@ -3,6 +3,7 @@ import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/data/services/api_exceptions.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -70,10 +71,16 @@ class SignInNotifier extends StateNotifier<SignInState> {
       );
       if (response.statusCode == StatusCode.OK) {
         String accessToken = response.data["data"]["accessToken"];
+
+        final userJson = response.data["data"]["user"];
+        ref.read(userProvider.notifier).initialize(userJson);
+
+        logger.i(ref.watch(userProvider)?.user.name);
+
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', accessToken);
 
-        final isProfileComplete = prefs.getBool("isProfileComplete");
+        final isProfileComplete = ref.watch(userProvider)?.user.isProfileComplete;
 
         if(isProfileComplete!) {
           state = state.copyWith(isSuccess: true, isProfileComplete: true);

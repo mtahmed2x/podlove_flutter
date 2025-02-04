@@ -3,10 +3,10 @@ class ApiEndpoints {
   // static String baseUrl = "http://10.0.60.41:7000";
 
   static String signUp = "/auth/register";
-  static String activation = "/auth/activate";
+  static String activate = "/auth/activate";
   static String signIn = "/auth/login";
-  static String forgotPassword = "/auth/forgot-password";
   static String recovery = "/auth/recovery";
+  static String recoveryVerify = "/auth/recovery-verify";
   static String resetPassword = "/auth/reset-password";
   static String changePassword = "/auth/change-password";
   static String resendOTP = "/auth/resend-otp";

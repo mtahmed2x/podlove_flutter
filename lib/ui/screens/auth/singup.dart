@@ -12,6 +12,7 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
+import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -45,7 +46,7 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     ref.listen<SignUpState>(
       signUpProvider,
-      (previous, current) {
+          (previous, current) {
         if (current.isSuccess == true) {
           context.push(
             RouterPath.verifyCode,
@@ -54,10 +55,40 @@ class _SignUpState extends ConsumerState<SignUp> {
               "email": current.email,
             },
           );
+        } else if (current.isSuccess == false) {
+          if (current.isVerified == true) {
+            showMessageDialog(
+              context,
+              "Alert",
+              current.error.toString(),
+                  () => context.push(RouterPath.signIn),
+              buttonText: "Sign in",
+            );
+          } else if (current.isVerified == false) {
+            showMessageDialog(
+              context,
+              "Alert",
+              current.error.toString(),
+                  () => context.push(
+                RouterPath.verifyCode,
+                extra: {
+                  "method": Method.emailActivation,
+                  "email": current.email,
+                },
+              ),
+              buttonText: "Verify",
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(current.error.toString()),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       },
     );
-
     return Scaffold(
       appBar: CustomAppBar(title: AppStrings.signUp),
       body: SafeArea(

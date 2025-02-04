@@ -49,18 +49,19 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
   Future<void> verifyCode(Method method, String email, String otp) async {
     final apiService = ref.read(apiServiceProvider);
     state = state.copyWith(isLoading: true);
-
+    logger.i("fuck");
+    logger.i(method);
     try {
       if (method == Method.emailActivation ||
           method == Method.phoneActivation) {
         final activationData = {
-          "method": method,
+          "method": "emailActivation",
           "email": email,
           "verificationOTP": otp,
         };
 
         final response = await apiService.post(
-          ApiEndpoints.activation,
+          ApiEndpoints.activate,
           data: activationData,
         );
         logger.i(response);
@@ -72,9 +73,11 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
 
           logger.i(prefs.getString('accessToken'));
 
+          logger.i(response.data["data"]["user"]);
           final userJson = response.data["data"]["user"];
           ref.read(userProvider.notifier).initialize(userJson);
-          state = state.copyWith(isSuccess: true, isLoading: false);
+          logger.i(ref.watch(userProvider)?.user.name);
+          state = state.copyWith(isSuccess: true);
         }
 
         else if(response.statusCode == StatusCode.UNAUTHORIZED) {
@@ -99,6 +102,8 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
         error: "An unexpected error occurred. Please try again.",
         isLoading: false,
       );
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 

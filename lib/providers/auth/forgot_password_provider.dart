@@ -55,7 +55,7 @@ class ForgotPasswordNotifier extends StateNotifier<ForgotPasswordState> {
     try {
       final apiService = ref.read(apiServiceProvider);
       final response = await apiService.post(
-        ApiEndpoints.forgotPassword,
+        ApiEndpoints.recovery,
         data: forgotPasswordData,
       );
       logger.i(response);

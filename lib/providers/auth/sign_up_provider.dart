@@ -9,15 +9,15 @@ class SignUpState {
   final bool isLoading;
   final bool? isSuccess;
   final String? error;
-  final String? phoneNumber;
   final String? email;
+  final bool? isVerified;
 
   SignUpState({
     this.isLoading = false,
     this.isSuccess,
     this.error,
-    this.phoneNumber,
     this.email,
+    this.isVerified,
   });
 
   factory SignUpState.initial() {
@@ -25,8 +25,8 @@ class SignUpState {
       isLoading: false,
       isSuccess: null,
       error: null,
-      phoneNumber: null,
       email: null,
+      isVerified: null,
     );
   }
 
@@ -36,13 +36,14 @@ class SignUpState {
     String? error,
     String? phoneNumber,
     String? email,
+    bool? isVerified,
   }) {
     return SignUpState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
       error: error ?? this.error,
+      isVerified: isVerified ?? this.isVerified,
     );
   }
 }
@@ -80,7 +81,6 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
 
         state = state.copyWith(
           isSuccess: true,
-          phoneNumber: signUpData["phoneNumber"],
           email: signUpData["email"],
         );
       } else if (response.statusCode == StatusCode.BAD_REQUEST) {
@@ -88,10 +88,11 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
             response.data['data']?['message'] ?? "Signup failed.";
         state = state.copyWith(isSuccess: false, error: errorMessage);
       } else if (response.statusCode == StatusCode.CONFLICT) {
-        final error = response.data['data']?['isVerified'] == true
+        final isVerified = response.data['data']?['isVerified'];
+        final error = isVerified == true
             ? "Your account already exists. Please login."
             : "Your account already exists. Please verify.";
-        state = state.copyWith(isSuccess: false, error: error);
+        state = state.copyWith(isSuccess: false, email: signUpData["email"], isVerified: isVerified, error: error);
       } else {
         state = state.copyWith(
             isSuccess: false, error: "Unexpected error occurred.");
@@ -107,7 +108,7 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
   }
 }
 
-final signUpProvider = StateNotifierProvider<SignUpNotifier, SignUpState>(
+final signUpProvider = StateNotifierProvider.autoDispose<SignUpNotifier, SignUpState>(
   (ref) {
     return SignUpNotifier(ref);
   },

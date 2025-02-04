@@ -7,11 +7,13 @@ import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
+import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
 import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class VerifyCode extends ConsumerStatefulWidget {
   final Method? method;
@@ -94,11 +96,14 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: (widget.method == Method.emailActivation ||
-                widget.method == Method.emailRecovery)
-            ? "Verify Email"
-            : "Verify Phone Number",
-      ),
+          title: (widget.method == Method.emailActivation ||
+                  widget.method == Method.emailRecovery)
+              ? "Verify Email"
+              : "Verify Phone Number",
+          onPressed: () => {
+                ref.read(signUpProvider.notifier).state = SignUpState.initial(),
+                context.push(RouterPath.signUp)
+              }),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
@@ -170,8 +175,9 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                       : AppStrings.verifyCode,
                   onPressed: verifyCodeState.isLoading
                       ? null
-                      : () {
+                      : () async {
                           final otp = otpController.text;
+                          logger.i(otp);
                           if (otp.length == 6) {
                             verifyCodeNotifier.verifyCode(
                               widget.method!,

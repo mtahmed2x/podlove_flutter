@@ -9,6 +9,7 @@ import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/dynamic_range_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class DistancePreference extends ConsumerWidget {
   const DistancePreference({super.key});
@@ -57,7 +58,10 @@ class DistancePreference extends ConsumerWidget {
                   initialValue: 30,
                   unit: "Miles",
                   onChanged: (value) {
+                    logger.i(value);
                     userNotifier.updateDistancePreference(value.toInt());
+                    logger.i(userState?.user.location.latitude);
+                    logger.i(userState?.user.preferences.distance);
                   },
                 ),
                 SizedBox(height: 80.h),

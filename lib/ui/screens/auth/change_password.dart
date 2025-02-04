@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/providers/auth/change_password_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
-import 'package:podlove_flutter/ui/widgets/show_success_dialog.dart';
+import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 
 class ChangePassword extends ConsumerStatefulWidget {
   const ChangePassword({super.key});
@@ -37,8 +38,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
     ref.listen<ChangePasswordState>(changePasswordProvider,
         (previous, current) {
       if (current.isSuccess == true) {
-        showSuccessDialog(context, "Success", "Password Changed Successfully",
-            RouterPath.settings);
+        showMessageDialog(
+          context,
+          "Success",
+          "Password Changed Successfully",
+          () => context.push(RouterPath.settings),
+        );
       }
     });
 

@@ -23,7 +23,13 @@ class DynamicRangeSlider extends StatefulWidget {
 }
 
 class _DynamicRangeSliderState extends State<DynamicRangeSlider> {
-  late double _currentValue = widget.initialValue;
+  double _currentValue = 30.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentValue = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,20 +96,20 @@ class _DynamicRangeSliderState extends State<DynamicRangeSlider> {
                     max: widget.max,
                     divisions: (widget.max - widget.min).toInt(),
                     onChanged: (value) {
-                      setState(
-                        () {
-                          _currentValue = value;
-                        },
-                      );
-                      widget.onChanged?.call(value);
+                      setState(() {
+                        _currentValue = value; // Update the state
+                      });
+                      if (widget.onChanged != null) {
+                        widget.onChanged!(value); // Notify parent about the change
+                      }
                     },
                   ),
                 ),
                 Positioned(
                   top: 50.0,
                   left: ((_currentValue - widget.min) /
-                              (widget.max - widget.min)) *
-                          (sliderWidth - 2 * thumbRadius) +
+                      (widget.max - widget.min)) *
+                      (sliderWidth - 2 * thumbRadius) +
                       thumbRadius -
                       15,
                   child: Transform.translate(
@@ -127,3 +133,4 @@ class _DynamicRangeSliderState extends State<DynamicRangeSlider> {
     );
   }
 }
+

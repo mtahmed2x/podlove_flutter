@@ -6,6 +6,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String? imageUrl;
   final String? secondImageUrl;
+  final VoidCallback? onPressed;
   final VoidCallback? onImageTap;
   final VoidCallback? onSecondImageTap;
 
@@ -14,6 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.imageUrl,
     this.secondImageUrl,
+    this.onPressed,
     this.onImageTap,
     this.onSecondImageTap,
   });
@@ -30,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           color: const Color.fromARGB(255, 255, 161, 117),
           size: 24.sp,
         ),
-        onPressed: () {
+        onPressed: onPressed ?? () {
           Navigator.pop(context);
         },
       ),

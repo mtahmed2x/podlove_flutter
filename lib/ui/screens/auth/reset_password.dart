@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
@@ -10,7 +11,7 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
-import 'package:podlove_flutter/ui/widgets/show_success_dialog.dart';
+import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 
 class ResetPassword extends ConsumerStatefulWidget {
   final String? email;
@@ -31,11 +32,15 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
     final resetPasswordState = ref.watch(resetPasswordProvider);
     final resetPasswordNotifier = ref.watch(resetPasswordProvider.notifier);
 
-    ref.listen<ResetPasswordState>(
-        resetPasswordProvider, (previous, current) {
-          if(current.isSuccess == true) {
-            showSuccessDialog(context, "Success", "Password Changed Successfully", RouterPath.signIn);
-          }
+    ref.listen<ResetPasswordState>(resetPasswordProvider, (previous, current) {
+      if (current.isSuccess == true) {
+        showMessageDialog(
+          context,
+          "Success",
+          "Password Changed Successfully",
+          () => context.push(RouterPath.signIn),
+        );
+      }
     });
 
     return Scaffold(
