@@ -13,6 +13,7 @@ class SignInState {
   final String? error;
   final bool? isProfileComplete;
   final bool? isVerified;
+  final String? email;
 
   SignInState({
     this.isLoading = false,
@@ -20,6 +21,7 @@ class SignInState {
     this.error,
     this.isProfileComplete,
     this.isVerified,
+    this.email,
   });
 
   factory SignInState.initial() {
@@ -29,6 +31,7 @@ class SignInState {
       error: null,
       isProfileComplete: null,
       isVerified: null,
+      email: null,
     );
   }
 
@@ -37,7 +40,8 @@ class SignInState {
     bool? isSuccess,
     String? error,
     bool? isProfileComplete,
-    bool? isVerified
+    bool? isVerified,
+    String? email
 
   }) {
     return SignInState(
@@ -46,6 +50,7 @@ class SignInState {
       error: error ?? this.error,
       isProfileComplete: isProfileComplete ?? this.isProfileComplete,
       isVerified: isVerified ?? this.isVerified,
+      email: email ?? email,
     );
   }
 }
@@ -63,7 +68,7 @@ class SignInNotifier extends StateNotifier<SignInState> {
       "email": email,
       "password": password,
     };
-    state = state.copyWith(isLoading: true);
+    state = state.copyWith(email: email, isLoading: true);
     try {
       final response = await apiService.post(
         ApiEndpoints.signIn,
@@ -81,11 +86,12 @@ class SignInNotifier extends StateNotifier<SignInState> {
         await prefs.setString('accessToken', accessToken);
 
         final isProfileComplete = ref.watch(userProvider)?.user.isProfileComplete;
+        prefs.setBool('isProfileComplete', isProfileComplete!);
 
-        if(isProfileComplete!) {
-          state = state.copyWith(isSuccess: true, isProfileComplete: true);
+        if(isProfileComplete) {
+          state = state.copyWith(isProfileComplete: true);
         } else {
-          state = state.copyWith(isSuccess: true, isProfileComplete: false);
+          state = state.copyWith(isProfileComplete: false);
         }
         state = state.copyWith(isSuccess: true);
       }
@@ -103,6 +109,10 @@ class SignInNotifier extends StateNotifier<SignInState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void resetState() {
+    state = SignInState.initial();
   }
 }
 

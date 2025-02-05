@@ -143,3 +143,107 @@ class SubscriptionCard extends StatelessWidget {
     );
   }
 }
+
+void showSubscriptionDetails(
+    BuildContext context,
+    String title,
+    String price,
+    List<Map<String, String>> features,
+    ) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Close button (top right corner)
+              Align(
+                alignment: Alignment.topRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(Icons.close, color: Colors.orange),
+                ),
+              ),
+
+              // Title
+              Center(
+                child: Text(
+                  "Details",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Subscription Name & Price
+              Text(
+                "$title ($price)",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Description Title
+              Text(
+                "Everything in the Listener package, plus:",
+                style: TextStyle(fontSize: 14),
+              ),
+
+              const SizedBox(height: 8),
+
+              // Features List (Bold key + Normal details)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: features.map((feature) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("• ", style: TextStyle(fontSize: 16)),
+                        Expanded(
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: "${feature['key']}: ",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: feature['details'],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}

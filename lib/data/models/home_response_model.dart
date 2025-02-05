@@ -1,65 +1,35 @@
-import 'dart:convert';
-
+import 'package:podlove_flutter/data/models/subscription_model.dart';
 import 'package:podlove_flutter/data/models/user_model.dart';
 
-HomeResponseModel homeResponseModelFromJson(String str) =>
-    HomeResponseModel.fromJson(json.decode(str));
-
-class HomeResponseModel {
-  final bool? success;
-  final String? message;
-  final HomeData? data;
-
-  HomeResponseModel({
-    this.success,
-    this.message,
-    this.data,
-  });
-
-  HomeResponseModel copyWith({
-    bool? success,
-    String? message,
-    HomeData? data,
-  }) =>
-      HomeResponseModel(
-        success: success ?? this.success,
-        message: message ?? this.message,
-        data: data ?? this.data,
-      );
-
-  factory HomeResponseModel.fromJson(Map<String, dynamic> json) =>
-      HomeResponseModel(
-        success: json["success"],
-        message: json["message"],
-        data: json["data"] == null ? null : HomeData.fromJson(json["data"]),
-      );
-}
-
-class HomeData {
+class HomeModel {
   final Podcast? podcast;
-  final List<SubscriptionPlan>? subscriptionPlans;
+  final List<SubscriptionModel>? subscriptionPlans;
+  final UserModel? user;
 
-  HomeData({
+  HomeModel({
     this.podcast,
     this.subscriptionPlans,
+    this.user,
   });
 
-  HomeData copyWith({
+  HomeModel copyWith({
     Podcast? podcast,
-    List<SubscriptionPlan>? subscriptionPlans,
+    List<SubscriptionModel>? subscriptionPlans,
+    UserModel? user,
   }) =>
-      HomeData(
+      HomeModel(
         podcast: podcast ?? this.podcast,
         subscriptionPlans: subscriptionPlans ?? this.subscriptionPlans,
+        user: user ?? this.user,
       );
 
-  factory HomeData.fromJson(Map<String, dynamic> json) => HomeData(
+  factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
         podcast:
             json["podcast"] == null ? null : Podcast.fromJson(json["podcast"]),
         subscriptionPlans: json["subscriptionPlans"] == null
             ? []
-            : List<SubscriptionPlan>.from(json["subscriptionPlans"]!
-                .map((x) => SubscriptionPlan.fromJson(x))),
+            : SubscriptionModel.fromJsonList(json["subscriptionPlans"]),
+        user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
       );
 }
 
@@ -197,92 +167,5 @@ class Participant {
         interests: json["interests"] == null
             ? []
             : List<dynamic>.from(json["interests"]!.map((x) => x)),
-      );
-}
-
-class SubscriptionPlan {
-  final String? id;
-  final String? name;
-  final List<Description>? description;
-  final String? unitAmount;
-  final String? interval;
-  final String? productId;
-  final String? priceId;
-  final int? v;
-
-  SubscriptionPlan({
-    this.id,
-    this.name,
-    this.description,
-    this.unitAmount,
-    this.interval,
-    this.productId,
-    this.priceId,
-    this.v,
-  });
-
-  SubscriptionPlan copyWith({
-    String? id,
-    String? name,
-    List<Description>? description,
-    String? unitAmount,
-    String? interval,
-    String? productId,
-    String? priceId,
-    int? v,
-  }) =>
-      SubscriptionPlan(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        unitAmount: unitAmount ?? this.unitAmount,
-        interval: interval ?? this.interval,
-        productId: productId ?? this.productId,
-        priceId: priceId ?? this.priceId,
-        v: v ?? this.v,
-      );
-
-  factory SubscriptionPlan.fromJson(Map<String, dynamic> json) =>
-      SubscriptionPlan(
-        id: json["_id"],
-        name: json["name"],
-        description: json["description"] == null
-            ? []
-            : List<Description>.from(
-                json["description"]!.map((x) => Description.fromJson(x))),
-        unitAmount: json["unitAmount"],
-        interval: json["interval"],
-        productId: json["productId"],
-        priceId: json["priceId"],
-        v: json["__v"],
-      );
-}
-
-class Description {
-  final String? key;
-  final String? details;
-  final String? id;
-
-  Description({
-    this.key,
-    this.details,
-    this.id,
-  });
-
-  Description copyWith({
-    String? key,
-    String? details,
-    String? id,
-  }) =>
-      Description(
-        key: key ?? this.key,
-        details: details ?? this.details,
-        id: id ?? this.id,
-      );
-
-  factory Description.fromJson(Map<String, dynamic> json) => Description(
-        key: json["key"],
-        details: json["details"],
-        id: json["_id"],
       );
 }

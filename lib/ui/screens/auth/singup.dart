@@ -29,6 +29,7 @@ class _SignUpState extends ConsumerState<SignUp> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+
   @override
   void dispose() {
     nameController.dispose();
@@ -36,6 +37,7 @@ class _SignUpState extends ConsumerState<SignUp> {
     phoneController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    ref.read(signUpProvider.notifier).resetState();
     super.dispose();
   }
 
@@ -43,6 +45,7 @@ class _SignUpState extends ConsumerState<SignUp> {
   Widget build(BuildContext context) {
     final signUpState = ref.watch(signUpProvider);
     final signUpNotifier = ref.read(signUpProvider.notifier);
+
 
     ref.listen<SignUpState>(
       signUpProvider,

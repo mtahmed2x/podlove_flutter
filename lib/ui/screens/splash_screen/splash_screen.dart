@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,6 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final isFirstTime = prefs.getBool("isFirstTime") ?? true;
     final accessToken = prefs.getString("accessToken");
     final isProfileComplete = prefs.getBool("isProfileComplete");
+
+    logger.i(prefs.getBool('isProfileComplete'));
 
     if (!mounted) return;
 

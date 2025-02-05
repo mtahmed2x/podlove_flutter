@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
@@ -160,10 +161,17 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   label: "Age (years)",
                   controller: _ageController,
                 ),
+                SizedBox(height: 10.h),
                 CustomDropdown<String>(
                   label: "Gender",
-                  options: ["Male", "Female"],
-                  initialValue: userState!.user.gender,
+                  options: [
+                    AppStrings.female,
+                    AppStrings.male,
+                    AppStrings.nonBinary,
+                    AppStrings.transgender,
+                    AppStrings.genderFluid,
+                  ],
+                  initialValue: AppStrings.male,
                   onChanged: (selectedValue) {
                     userNotifier.updateGender(selectedValue);
                   },
@@ -174,13 +182,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 //   label: "Gender Preference",
                 //   controller: _genderPreferenceController,
                 // ),
-                SizedBox(height: 5.h),
+                SizedBox(height: 20.h),
                 CustomTextField(
                   fieldType: TextFieldType.text,
                   label: "Location",
                   controller: _locationController,
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 CustomRoundButton(
                   text: "Save",
                   onPressed: () async {
@@ -191,13 +199,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     userNotifier.updatePhoneNumber(_phoneController.text);
                     userNotifier.updateBio(_bioController.text);
                     userNotifier.updateAge(int.tryParse(_ageController.text) ??
-                        userState.user.age);
+                        userState!.user.age);
                     userNotifier.updateGender(_genderPreferenceController.text);
                     // userNotifier.updatePreferredGender(
                     //     _genderPreferenceController.text);
                     userNotifier.updateLocation(
-                        userState.user.location.latitude,
-                        userState.user.location.longitude,
+                        userState!.user.location.latitude,
+                        userState!.user.location.longitude,
                         _locationController.text);
 
                     try {

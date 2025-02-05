@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 
 class Chat extends StatefulWidget {
-  const Chat({super.key});
+  final String userId;
+  final String receiverId;
+  final String name;
+  const Chat({super.key, required this.userId, required this.receiverId, required this.name});
 
-  final userId = "Tanim Ahmed";
-  final receiverId = "Eleanor Pera";
-  final name = "Eleanor Pera";
 
   @override
   State<Chat> createState() => _ChatState();
@@ -39,17 +39,15 @@ class _ChatState extends State<Chat> {
     }
   }
 
-  /// ✅ Fetch messages in real-time
-  Stream<QuerySnapshot> getMessages() {
-    print(
-        "🔄 Fetching messages for ${widget.userId} and ${widget.receiverId}...");
 
+  Stream<QuerySnapshot> getMessages() {
     return FirebaseFirestore.instance
         .collection('messages')
-        .where('participants',
-            arrayContains: widget
-                .userId) // ✅ Fetch chat where current user is a participant
-        .orderBy('timestamp', descending: false) // ✅ Order by timestamp
+        .where(Filter.or(
+      Filter.and(Filter('senderId', isEqualTo: widget.userId), Filter('receiverId', isEqualTo: widget.receiverId)),
+      Filter.and(Filter('senderId', isEqualTo: widget.receiverId), Filter('receiverId', isEqualTo: widget.userId)),
+    ))
+        .orderBy('timestamp', descending: false)
         .snapshots();
   }
 

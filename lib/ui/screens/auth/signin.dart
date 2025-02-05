@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/auth/sign_in_provider.dart';
@@ -12,6 +13,7 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_check_box.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 import 'package:podlove_flutter/ui/widgets/social_media_button.dart';
 
 class SignIn extends ConsumerStatefulWidget {
@@ -30,6 +32,7 @@ class _SignInState extends ConsumerState<SignIn> {
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
+    ref.read(signInProvider.notifier).resetState();
     super.dispose();
   }
 
@@ -41,6 +44,21 @@ class _SignInState extends ConsumerState<SignIn> {
     ref.listen(signInProvider, (prev, current) {
       if (current.isSuccess == true && current.isProfileComplete == true) {
         context.push(RouterPath.home);
+      }
+      else if(current.isSuccess == true && current.isVerified != true) {
+        showMessageDialog(
+          context,
+          "Alert",
+          current.error.toString(),
+              () => context.push(
+            RouterPath.verifyCode,
+            extra: {
+              "method": Method.emailActivation,
+              "email": current.email,
+            },
+          ),
+          buttonText: "Verify",
+        );
       }
       if (current.isSuccess == true && current.isProfileComplete == false) {
         context.push(RouterPath.locationAccess);

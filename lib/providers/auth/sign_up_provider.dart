@@ -106,6 +106,10 @@ class SignUpNotifier extends StateNotifier<SignUpState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  void resetState() {
+    state = SignUpState.initial();
+  }
 }
 
 final signUpProvider = StateNotifierProvider.autoDispose<SignUpNotifier, SignUpState>(

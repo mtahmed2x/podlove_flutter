@@ -101,6 +101,18 @@ class AppRouter {
           );
         },
       ),
+
+      GoRoute(
+        path: RouterPath.chat,
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>?;
+          return Chat(
+            userId: args?['userId'] ?? "Tanim",
+            receiverId: args?['receiverId'] ?? "Mir",
+            name: args?['name'] ?? "Mir",
+          );
+        },
+      ),
       GoRoute(
         path: RouterPath.forgotPassword,
         builder: (context, state) => const ForgotPassword(),
@@ -275,10 +287,7 @@ class AppRouter {
         path: RouterPath.podcastDetails,
         builder: (context, state) => const PodcastDetails(),
       ),
-      GoRoute(
-        path: RouterPath.chat,
-        builder: (context, state) => const Chat(),
-      ),
+
       // GoRoute(
       //   path: RouterPath.chat,
       //   builder: (context, state) {
