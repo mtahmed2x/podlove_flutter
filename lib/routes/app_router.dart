@@ -38,6 +38,7 @@ import 'package:podlove_flutter/ui/screens/user/age/select_age.dart';
 import 'package:podlove_flutter/ui/screens/user/age/select_preferred_age.dart';
 import 'package:podlove_flutter/ui/screens/user/body/select_body_type.dart';
 import 'package:podlove_flutter/ui/screens/user/body/select_preferred_body_type.dart';
+import 'package:podlove_flutter/ui/screens/user/choose_subscription.dart';
 import 'package:podlove_flutter/ui/screens/user/compatibility_question.dart';
 import 'package:podlove_flutter/ui/screens/user/ethnicity/select_ethnicity.dart';
 import 'package:podlove_flutter/ui/screens/user/ethnicity/select_preferred_ethnicities.dart';
@@ -75,8 +76,9 @@ class AppRouter {
         builder: (context, state) => const TermsOfUse(),
       ),
       GoRoute(
-          path: RouterPath.connectionPathWay,
-          builder: (context, state) => const ConnectionPathway()),
+        path: RouterPath.connectionPathWay,
+        builder: (context, state) => const ConnectionPathway(),
+      ),
       GoRoute(
         path: RouterPath.attention,
         builder: (context, state) => const Attention(),
@@ -298,6 +300,10 @@ class AppRouter {
         path: RouterPath.survey,
         builder: (context, state) => const Survey(),
       ),
+
+      GoRoute(
+          path: RouterPath.chooseSubscription,
+          builder: (context, state) => const ChooseSubscription())
     ],
   );
 }

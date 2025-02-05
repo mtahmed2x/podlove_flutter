@@ -73,4 +73,6 @@ class RouterPath {
   static const String chat = "/chat";
 
   static const String survey = "/survey";
+
+  static const String chooseSubscription = "/choose-subscription";
 }

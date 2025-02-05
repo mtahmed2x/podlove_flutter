@@ -3,8 +3,10 @@ import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/data/models/subscription_model.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
-class SubscriptionNotifier extends StateNotifier<AsyncValue<SubscriptionModel>> {
+class SubscriptionNotifier
+    extends StateNotifier<AsyncValue<List<SubscriptionModel>>> {
   final Ref ref;
 
   SubscriptionNotifier(this.ref) : super(AsyncLoading());
@@ -13,16 +15,15 @@ class SubscriptionNotifier extends StateNotifier<AsyncValue<SubscriptionModel>> 
     final apiServices = ref.watch(apiServiceProvider);
     try {
       final response = await apiServices.get(ApiEndpoints.subscriptionPlan);
-
+      logger.i(response);
       if (response.statusCode == StatusCode.OK) {
-        final jsonData = response.data["data"];
-        if (jsonData != null) {
-          state = AsyncData(SubscriptionModel.fromJson(jsonData));
-        } else {
-          state = AsyncError('No data found in the response', StackTrace.current);
-        }
+        final List<dynamic> jsonList = response.data["data"];
+        logger.i(response.data["data"]);
+        state = AsyncData(SubscriptionModel.fromJsonList(jsonList));
       } else {
-        state = AsyncError('Failed to load data. Status: ${response.statusCode}', StackTrace.current);
+        state = AsyncError(
+            'Failed to load data. Status: ${response.statusCode}',
+            StackTrace.current);
       }
     } catch (e, stackTrace) {
       state = AsyncError(e.toString(), stackTrace);
@@ -30,6 +31,5 @@ class SubscriptionNotifier extends StateNotifier<AsyncValue<SubscriptionModel>> 
   }
 }
 
-final subscriptionProvider =
-StateNotifierProvider<SubscriptionNotifier, AsyncValue<SubscriptionModel>>(
-        (ref) => SubscriptionNotifier(ref));
+final subscriptionProvider = StateNotifierProvider<SubscriptionNotifier,
+    AsyncValue<List<SubscriptionModel>>>((ref) => SubscriptionNotifier(ref));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
@@ -148,9 +149,15 @@ class CustomCheckboxGroup extends StatelessWidget {
           child: Row(
             children: [
               Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(2.0.r),
+                ),
+                side: WidgetStateBorderSide.resolveWith(
+                      (states) => BorderSide(width: 2.0.w, color: AppColors.accent),
+                ),
                 value: selectedItem == label,
-                activeColor: const Color.fromRGBO(255, 161, 117, 1),
-                checkColor: Colors.white,
+                activeColor: AppColors.accent,
+                checkColor: AppColors.background,
                 onChanged: (value) => onItemSelected(label),
               ),
               Expanded(

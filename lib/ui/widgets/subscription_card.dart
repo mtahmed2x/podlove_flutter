@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 
 class SubscriptionCard extends StatelessWidget {
+  final double? width;
   final String title;
   final String subtitle;
   final String price;
@@ -12,6 +13,7 @@ class SubscriptionCard extends StatelessWidget {
   final bool isCurrentPlan;
 
   const SubscriptionCard({
+    this.width = 300,
     required this.title,
     required this.subtitle,
     required this.price,
@@ -27,7 +29,7 @@ class SubscriptionCard extends StatelessWidget {
     ScreenUtil.init(context, designSize: Size(375, 812), minTextAdapt: true);
 
     return SizedBox(
-      width: 300.w,
+      width: width?.w,
       child: Card(
         elevation: 0,
         color: Color.fromARGB(255, 254, 254, 254),

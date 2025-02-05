@@ -145,10 +145,8 @@ class SelectableCircleGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 12.w,
-      runSpacing: 12.h,
-      alignment: WrapAlignment.center,
+    return Column(
+      spacing: 12.0.h,
       children: labels.map((label) {
         final isActive = selectedItems.contains(label);
         return GestureDetector(
@@ -162,12 +160,10 @@ class SelectableCircleGroup extends StatelessWidget {
             onSelectionChanged(updatedSelection);
           },
           child: Container(
-            width: 100.w,
-            height: 100.w,
+            width: 120.w,
+            height: 120.h,
             decoration: BoxDecoration(
-              color: isActive
-                  ? const Color.fromARGB(255, 0, 0, 255)
-                  : const Color.fromRGBO(255, 161, 117, 1),
+              color: AppColors.accent,
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -175,7 +171,7 @@ class SelectableCircleGroup extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: Colors.white,
+                color: isActive ? AppColors.blue : AppColors.background,
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,

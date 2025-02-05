@@ -6,7 +6,6 @@ class SubscriptionModel {
   final String? interval;
   final String? productId;
   final String? priceId;
-  final int? v;
 
   SubscriptionModel({
     this.id,
@@ -16,7 +15,6 @@ class SubscriptionModel {
     this.interval,
     this.productId,
     this.priceId,
-    this.v,
   });
 
   SubscriptionModel copyWith({
@@ -27,7 +25,6 @@ class SubscriptionModel {
     String? interval,
     String? productId,
     String? priceId,
-    int? v,
   }) =>
       SubscriptionModel(
         id: id ?? this.id,
@@ -37,7 +34,6 @@ class SubscriptionModel {
         interval: interval ?? this.interval,
         productId: productId ?? this.productId,
         priceId: priceId ?? this.priceId,
-        v: v ?? this.v,
       );
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
@@ -47,13 +43,16 @@ class SubscriptionModel {
         description: json["description"] == null
             ? []
             : List<Description>.from(
-            json["description"]!.map((x) => Description.fromJson(x))),
+                json["description"]!.map((x) => Description.fromJson(x))),
         unitAmount: json["unitAmount"],
         interval: json["interval"],
         productId: json["productId"],
         priceId: json["priceId"],
-        v: json["__v"],
       );
+
+  static List<SubscriptionModel> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => SubscriptionModel.fromJson(json)).toList();
+  }
 }
 
 class Description {
@@ -79,8 +78,8 @@ class Description {
       );
 
   factory Description.fromJson(Map<String, dynamic> json) => Description(
-    key: json["key"],
-    details: json["details"],
-    id: json["_id"],
-  );
+        key: json["key"],
+        details: json["details"],
+        id: json["_id"],
+      );
 }
