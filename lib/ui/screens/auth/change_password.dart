@@ -11,6 +11,7 @@ import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class ChangePassword extends ConsumerStatefulWidget {
   const ChangePassword({super.key});
@@ -40,19 +41,27 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
 
     ref.listen<ChangePasswordState>(changePasswordProvider,
         (previous, current) {
-      if (current.isSuccess == true) {
+      if (current.isSuccess == true && current.isLoading == false) {
         showMessageDialog(
           context,
           AppStrings.success,
           AppStrings.passwordChangeSuccessMessage,
           () => context.push(RouterPath.settings),
         );
+      } else if (current.isSuccess != true &&
+          current.error != null &&
+          current.isLoading == false) {
+        logger.i(current.error!);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(current.error!),
+          ),
+        );
       }
     });
 
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.changePassword),
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+      appBar: CustomAppBar(title: AppStrings.changePassword, isLeading: true),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -74,6 +83,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                     label: AppStrings.currentPassword,
                     hint: AppStrings.enterCurrentPassword,
                     controller: currentPasswordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.enterPasswordError;
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 10.h),
                   CustomTextField(
@@ -81,6 +96,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                     label: AppStrings.newPassword,
                     hint: AppStrings.enterNewPassword,
                     controller: newPasswordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.enterPasswordError;
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 10.h),
                   CustomTextField(
@@ -88,6 +109,15 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                     label: AppStrings.retypePassword,
                     hint: AppStrings.retypeNewPassword,
                     controller: confirmPasswordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppStrings.confirmPasswordError;
+                      }
+                      if (value != newPasswordController.text) {
+                        return AppStrings.passwordMismatchError;
+                      }
+                      return null;
+                    },
                   ),
                   SizedBox(height: 20.h),
                   CustomRoundButton(

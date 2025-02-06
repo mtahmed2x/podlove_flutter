@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class ChangePasswordState {
   final bool isLoading;
@@ -37,9 +39,10 @@ class ChangePasswordState {
 class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
   final Ref ref;
 
-  ChangePasswordNotifier(this.ref) : super(ChangePasswordState());
+  ChangePasswordNotifier(this.ref) : super(ChangePasswordState.initial());
 
-  Future<void> changePassword(String password, String newPassword, String confirmPassword) async {
+  Future<void> changePassword(
+      String password, String newPassword, String confirmPassword) async {
     final changePasswordData = {
       "password": password,
       "newPassword": newPassword,
@@ -52,9 +55,18 @@ class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
         ApiEndpoints.changePassword,
         data: changePasswordData,
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == StatusCode.OK) {
         state = state.copyWith(
           isSuccess: true,
+          isLoading: false,
+        );
+        logger.i(state.isLoading);
+        logger.i(state.isSuccess);
+      } else if (response.statusCode == StatusCode.UNAUTHORIZED) {
+        state = state.copyWith(
+          isSuccess: false,
+          error:
+              "Your current password is incorrect. Please check and try again.",
           isLoading: false,
         );
       }
@@ -64,8 +76,6 @@ class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
         error: "An unexpected error occurred. Please try again.",
         isLoading: false,
       );
-    } finally {
-      state = state.copyWith(isLoading: false);
     }
   }
 }
