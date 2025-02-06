@@ -99,7 +99,7 @@ class SignInNotifier extends StateNotifier<SignInState> {
         logger.i(response.data["message"]);
       }
       else if(response.statusCode == StatusCode.UNAUTHORIZED) {
-        state = state.copyWith(isSuccess: true, isVerified: false);
+        state = state.copyWith(isSuccess: true, isVerified: false, error: response.data["message"].toString());
       }
     } on ApiException catch (e) {
       state = state.copyWith(isSuccess: false, error: e.message);

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
+import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,7 +14,7 @@ class TermsOfUse extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Terms of Use"),
+      appBar: CustomAppBar(title: AppStrings.termsOfUse, isLeading: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
@@ -27,7 +29,7 @@ class TermsOfUse extends StatelessWidget {
                       Text(
                         "Welcome to our pod!",
                         style: TextStyle(
-                          fontSize: 22.sp,
+                          fontSize: 25.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -107,7 +109,7 @@ class TermsOfUse extends StatelessWidget {
                       ),
                       SizedBox(height: 40.h),
                       CustomRoundButton(
-                        text: "I Agree",
+                        text: AppStrings.agreementConsent,
                         onPressed: () =>
                             context.push(RouterPath.connectionPathWay),
                       ),

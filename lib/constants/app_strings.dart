@@ -1,4 +1,23 @@
 class AppStrings {
+  static const String success = "Success";
+  static const String next = "Next";
+  static const String submit = "Submit";
+
+  static const String attention = "Attention";
+  static const String appreciationForInterest = "Thank you for your interest in PodLove. Based on your responses, it seems our app may not be the right fit for you at this time. We appreciate you exploring our platform and wish you the best in finding the connections you're looking for. Feel free to check back with us in the future!";
+  static const String understoodConsent = "I Understood";
+  static const String agreementConsent = "I Agree";
+
+  static const String approach = "Our Approach";
+  static const String approachTitle = "Our Approach to Love";
+  static const String approachDescription = "PodLove is grounded in fostering authentic, meaningful connections beyond surface-level preferences. While we understand some people have specific preferences, our goal is to help you find love where it might be least expected.";
+
+  static const String expect = "What to Expect";
+
+  static const String termsOfUse = "Terms of Use";
+
+  static const String connectionPathway = "Connection Pathway";
+
   static const String signUp = "Sign Up";
   static const String emailActivationVerify = "EmailActivationVerify";
   static const String verifyEmail = "Verify Email";
@@ -27,6 +46,18 @@ class AppStrings {
   static const String passwordMismatchError = "* Passwords do not match";
   static const String signingUp = "Signing Up...";
   static const String signInPrompt = "Already have an account? Sign in";
+
+  static const String changePassword = "Change Password";
+  static const String setNewPassword = "Set your new password";
+  static const String currentPassword = "Current Password";
+  static const String enterCurrentPassword = "Enter current password";
+  static const String newPassword = "New Password";
+  static const String enterNewPassword = "Enter new password";
+  static const String retypePassword = "Retype Password";
+  static const String retypeNewPassword = "Retype new password";
+  static const String changingPassword = "Changing...";
+  static const String changePasswordButton = "Change Password";
+  static const String passwordChangeSuccessMessage = "Password Changed Successfully";
 
   static const String welcomeBack = "Welcome Back";
   static const String rememberMe = "Remember Me";

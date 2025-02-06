@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/screens/home/content/home_content.dart';
 import 'package:podlove_flutter/ui/screens/home/content/matches_content.dart';
@@ -57,7 +58,6 @@ class _HomePageState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       drawer: SafeArea(
         child: Drawer(
           child: Column(
@@ -148,8 +148,8 @@ class _HomePageState extends ConsumerState<Home> {
               icon: ImageIcon(
                 AssetImage("assets/images/${navIcons[index]}"),
                 color: _selectedIndex == index
-                    ? const Color.fromARGB(255, 255, 161, 117)
-                    : const Color.fromARGB(255, 118, 118, 118),
+                    ? AppColors.accent
+                    : AppColors.mutedText,
               ),
               label: navLabels[index],
             ));

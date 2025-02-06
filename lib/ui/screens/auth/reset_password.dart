@@ -36,8 +36,8 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
       if (current.isSuccess == true) {
         showMessageDialog(
           context,
-          "Success",
-          "Password Changed Successfully",
+          AppStrings.success,
+          AppStrings.passwordChangeSuccessMessage,
           () => context.push(RouterPath.signIn),
         );
       }

@@ -4,6 +4,8 @@ import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  /// If true, the back arrow will be shown. If false or null, it won't be shown.
+  final bool? isLeading;
   final String? imageUrl;
   final String? secondImageUrl;
   final VoidCallback? onPressed;
@@ -13,6 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key,
     required this.title,
+    this.isLeading,
     this.imageUrl,
     this.secondImageUrl,
     this.onPressed,
@@ -24,18 +27,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title:
-          CustomText(text: title, fontWeight: FontWeight.w500, fontSize: 20.sp),
-      leading: IconButton(
+      automaticallyImplyLeading: false,
+      title: CustomText(
+        text: title,
+        fontWeight: FontWeight.w500,
+        fontSize: 20.sp,
+      ),
+      leading: isLeading == true
+          ? IconButton(
         icon: Icon(
           Icons.arrow_back,
           color: const Color.fromARGB(255, 255, 161, 117),
           size: 24.sp,
         ),
-        onPressed: onPressed ?? () {
-          Navigator.pop(context);
-        },
-      ),
+        onPressed: onPressed ??
+                () {
+              Navigator.pop(context);
+            },
+      )
+          : null,
       actions: [
         if (imageUrl != null)
           Padding(

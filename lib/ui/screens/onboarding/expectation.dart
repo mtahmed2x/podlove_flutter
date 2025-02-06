@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +14,7 @@ class Expectation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "What to Expect"),
+      appBar: CustomAppBar(title: AppStrings.expect, isLeading: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w)
@@ -39,7 +40,7 @@ class Expectation extends StatelessWidget {
                 ),
                 SizedBox(height: 20.h),
                 Text(
-                  "What to expect",
+                  AppStrings.expect,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24.sp,
@@ -86,7 +87,7 @@ class Expectation extends StatelessWidget {
                 ),
                 SizedBox(height: 50.h),
                 CustomRoundButton(
-                  text: "Next",
+                  text: AppStrings.next,
                   onPressed: () => context.push(RouterPath.termsOfUse),
                 ),
               ],

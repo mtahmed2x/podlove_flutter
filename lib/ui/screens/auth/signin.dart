@@ -44,26 +44,30 @@ class _SignInState extends ConsumerState<SignIn> {
     ref.listen(signInProvider, (prev, current) {
       if (current.isSuccess == true && current.isProfileComplete == true) {
         context.push(RouterPath.home);
-      }
-      else if(current.isSuccess == true && current.isVerified != true) {
-        showMessageDialog(
-          context,
-          "Alert",
-          current.error.toString(),
-              () => context.push(
-            RouterPath.verifyCode,
-            extra: {
-              "method": Method.emailActivation,
-              "email": current.email,
-            },
+      } else if (current.isSuccess == true && current.isVerified != true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(current.error.toString()),
+            action: SnackBarAction(
+              label: "Verify",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                context.push(
+                  RouterPath.verifyCode,
+                  extra: {
+                    "method": Method.emailActivation,
+                    "email": current.email,
+                  },
+                );
+              },
+            ),
+            backgroundColor: Colors.red,
           ),
-          buttonText: "Verify",
         );
       }
       if (current.isSuccess == true && current.isProfileComplete == false) {
         context.push(RouterPath.locationAccess);
       }
-
     });
 
     return Scaffold(

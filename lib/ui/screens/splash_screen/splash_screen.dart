@@ -15,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<void> _navigate() async {
     final prefs = await SharedPreferences.getInstance();
-    final isFirstTime = prefs.getBool("isFirstTime") ?? true;
+    final isFirstTime = prefs.getBool("isFirstTime");
     final accessToken = prefs.getString("accessToken");
     final isProfileComplete = prefs.getBool("isProfileComplete");
 
@@ -23,8 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
-    if (isFirstTime) {
-      await prefs.setBool("isFirstTime", false);
+    if (isFirstTime!) {
       if (mounted) {
         context.push(RouterPath.approachToLove);
       }
@@ -46,46 +45,49 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GestureDetector(
-        onTap: _navigate,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.png"),
-              fit: BoxFit.cover,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: GestureDetector(
+          onTap: _navigate,
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/background.png"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Image.asset(
-                  "assets/images/podLove.png",
-                  width: 301.w,
-                  height: 64.h,
-                  fit: BoxFit.contain,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Image.asset(
+                    "assets/images/podLove.png",
+                    width: 301.w,
+                    height: 64.h,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                "Deeper Connection",
-                style: TextStyle(
-                  fontSize: 24.sp,
-                  color: Color.fromARGB(255, 255, 161, 117),
+                SizedBox(height: 20.h),
+                Text(
+                  "Deeper Connection",
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: Color.fromARGB(255, 255, 161, 117),
+                  ),
                 ),
-              ),
-              SizedBox(height: 15.h),
-              Text(
-                "Begins Here",
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: Color.fromARGB(255, 39, 87, 166),
+                SizedBox(height: 15.h),
+                Text(
+                  "Begins Here",
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: Color.fromARGB(255, 39, 87, 166),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

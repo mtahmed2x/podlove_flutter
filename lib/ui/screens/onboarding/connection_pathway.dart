@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
+import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
@@ -32,7 +33,7 @@ class _ConnectionPathwayPageState extends State<ConnectionPathway> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Connection Pathway"),
+      appBar: CustomAppBar(title: AppStrings.connectionPathway, isLeading: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w)
@@ -142,7 +143,7 @@ class _ConnectionPathwayPageState extends State<ConnectionPathway> {
                 SizedBox(height: 30.h),
                 // Submit button
                 CustomRoundButton(
-                  text: "Submit",
+                  text: AppStrings.submit,
                   onPressed: () {
                     context.push(RouterPath.attention);
                   },

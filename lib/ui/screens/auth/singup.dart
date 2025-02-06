@@ -93,7 +93,7 @@ class _SignUpState extends ConsumerState<SignUp> {
       },
     );
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.signUp),
+      appBar: CustomAppBar(title: AppStrings.signUp, isLeading: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
