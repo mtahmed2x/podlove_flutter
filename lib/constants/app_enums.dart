@@ -26,4 +26,11 @@ enum HomePageType {
   after,
 }
 
+enum SignInErrorType {
+  blocked,
+  notFound,
+  wrongPassword,
+  notVerified,
+}
+
 enum HomeContentType { before, after }
