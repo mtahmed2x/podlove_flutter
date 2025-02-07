@@ -73,8 +73,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     final userNotifier = ref.read(userProvider.notifier);
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Edit Profile"),
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+      appBar: CustomAppBar(
+        title: "Edit Profile",
+        isLeading: true,
+        onPressed: () => context.push(RouterPath.home, extra: 3),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),

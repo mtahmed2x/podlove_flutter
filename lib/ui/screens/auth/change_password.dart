@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -54,7 +55,14 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
         logger.i(current.error!);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(current.error!),
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Wrong Password!',
+              message: current.error!,
+              contentType: ContentType.failure,
+            ),
           ),
         );
       }

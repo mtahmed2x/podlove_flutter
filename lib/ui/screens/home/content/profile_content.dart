@@ -26,7 +26,6 @@ class ProfileContent extends ConsumerWidget {
       child: Scaffold(
         appBar: CustomAppBar(
           title: "Profile",
-          onPressed: () {},
           imageUrl: "assets/images/edit-icon.png",
           onImageTap: () {
             context.push(RouterPath.editProfile);
@@ -159,7 +158,8 @@ class ProfileContent extends ConsumerWidget {
                           ),
                           const SizedBox(width: 10),
                           CustomText(
-                            text: getLastTwoParts(userState.user.location.place),
+                            text:
+                                getLastTwoParts(userState.user.location.place),
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),

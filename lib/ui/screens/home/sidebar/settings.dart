@@ -21,7 +21,11 @@ class Settings extends ConsumerWidget {
     });
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Settings"),
+      appBar: CustomAppBar(
+        title: "Settings",
+        isLeading: true,
+        onPressed: () => context.push(RouterPath.home),
+      ),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: SingleChildScrollView(

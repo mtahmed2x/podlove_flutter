@@ -39,6 +39,17 @@ class _HomePageState extends ConsumerState<Home> {
     ];
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final extra = GoRouterState.of(context).extra;
+    if (extra is int) {
+      setState(() {
+        _selectedIndex = extra;
+      });
+    }
+  }
+
   Future<void> _logOut() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('accessToken');
@@ -98,12 +109,13 @@ class _HomePageState extends ConsumerState<Home> {
               ),
               const Expanded(child: SizedBox()),
               ListTile(
-                  leading: Image.asset("assets/images/logout.png"),
-                  title: const Text('Logout'),
-                  onTap: () async {
-                    await _logOut()
-                        .whenComplete(() => context.go(RouterPath.signIn));
-                  }),
+                leading: Image.asset("assets/images/logout.png"),
+                title: const Text('Logout'),
+                onTap: () async {
+                  await _logOut()
+                      .whenComplete(() => context.go(RouterPath.signIn));
+                },
+              ),
               const SizedBox(height: 30),
             ],
           ),
@@ -143,15 +155,15 @@ class _HomePageState extends ConsumerState<Home> {
     final navLabels = ['Home', 'Matches', 'Notifications', 'Profile'];
 
     return List.generate(
-        4,
-        (index) => BottomNavigationBarItem(
-              icon: ImageIcon(
-                AssetImage("assets/images/${navIcons[index]}"),
-                color: _selectedIndex == index
-                    ? AppColors.accent
-                    : AppColors.mutedText,
-              ),
-              label: navLabels[index],
-            ));
+      4,
+      (index) => BottomNavigationBarItem(
+        icon: ImageIcon(
+          AssetImage("assets/images/${navIcons[index]}"),
+          color:
+              _selectedIndex == index ? AppColors.accent : AppColors.mutedText,
+        ),
+        label: navLabels[index],
+      ),
+    );
   }
 }
