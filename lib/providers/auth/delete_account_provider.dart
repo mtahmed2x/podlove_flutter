@@ -39,7 +39,7 @@ class DeleteAccountState {
 class DeleteAccountNotifier extends StateNotifier<DeleteAccountState> {
   final ApiServices apiService;
 
-  DeleteAccountNotifier(this.apiService) : super(DeleteAccountState());
+  DeleteAccountNotifier(this.apiService) : super(DeleteAccountState.initial());
 
   Future<void> deleteAccount() async {
     try {
@@ -62,8 +62,6 @@ class DeleteAccountNotifier extends StateNotifier<DeleteAccountState> {
         error: "An unexpected error occurred. Please try again.",
         isLoading: false,
       );
-    } finally {
-      state = state.copyWith(isLoading: false);
     }
   }
 }

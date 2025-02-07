@@ -127,7 +127,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 50.h),
                   CustomRoundButton(
                     text: changePasswordState.isLoading
                         ? AppStrings.changingPassword
