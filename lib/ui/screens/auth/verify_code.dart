@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
+import 'package:podlove_flutter/providers/auth/sign_in_provider.dart';
 import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
 import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
@@ -44,21 +46,30 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
       (previous, current) {
         if ((widget.method == Method.emailActivation ||
                 widget.method == Method.phoneActivation) &&
-            current.isSuccess == true) {
+            current.isSuccess == true && current.isLoading == false) {
           context.push(RouterPath.locationAccess);
         }
         if ((widget.method == Method.emailRecovery ||
                 widget.method == Method.phoneRecovery) &&
-            current.isSuccess == true) {
+            current.isSuccess == true && current.isLoading == false) {
           context.push(RouterPath.resetPass, extra: {
             "email": widget.email,
           });
         }
-        if (current.isSuccess == false) {
+        if (current.isSuccess == false && current.isLoading == false) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(current.error.toString()),
-              backgroundColor: Colors.red,
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: SizedBox(
+                width: 400.w,
+                child: AwesomeSnackbarContent(
+                  title: "Error",
+                  message: current.error.toString(),
+                  contentType: ContentType.failure,
+                ),
+              ),
             ),
           );
         }
@@ -100,6 +111,7 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                   widget.method == Method.emailRecovery)
               ? "Verify Email"
               : "Verify Phone Number",
+          isLeading: true,
           onPressed: () => {
                 ref.read(signUpProvider.notifier).state = SignUpState.initial(),
                 context.push(RouterPath.signUp)
@@ -194,6 +206,42 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                           }
                         },
                 ),
+                SizedBox(height: 20.h),
+                widget.method != Method.phoneActivation
+                    ? GestureDetector(
+                        onTap: () async {
+                          final isSuccess = await ref.read(signInProvider.notifier).resendOTP(Method.phoneActivation.toString(), widget.email!);
+                          if(isSuccess) {
+                            context.pushReplacement(RouterPath.verifyCode,
+                              extra: {
+                                "method": Method.phoneActivation,
+                                "email": widget.email,
+                              },
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: SizedBox(
+                                  width: 400.w,
+                                  child: AwesomeSnackbarContent(
+                                    title: "Failure",
+                                    message: "Failed to send the verification OTP to your phone number. Please try again later.",
+                                    contentType: ContentType.failure,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: CustomText(
+                          text: "Use Phone Instead",
+                          color: AppColors.accent,
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),

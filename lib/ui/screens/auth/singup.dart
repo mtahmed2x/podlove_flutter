@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,7 +51,7 @@ class _SignUpState extends ConsumerState<SignUp> {
     ref.listen<SignUpState>(
       signUpProvider,
           (previous, current) {
-        if (current.isSuccess == true) {
+        if (current.isSuccess == true  && current.isLoading == false) {
           context.push(
             RouterPath.verifyCode,
             extra: {
@@ -58,7 +59,7 @@ class _SignUpState extends ConsumerState<SignUp> {
               "email": current.email,
             },
           );
-        } else if (current.isSuccess == false) {
+        } else if (current.isSuccess == false && current.isLoading == false) {
           if (current.isVerified == true) {
             showMessageDialog(
               context,
@@ -84,8 +85,17 @@ class _SignUpState extends ConsumerState<SignUp> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(current.error.toString()),
-                backgroundColor: Colors.red,
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                backgroundColor: Colors.transparent,
+                content: SizedBox(
+                  width: 400.w,
+                  child: AwesomeSnackbarContent(
+                    title: "Error",
+                    message: current.error!,
+                    contentType: ContentType.failure,
+                  ),
+                ),
               ),
             );
           }
@@ -195,7 +205,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                         ? null
                         : () async {
                             if (_formKey.currentState?.validate() ?? false) {
-                              signUpNotifier.signUp(
+                              await signUpNotifier.signUp(
                                 nameController.text,
                                 emailController.text,
                                 phoneController.text,

@@ -132,7 +132,7 @@ class SignInNotifier extends StateNotifier<SignInState> {
     }
   }
 
-  Future<void> resendOTP(String method, String email) async {
+  Future<bool> resendOTP(String method, String email) async {
     final apiService = ref.read(apiServiceProvider);
     logger.i(method);
     final resendOTPData = {
@@ -143,7 +143,10 @@ class SignInNotifier extends StateNotifier<SignInState> {
       ApiEndpoints.resendOTP,
       data: resendOTPData,
     );
-    logger.i(response);
+    if(response.statusCode == StatusCode.OK) {
+      return true;
+    }
+    return false;
   }
 
   void resetState() {

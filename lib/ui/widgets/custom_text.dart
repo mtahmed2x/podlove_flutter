@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:podlove_flutter/constants/app_colors.dart';
 
 class CustomText extends StatelessWidget {
   final String text;
@@ -13,7 +14,8 @@ class CustomText extends StatelessWidget {
   final Color? color;
   final double? fontSize;
 
-  const CustomText({
+  const
+  CustomText({
     super.key,
     required this.text,
     this.style,
@@ -29,13 +31,14 @@ class CustomText extends StatelessWidget {
   });
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Text(
       text,
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
-      style: style ??
+      style:
           TextStyle(
             letterSpacing: letterSpacing,
             wordSpacing: wordSpacing,
@@ -43,6 +46,7 @@ class CustomText extends StatelessWidget {
             fontStyle: fontStyle,
             color: color,
             fontSize: fontSize,
+
           ),
     );
   }
