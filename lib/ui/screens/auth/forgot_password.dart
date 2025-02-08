@@ -62,7 +62,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                 Center(
                   child: Column(
                     children: [
-                      // Logo
                       AppWidgets.podLoveLogo,
                       SizedBox(height: 25.h),
                       CustomText(
@@ -105,9 +104,9 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                       : AppStrings.sendCode,
                   onPressed: () => forgotPasswordState.isLoading
                       ? null
-                      : () {
+                      : () async {
                           if (_formKey.currentState!.validate()) {
-                            forgotPasswordNotifier.forgotPassword(emailController.text);
+                            await forgotPasswordNotifier.forgotPassword(emailController.text);
                           }
                         },
                 ),
