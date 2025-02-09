@@ -140,6 +140,74 @@ class _ConnectionPathwayPageState extends State<ConnectionPathway> {
                   labels: ['Yes', 'No'],
                 ),
 
+                SizedBox(height: 16.h),
+                Text(
+                  'I prioritize being in a committed relationship.',
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                SizedBox(height: 8.h),
+                _buildRadioGroup<String>(
+                  groupValue: _committedValue,
+                  onChanged: (value) {
+                    setState(() => _committedValue = value);
+                  },
+                  labels: [
+                    'Strongly Disagree',
+                    'Disagree',
+                    'Neutral',
+                    'Agree',
+                    'Strongly Agree',
+                  ],
+                ),
+
+                SizedBox(height: 16.h),
+                Text(
+                  'Have you worked on yourself to become a better partner? ',
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                SizedBox(height: 8.h),
+                _buildRadioGroup<String>(
+                  groupValue: _selfWorkValue,
+                  onChanged: (value) {
+                    setState(() => _selfWorkValue = value);
+                  },
+                  labels: ['Yes', 'No', 'Not sure yet'],
+                ),
+
+                SizedBox(height: 16.h),
+                Text(
+                  'I am willing to invest time in deep conversations to truly understand my partner. ',
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                SizedBox(height: 8.h),
+                _buildRadioGroup<String>(
+                  groupValue: _deepConversationValue,
+                  onChanged: (value) {
+                    setState(() => _deepConversationValue = value);
+                  },
+                  labels: ['Yes', 'No'],
+                ),
+
+                SizedBox(height: 16.h),
+                Text(
+                  'I believe that building a strong relationship takes time and intentional effort.',
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                SizedBox(height: 8.h),
+                _buildRadioGroup<String>(
+                  groupValue: _strongRelationshipValue,
+                  onChanged: (value) {
+                    setState(() => _strongRelationshipValue = value);
+                  },
+                  labels: [
+                    'Strongly Disagree',
+                    'Disagree',
+                    'Neutral',
+                    'Agree',
+                    'Strongly Agree',
+                  ],
+                ),
+
                 SizedBox(height: 30.h),
                 // Submit button
                 CustomRoundButton(
