@@ -208,7 +208,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     //     _genderPreferenceController.text);
                     userNotifier.updateLocation(
                         userState!.user.location.latitude,
-                        userState!.user.location.longitude,
+                        userState.user.location.longitude,
                         _locationController.text);
 
                     try {
@@ -221,7 +221,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     }
                   },
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
               ],
             ),
           ),

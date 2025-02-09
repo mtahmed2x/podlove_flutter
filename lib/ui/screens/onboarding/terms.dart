@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
-import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
