@@ -18,7 +18,6 @@ enum Method {
   emailActivation,
   phoneActivation,
   emailRecovery,
-  phoneRecovery,
 }
 
 enum HomePageType {

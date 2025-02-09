@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
-import 'package:podlove_flutter/data/services/api_services.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
 import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/utils/logger.dart';
@@ -11,31 +9,42 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyCodeState {
   final bool isLoading;
-  final bool? isSuccess;
+  final bool? isVerificationSuccess;
+  final bool? isPhoneSuccess;
+  final bool? isResendSuccess;
   final String? error;
 
   VerifyCodeState({
     this.isLoading = false,
-    this.isSuccess,
+    this.isVerificationSuccess,
+    this.isPhoneSuccess,
+    this.isResendSuccess,
     this.error,
   });
 
   factory VerifyCodeState.initial() {
     return VerifyCodeState(
       isLoading: false,
-      isSuccess: null,
+      isVerificationSuccess: null,
+      isPhoneSuccess: null,
+      isResendSuccess: null,
       error: null,
     );
   }
 
   VerifyCodeState copyWith({
     bool? isLoading,
-    bool? isSuccess,
+    bool? isVerificationSuccess,
+    bool? isPhoneSuccess,
+    bool? isResendSuccess,
     String? error,
   }) {
     return VerifyCodeState(
       isLoading: isLoading ?? this.isLoading,
-      isSuccess: isSuccess ?? this.isSuccess,
+      isVerificationSuccess:
+          isVerificationSuccess ?? this.isVerificationSuccess,
+      isPhoneSuccess: isPhoneSuccess ?? this.isPhoneSuccess,
+      isResendSuccess: isResendSuccess ?? this.isResendSuccess,
       error: error ?? this.error,
     );
   }
@@ -47,15 +56,12 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
   VerifyCodeNotifier(this.ref) : super(VerifyCodeState.initial());
 
   Future<void> verifyCode(Method method, String email, String otp) async {
-    final apiService = ref.read(apiServiceProvider);
     state = state.copyWith(isLoading: true);
-    logger.i("fuck");
-    logger.i(method);
+    final apiService = ref.read(apiServiceProvider);
     try {
       if (method == Method.emailActivation ||
           method == Method.phoneActivation) {
         final activationData = {
-          "method": "emailActivation",
           "email": email,
           "verificationOTP": otp,
         };
@@ -64,27 +70,21 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
           ApiEndpoints.activate,
           data: activationData,
         );
-        logger.i(response);
 
         if (response.statusCode == StatusCode.OK) {
           final accessToken = response.data["data"]["accessToken"];
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('accessToken', accessToken);
 
-          logger.i(prefs.getString('accessToken'));
-
-          logger.i(response.data["data"]["user"]);
           final userJson = response.data["data"]["user"];
           ref.read(userProvider.notifier).initialize(userJson);
-          logger.i(ref.watch(userProvider)?.user.name);
-          state = state.copyWith(isSuccess: true);
-        }
 
-        else if(response.statusCode == StatusCode.UNAUTHORIZED) {
-          state = state.copyWith(isSuccess: false, error: response.data["message"]);
+          state = state.copyWith(isVerificationSuccess: true);
+        } else if (response.statusCode == StatusCode.UNAUTHORIZED) {
+          state = state.copyWith(
+              isVerificationSuccess: false, error: response.data["message"]);
         }
-      } else if (method == Method.emailRecovery ||
-          method == Method.phoneRecovery) {
+      } else if (method == Method.emailRecovery) {
         final recoveryData = {
           "method": method,
           "email": email,
@@ -98,7 +98,7 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
       }
     } catch (e) {
       state = state.copyWith(
-        isSuccess: false,
+        isVerificationSuccess: false,
         error: "An unexpected error occurred. Please try again.",
         isLoading: false,
       );
@@ -107,10 +107,63 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
     }
   }
 
-  Future<void> resendOTP(Method method, String email) async {
+  Future<void> resendOTP(String method, String email) async {
+    state = state.copyWith(isLoading: true);
+    final apiService = ref.read(apiServiceProvider);
 
+    try {
+      final resendOTPData = {
+        "method": method,
+        "email": email,
+      };
+
+      final response = await apiService.post(
+        ApiEndpoints.resendOTP,
+        data: resendOTPData,
+      );
+
+      if (response.statusCode == StatusCode.OK) {
+        state = state.copyWith(isResendSuccess: true);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isPhoneSuccess: false,
+        error: "An unexpected error occurred. Please try again.",
+        isLoading: false,
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
+  Future<void> phoneVerification(String email) async {
+    state = state.copyWith(isLoading: true);
+    final apiService = ref.read(apiServiceProvider);
+
+    try {
+      final phoneVerificationData = {
+        "method": "phoneActivation",
+        "email": email,
+      };
+
+      final response = await apiService.post(
+        ApiEndpoints.resendOTP,
+        data: phoneVerificationData,
+      );
+
+      if (response.statusCode == StatusCode.OK) {
+        state = state.copyWith(isPhoneSuccess: true);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        isPhoneSuccess: false,
+        error: "An unexpected error occurred. Please try again.",
+        isLoading: false,
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
 }
 
 final verifyCodeProvider =

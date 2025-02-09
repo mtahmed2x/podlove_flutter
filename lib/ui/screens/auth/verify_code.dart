@@ -46,17 +46,50 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
       (previous, current) {
         if ((widget.method == Method.emailActivation ||
                 widget.method == Method.phoneActivation) &&
-            current.isSuccess == true && current.isLoading == false) {
+            current.isVerificationSuccess == true &&
+            current.isLoading == false) {
           context.push(RouterPath.locationAccess);
+        } else if (current.isPhoneSuccess == true &&
+            current.isLoading == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              duration: Duration(seconds: 5), // Snackbar duration
+              content: SizedBox(
+                width: 400.w,
+                child: AwesomeSnackbarContent(
+                  title: "Success",
+                  message: "A verification Code has been sent to your phone",
+                  contentType: ContentType.success,
+                ),
+              ),
+            ),
+          );
+
+          Future.delayed(Duration(seconds: 5), () {
+            if (context.mounted) {
+              context.push(
+                RouterPath.verifyCode,
+                extra: {
+                  "method": Method.phoneActivation,
+                  "email": widget.email,
+                },
+              );
+            }
+          });
         }
-        if ((widget.method == Method.emailRecovery ||
-                widget.method == Method.phoneRecovery) &&
-            current.isSuccess == true && current.isLoading == false) {
+
+        if (widget.method == Method.emailRecovery &&
+            current.isVerificationSuccess == true &&
+            current.isLoading == false) {
           context.push(RouterPath.resetPass, extra: {
             "email": widget.email,
           });
         }
-        if (current.isSuccess == false && current.isLoading == false) {
+        if (current.isVerificationSuccess == false &&
+            current.isLoading == false) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 0,
@@ -107,15 +140,12 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
 
     return Scaffold(
       appBar: CustomAppBar(
-          title: (widget.method == Method.emailActivation ||
-                  widget.method == Method.emailRecovery)
-              ? "Verify Email"
-              : "Verify Phone Number",
-          isLeading: true,
-          onPressed: () => {
-                ref.read(signUpProvider.notifier).state = SignUpState.initial(),
-                context.push(RouterPath.signUp)
-              }),
+        title: (widget.method == Method.emailActivation ||
+                widget.method == Method.emailRecovery)
+            ? "Verify Email"
+            : "Verify Phone Number",
+        isLeading: true,
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
@@ -167,9 +197,11 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                     child: GestureDetector(
                       onTap: verifyCodeState.isLoading
                           ? null
-                          : () {
-                              verifyCodeNotifier.resendOTP(
-                                  widget.method!, widget.email!);
+                          : () async {
+                              await verifyCodeNotifier.resendOTP(
+                                widget.method!.toString(),
+                                widget.email!,
+                              );
                             },
                       child: CustomText(
                         text: AppStrings.resendOtp,
@@ -208,38 +240,27 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                 ),
                 SizedBox(height: 20.h),
                 widget.method != Method.phoneActivation
-                    ? GestureDetector(
-                        onTap: () async {
-                          final isSuccess = await ref.read(signInProvider.notifier).resendOTP(Method.phoneActivation.toString(), widget.email!);
-                          if(isSuccess) {
-                            context.pushReplacement(RouterPath.verifyCode,
-                              extra: {
-                                "method": Method.phoneActivation,
-                                "email": widget.email,
-                              },
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                content: SizedBox(
-                                  width: 400.w,
-                                  child: AwesomeSnackbarContent(
-                                    title: "Failure",
-                                    message: "Failed to send the verification OTP to your phone number. Please try again later.",
-                                    contentType: ContentType.failure,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        child: CustomText(
-                          text: "Use Phone Instead",
-                          color: AppColors.accent,
-                        ),
+                    ? Column(
+                        children: [
+                          GestureDetector(
+                            onTap: verifyCodeState.isLoading == true
+                                ? null
+                                : () async {
+                                    await verifyCodeNotifier
+                                        .phoneVerification(widget.email!);
+                                  },
+                            child: CustomText(
+                              text: "Use Phone Instead",
+                              color: AppColors.accent,
+                            ),
+                          ),
+                          verifyCodeState.isLoading == true
+                              ? CustomText(
+                                  text:
+                                      "Sending verification code to the phone...",
+                                )
+                              : Container()
+                        ],
                       )
                     : Container(),
               ],
