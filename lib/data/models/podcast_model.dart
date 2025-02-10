@@ -1,45 +1,8 @@
-import 'package:podlove_flutter/data/models/subscription_model.dart';
-import 'package:podlove_flutter/data/models/user_model.dart';
-
-class HomeModel {
-  final Podcast? podcast;
-  final List<SubscriptionModel>? subscriptionPlans;
-  final UserModel? user;
-
-  HomeModel({
-    this.podcast,
-    this.subscriptionPlans,
-    this.user,
-  });
-
-  HomeModel copyWith({
-    Podcast? podcast,
-    List<SubscriptionModel>? subscriptionPlans,
-    UserModel? user,
-  }) =>
-      HomeModel(
-        podcast: podcast ?? this.podcast,
-        subscriptionPlans: subscriptionPlans ?? this.subscriptionPlans,
-        user: user ?? this.user,
-      );
-
-  factory HomeModel.fromJson(Map<String, dynamic> json) => HomeModel(
-        podcast:
-            json["podcast"] == null ? null : Podcast.fromJson(json["podcast"]),
-        subscriptionPlans: json["subscriptionPlans"] == null
-            ? []
-            : SubscriptionModel.fromJsonList(json["subscriptionPlans"]),
-        user: json["user"] == null ? null : UserModel.fromJson(json["user"]),
-      );
-}
-
 class Podcast {
   final Schedule? schedule;
   final String? id;
   final String? primaryUser;
-  final Participant? participant1;
-  final Participant? participant2;
-  final Participant? participant3;
+  final List<Participant>? participants;
   final dynamic selectedUser;
   final String? status;
   final String? recordingUrl;
@@ -49,9 +12,7 @@ class Podcast {
     this.schedule,
     this.id,
     this.primaryUser,
-    this.participant1,
-    this.participant2,
-    this.participant3,
+    this.participants,
     this.selectedUser,
     this.status,
     this.recordingUrl,
@@ -62,9 +23,7 @@ class Podcast {
     Schedule? schedule,
     String? id,
     String? primaryUser,
-    Participant? participant1,
-    Participant? participant2,
-    Participant? participant3,
+    List<Participant>? participants,
     dynamic selectedUser,
     String? status,
     String? recordingUrl,
@@ -74,9 +33,7 @@ class Podcast {
         schedule: schedule ?? this.schedule,
         id: id ?? this.id,
         primaryUser: primaryUser ?? this.primaryUser,
-        participant1: participant1 ?? this.participant1,
-        participant2: participant2 ?? this.participant2,
-        participant3: participant3 ?? this.participant3,
+        participants: participants ?? this.participants,
         selectedUser: selectedUser ?? this.selectedUser,
         status: status ?? this.status,
         recordingUrl: recordingUrl ?? this.recordingUrl,
@@ -89,15 +46,10 @@ class Podcast {
             : Schedule.fromJson(json["schedule"]),
         id: json["_id"],
         primaryUser: json["primaryUser"],
-        participant1: json["participant1"] == null
-            ? null
-            : Participant.fromJson(json["participant1"]),
-        participant2: json["participant2"] == null
-            ? null
-            : Participant.fromJson(json["participant2"]),
-        participant3: json["participant3"] == null
-            ? null
-            : Participant.fromJson(json["participant3"]),
+        participants: json["participants"] == null
+            ? []
+            : List<Participant>.from(
+                json["participants"].map((x) => Participant.fromJson(x))),
         selectedUser: json["selectedUser"],
         status: json["status"],
         recordingUrl: json["recordingUrl"],
@@ -106,9 +58,9 @@ class Podcast {
 }
 
 class Schedule {
-  String? date;
-  String? day;
-  String? time;
+  final String? date;
+  final String? day;
+  final String? time;
 
   Schedule({
     this.date,
@@ -138,7 +90,7 @@ class Participant {
   final String? id;
   final String? name;
   final String? bio;
-  final List<dynamic>? interests;
+  final List<String>? interests;
 
   Participant({
     this.id,
@@ -151,7 +103,7 @@ class Participant {
     String? id,
     String? name,
     String? bio,
-    List<dynamic>? interests,
+    List<String>? interests,
   }) =>
       Participant(
         id: id ?? this.id,
@@ -166,6 +118,6 @@ class Participant {
         bio: json["bio"],
         interests: json["interests"] == null
             ? []
-            : List<dynamic>.from(json["interests"]!.map((x) => x)),
+            : List<String>.from(json["interests"].map((x) => x.toString())),
       );
 }

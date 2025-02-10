@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-import 'package:podlove_flutter/data/models/home_response_model.dart';
+import 'package:podlove_flutter/data/models/podcast_model.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
-import 'package:podlove_flutter/providers/user/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
@@ -35,14 +34,7 @@ class _MatchedProfileState extends ConsumerState<MatchedProfile> {
         final homeData = ref.watch(homeProvider);
         return homeData.when(
           data: (data) {
-            Participant participant;
-            if (widget.index == 1) {
-              participant = data.podcast!.participant1!;
-            } else if (widget.index == 2) {
-              participant = data.podcast!.participant2!;
-            } else {
-              participant = data.podcast!.participant3!;
-            }
+            Participant participant = data.podcast!.participants![widget.index];
             logger.i(participant.id);
             return Scaffold(
               appBar: CustomAppBar(title: "${participant.name} Bio"),

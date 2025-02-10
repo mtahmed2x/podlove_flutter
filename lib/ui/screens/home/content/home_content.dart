@@ -86,44 +86,37 @@ class _HomeContentState extends ConsumerState<HomeContent> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                     const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Image.asset(
-                                            "assets/images/match-1.png"),
-                                        Image.asset(
-                                            "assets/images/match-2.png"),
-                                        Image.asset(
-                                            "assets/images/match-3.png"),
-                                      ],
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        spacing: 10,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: List.generate(
+                                          data.podcast!.participants!.length,
+                                          (index) => Image.asset(
+                                              "assets/images/match-${index + 1}.png"),
+                                        ),
+                                      ),
                                     ),
                                     if (data.podcast?.status == "Done") ...[
                                       const SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          CustomImageButton(
-                                            imagePath:
-                                                "assets/images/btn-active.png",
+                                        children: List.generate(
+                                          data.podcast!.participants!.length,
+                                          (index) => CustomImageButton(
+                                            imagePath: index == 0
+                                                ? "assets/images/btn-active.png"
+                                                : "assets/images/btn-inactive.png",
                                             text: "Chat",
-                                            onPressed: () =>
-                                                context.push(RouterPath.chat),
+                                            onPressed: index == 0
+                                                ? () => context
+                                                    .push(RouterPath.chat)
+                                                : () {},
                                           ),
-                                          CustomImageButton(
-                                            imagePath:
-                                                "assets/images/btn-inactive.png",
-                                            text: "Chat",
-                                            onPressed: () {},
-                                          ),
-                                          CustomImageButton(
-                                            imagePath:
-                                                "assets/images/btn-inactive.png",
-                                            text: "Chat",
-                                            onPressed: () {},
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ]
                                   ],

@@ -12,102 +12,67 @@ class MatchesContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final homeData = ref.watch(homeProvider);
-    final userData = ref.watch(userProvider);
-
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        appBar: CustomAppBar(title: "Matches", onPressed: () {},),
-        backgroundColor: Color.fromARGB(255, 248, 248, 248),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Center(
-                  child: homeData.when(
-                data: (data) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (userData!.user.subscription.plan ==
-                              "Seeker: Connection Builder") {
-                            context.push(
-                              RouterPath.matchedProfile,
-                              extra: 1,
-                            );
-                          }
-                          // if (userData!.user.subscription.plan ==
-                          //     "Seeker: Connection Builder") {
-                          //   context.push(RouterPath.matchedProfile, extra: {
-                          //     "index": 1,
-                          //     "id": data.podcast!.participant1!.id,
-                          //     "name": data.podcast!.participant1!.name,
-                          //     "bio": data.podcast!.participant1!.bio,
-                          //     "interests": data.podcast!.participant1!.interests,
-                          //   });
-                          // }
-                        },
-                        child: ImageTextCard(
-                          imageUrl: data.podcast!.status != "Done"
-                              ? "assets/images/hidden-match.png"
-                              : "assets/images/revealed-match.png",
-                          text: "Match-1",
-                          textBackgroundColor: data.podcast!.status != "Done"
-                              ? AppColors.accent
-                              : AppColors.background,
-                          isNetworkImage: false,
+      child: Consumer(builder: (context, ref, child) {
+        final homeData = ref.watch(homeProvider);
+        return homeData.when(
+          data: (data) {
+            final userData = ref.watch(userProvider);
+            final participants = data.podcast?.participants ?? [];
+
+            return Scaffold(
+              appBar: CustomAppBar(title: "Matches"),
+              backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: Center(
+                      child: Column(
+                        children: List.generate(
+                          participants.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 30),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (userData?.user.subscription.plan ==
+                                    "Seeker: Connection Builder") {
+                                  context.push(
+                                    RouterPath.matchedProfile,
+                                    extra: index,
+                                  );
+                                }
+                              },
+                              child: ImageTextCard(
+                                imageUrl: data.podcast?.status != "Done"
+                                    ? "assets/images/hidden-match.png"
+                                    : "assets/images/revealed-match.png",
+                                text: "Match-${index + 1}",
+                                textBackgroundColor:
+                                    data.podcast?.status != "Done"
+                                        ? AppColors.accent
+                                        : AppColors.background,
+                                isNetworkImage: false,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 30),
-                      GestureDetector(
-                        onTap: () {
-                          if (userData!.user.subscription.plan ==
-                              "Seeker: Connection Builder") {
-                            context.push(
-                              RouterPath.matchedProfile,
-                              extra: 2,
-                            );
-                          }
-                        },
-                        child: ImageTextCard(
-                          imageUrl: "assets/images/hidden-match.png",
-                          text: "Match-2",
-                          textBackgroundColor: AppColors.accent,
-                          isNetworkImage: false,
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      GestureDetector(
-                        onTap: () {
-                          if (userData!.user.subscription.plan ==
-                              "Seeker: Connection Builder") {
-                            context.push(
-                              RouterPath.matchedProfile,
-                              extra: 3,
-                            );
-                          }
-                        },
-                        child: ImageTextCard(
-                          imageUrl: "assets/images/hidden-match.png",
-                          text: "Match-3",
-                          textBackgroundColor: AppColors.accent,
-                          isNetworkImage: false,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-                loading: () => Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(
-                  child: Text('Failed to load home data: ${error.toString()}'),
+                    ),
+                  ),
                 ),
-              )),
-            ),
-          ),
-        ),
-      ),
+              ),
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) {
+            print(error);
+            print(stack.toString());
+            return Center(child: Text("Error: ${error.toString()}"));
+          },
+        );
+      }),
     );
   }
 }
