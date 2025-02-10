@@ -60,7 +60,7 @@ class _SelectPreferredGenderState extends ConsumerState<SelectPreferredGender> {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.genderPreferenceTitle),
+      appBar: CustomAppBar(title: AppStrings.genderPreferenceTitle, isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)

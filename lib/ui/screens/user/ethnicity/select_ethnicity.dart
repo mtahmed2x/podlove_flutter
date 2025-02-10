@@ -56,7 +56,7 @@ class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Ethnicity"),
+      appBar: CustomAppBar(title: "Ethnicity", isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)

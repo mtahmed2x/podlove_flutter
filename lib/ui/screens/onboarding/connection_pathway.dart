@@ -207,9 +207,8 @@ class _ConnectionPathwayPageState extends State<ConnectionPathway> {
                     'Strongly Agree',
                   ],
                 ),
-
                 SizedBox(height: 30.h),
-                // Submit button
+
                 CustomRoundButton(
                   text: AppStrings.submit,
                   onPressed: () {

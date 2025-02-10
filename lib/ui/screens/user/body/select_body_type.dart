@@ -54,7 +54,7 @@ class _SelectBodyTypeState extends ConsumerState<SelectBodyType> {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Body Type"),
+      appBar: CustomAppBar(title: "Body Type", isLeading: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w)

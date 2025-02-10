@@ -32,7 +32,7 @@ class SelectAge extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.selectAgeTitle),
+      appBar: CustomAppBar(title: AppStrings.selectAgeTitle, isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w)
@@ -91,7 +91,7 @@ class SelectAge extends ConsumerWidget {
                               return;
                             }
                             logger.i("new age: $age");
-                            context.go(RouterPath.selectPreferredAge);
+                            context.push(RouterPath.selectPreferredAge);
                           },
                   );
                 }),

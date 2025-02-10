@@ -62,7 +62,7 @@ class _SelectPreferredEthnicitiesState
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Cultural & Ethnic Background"),
+      appBar: CustomAppBar(title: "Cultural & Ethnic Background", isLeading: true,),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: Padding(
@@ -120,7 +120,7 @@ class _SelectPreferredEthnicitiesState
                           userNotifier
                               .updatePreferredEthnicity(selectedEthnicities);
                           logger.i(selectedEthnicities);
-                          context.go(RouterPath.addBio);
+                          context.push(RouterPath.addBio);
                         },
                 ),
                 SizedBox(height: 50.h),

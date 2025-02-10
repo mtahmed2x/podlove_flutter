@@ -19,8 +19,7 @@ class SelectPersonalityTraits extends ConsumerWidget {
 
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Personality Traits"),
-      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
+      appBar: CustomAppBar(title: "Personality Traits", isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)

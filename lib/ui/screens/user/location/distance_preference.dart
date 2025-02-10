@@ -20,7 +20,7 @@ class DistancePreference extends ConsumerWidget {
     final userNotifier = ref.read(userProvider.notifier);
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Distance Preferences"),
+      appBar: CustomAppBar(title: "Distance Preferences", isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)

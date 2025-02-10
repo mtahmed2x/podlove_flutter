@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +21,7 @@ void showMessageDialog(BuildContext context, String title, String text, VoidCall
               backgroundColor: AppColors.accent,
               padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 10.w),
             ),
-            child: const Text("OK"),
+            child: Text(buttonText),
           ),
         ),
       ],

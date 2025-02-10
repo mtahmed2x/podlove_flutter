@@ -164,9 +164,13 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  void resetState() {
+    state = VerifyCodeState.initial();
+  }
 }
 
 final verifyCodeProvider =
-    StateNotifierProvider<VerifyCodeNotifier, VerifyCodeState>(
+    StateNotifierProvider.autoDispose <VerifyCodeNotifier, VerifyCodeState>(
   (ref) => VerifyCodeNotifier(ref),
 );

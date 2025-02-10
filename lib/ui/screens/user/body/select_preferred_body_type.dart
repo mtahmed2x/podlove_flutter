@@ -60,7 +60,7 @@ class _SelectPreferredBodyTypeState
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Preferred Body Type"),
+      appBar: CustomAppBar(title: "Preferred Body Type", isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)

@@ -41,7 +41,7 @@ class _UploadPhotoState extends ConsumerState<UploadPhoto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.uploadPhotoTitle),
+      appBar: CustomAppBar(title: AppStrings.uploadPhotoTitle, isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w)

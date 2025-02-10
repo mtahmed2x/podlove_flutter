@@ -30,7 +30,7 @@ class SelectPreferredAge extends ConsumerWidget {
       });
     }
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.ageRangeTitle),
+      appBar: CustomAppBar(title: AppStrings.ageRangeTitle, isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.w)
@@ -93,7 +93,7 @@ class SelectPreferredAge extends ConsumerWidget {
                                         logger.i(state?.user);
                                         logger.i(state?.user.location.place);
                                         logger.i(state?.user.location.latitude);
-                                        context.go(RouterPath.selectGender);
+                                        context.push(RouterPath.selectGender);
                                       },
                               );
                             }),

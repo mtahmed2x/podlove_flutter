@@ -8,13 +8,12 @@ import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-import 'package:podlove_flutter/providers/auth/sign_in_provider.dart';
-import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
 import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 
 class VerifyCode extends ConsumerStatefulWidget {
@@ -29,6 +28,12 @@ class VerifyCode extends ConsumerStatefulWidget {
 
 class _VerifyCodeState extends ConsumerState<VerifyCode> {
   final otpController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(verifyCodeProvider);
+  }
 
   @override
   void dispose() {
@@ -51,34 +56,47 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
           context.push(RouterPath.locationAccess);
         } else if (current.isPhoneSuccess == true &&
             current.isLoading == false) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              elevation: 0,
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.transparent,
-              duration: Duration(seconds: 5), // Snackbar duration
-              content: SizedBox(
-                width: 400.w,
-                child: AwesomeSnackbarContent(
-                  title: "Success",
-                  message: "A verification Code has been sent to your phone",
-                  contentType: ContentType.success,
-                ),
-              ),
+          showMessageDialog(
+            context,
+            "Alert",
+            "A verification Code has been sent to your phone",
+                () => context.push(
+              RouterPath.verifyCode,
+              extra: {
+                "method": Method.phoneActivation,
+                "email": widget.email,
+              },
             ),
+            buttonText: "Verify",
           );
-
-          Future.delayed(Duration(seconds: 5), () {
-            if (context.mounted) {
-              context.push(
-                RouterPath.verifyCode,
-                extra: {
-                  "method": Method.phoneActivation,
-                  "email": widget.email,
-                },
-              );
-            }
-          });
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     elevation: 0,
+          //     behavior: SnackBarBehavior.floating,
+          //     backgroundColor: Colors.transparent,
+          //     duration: Duration(seconds: 5),
+          //     content: SizedBox(
+          //       width: 400.w,
+          //       child: AwesomeSnackbarContent(
+          //         title: "Success",
+          //         message: "A verification Code has been sent to your phone",
+          //         contentType: ContentType.success,
+          //       ),
+          //     ),
+          //   ),
+          // );
+          //
+          // Future.delayed(Duration(seconds: 5), () {
+          //   if (context.mounted) {
+          //     context.push(
+          //       RouterPath.verifyCode,
+          //       extra: {
+          //         "method": Method.phoneActivation,
+          //         "email": widget.email,
+          //       },
+          //     );
+          //   }
+          // });
         }
 
         if (widget.method == Method.emailRecovery &&

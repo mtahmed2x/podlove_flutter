@@ -33,7 +33,7 @@ class AddBio extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Add Bio"),
+      appBar: CustomAppBar(title: "Add Bio", isLeading: true,),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: Padding(
@@ -112,7 +112,7 @@ class AddBio extends ConsumerWidget {
                                 return;
                               }
                               logger.i(state.user.bio);
-                              context.go(RouterPath
+                              context.push(RouterPath
                                   .uploadPhoto); // Navigate to the next screen
                             },
                     );

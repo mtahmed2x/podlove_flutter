@@ -173,7 +173,7 @@ class CompatibilityQuestion extends StatelessWidget {
         : questions.sublist((questions.length / 2).ceil());
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Discover Compatibility"),
+      appBar: CustomAppBar(title: "Discover Compatibility", isLeading: true),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
@@ -205,11 +205,9 @@ class CompatibilityQuestion extends StatelessWidget {
                   text: pageIndex == 1 ? "Next" : "Submit",
                   onPressed: () {
                     if (pageIndex == 1) {
-                      GoRouter.of(context)
-                          .go('${RouterPath.compatibalityQuestion}/2');
+                      context.push('${RouterPath.compatibalityQuestion}/2');
                     } else {
-                      GoRouter.of(context)
-                          .go(RouterPath.selectPersonalityTraits);
+                      context.push(RouterPath.selectPersonalityTraits);
                     }
                   },
                 ),
