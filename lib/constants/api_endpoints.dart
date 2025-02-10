@@ -23,4 +23,8 @@ class ApiEndpoints {
   static String purchase = "/subscription/upgrade";
 
   static String subscriptionPlan = "/plan";
+
+  static String signInWithGoogle = "/auth/signin-with-google";
+
+  static String connectionPathway = "/ai/is-user-suitable";
 }

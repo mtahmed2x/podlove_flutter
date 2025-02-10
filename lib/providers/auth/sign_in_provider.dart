@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http_status_code/http_status_code.dart';
 import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
@@ -37,13 +38,14 @@ class SignInState {
     );
   }
 
-  SignInState copyWith(
-      {bool? isLoading,
-      bool? isSuccess,
-      SignInErrorType? errorType,
-      String? error,
-      bool? isProfileComplete,
-      String? email}) {
+  SignInState copyWith({
+    bool? isLoading,
+    bool? isSuccess,
+    SignInErrorType? errorType,
+    String? error,
+    bool? isProfileComplete,
+    String? email,
+  }) {
     return SignInState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
@@ -143,10 +145,64 @@ class SignInNotifier extends StateNotifier<SignInState> {
       ApiEndpoints.resendOTP,
       data: resendOTPData,
     );
-    if(response.statusCode == StatusCode.OK) {
+    if (response.statusCode == StatusCode.OK) {
       return true;
     }
     return false;
+  }
+
+  Future<void> googleSignIn() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: ['email'],
+    );
+    final account = await googleSignIn.signIn();
+    if (account != null) {
+      logger.i(account.id);
+      logger.i(account.displayName);
+      logger.i(account.email);
+      logger.i(account.photoUrl);
+
+      final apiService = ref.read(apiServiceProvider);
+      final signInWithGoogleData = {
+        "googleId": account.id,
+        "name": account.displayName,
+        "email": account.email,
+        "avatar": account.photoUrl
+      };
+      try {
+        final response = await apiService.post(ApiEndpoints.signInWithGoogle, data: signInWithGoogleData);
+        if (response.statusCode == StatusCode.OK) {
+          String accessToken = response.data["data"]["accessToken"];
+          final userJson = response.data["data"]["user"];
+          ref.read(userProvider.notifier).initialize(userJson);
+          final isProfileComplete =
+              ref.watch(userProvider)?.user.isProfileComplete;
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('accessToken', accessToken);
+          await prefs.setBool('isProfileComplete', isProfileComplete!);
+          await prefs.setBool('isGoogleLogin', true);
+
+          logger.i(prefs.getString('accessToken'));
+
+          if (isProfileComplete) {
+            state = state.copyWith(isProfileComplete: true);
+          } else {
+            state = state.copyWith(isProfileComplete: false);
+          }
+          state = state.copyWith(isSuccess: true);
+        }
+
+      } on ApiException catch (e) {
+        state = state.copyWith(isSuccess: false, error: e.message);
+      } catch (e) {
+        state =
+            state.copyWith(isSuccess: false, error: "An unknown error occurred.");
+      } finally {
+        state = state.copyWith(isLoading: false);
+      }
+
+    }
   }
 
   void resetState() {

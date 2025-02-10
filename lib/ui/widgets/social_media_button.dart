@@ -3,7 +3,7 @@ import 'custom_text.dart';
 
 class SocialMediaButton extends StatelessWidget {
   final String path;
-  // final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
   final Color? color;
   final double? fontSize;
@@ -12,7 +12,7 @@ class SocialMediaButton extends StatelessWidget {
   const SocialMediaButton({
     super.key,
     required this.path,
-    // required this.onPressed,
+    this.onPressed,
     required this.text,
     this.color,
     this.fontSize,
@@ -25,7 +25,7 @@ class SocialMediaButton extends StatelessWidget {
       width: double.infinity,
       height: 48,
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: onPressed ?? () {},
         style: ButtonStyle(),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

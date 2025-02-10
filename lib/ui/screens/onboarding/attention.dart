@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
@@ -36,35 +37,33 @@ class Attention extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: 30.h), // Responsive spacing
+                  SizedBox(height: 30.h),
                   Text(
                     AppStrings.attention,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 22.sp, // Responsive font size
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.w500,
                       color: const Color.fromARGB(255, 51, 51, 51),
                     ),
                   ),
-                  SizedBox(height: 30.h), // Responsive spacing
+                  SizedBox(height: 30.h),
                   Expanded(
                     child: Text(
                       AppStrings.appreciationForInterest,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 18.sp, // Responsive font size
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w400,
                         color: const Color.fromARGB(255, 51, 51, 51),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.h), // Responsive spacing
+                  SizedBox(height: 20.h),
                   CustomRoundButton(
-                    text: AppStrings.understoodConsent,
+                    text: "Exit",
                     onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      await prefs.setBool('isFirstTime', false);
-                      context.push(RouterPath.signUp);
+                      SystemNavigator.pop();
                     },
                   ),
                 ],

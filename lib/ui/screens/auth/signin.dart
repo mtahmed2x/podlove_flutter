@@ -230,6 +230,7 @@ class _SignInState extends ConsumerState<SignIn> {
                     SocialMediaButton(
                       path: AppStrings.googleLogoPath,
                       text: AppStrings.signInWithGoogle,
+                      onPressed: signInNotifier.googleSignIn,
                     ),
                     SizedBox(height: 15.h),
                     SocialMediaButton(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
@@ -53,6 +54,16 @@ class _HomePageState extends ConsumerState<Home> {
   Future<void> _logOut() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('accessToken');
+    await prefs.setBool('isProfileComplete', false);
+    if (prefs.containsKey('isGoogleLogin')) {
+      bool? isGoogleLogin = prefs.getBool('isGoogleLogin');
+      if(isGoogleLogin?? false) {
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        await googleSignIn.signOut();
+        await prefs.setBool('isGoogleLogin', false);
+      }
+    }
+
   }
 
   void _onItemTapped(int index) {
