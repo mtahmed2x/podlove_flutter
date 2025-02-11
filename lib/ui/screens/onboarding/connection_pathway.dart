@@ -17,7 +17,8 @@ class ConnectionPathway extends ConsumerStatefulWidget {
   const ConnectionPathway({super.key});
 
   @override
-  ConsumerState<ConnectionPathway> createState() => _ConnectionPathwayPageState();
+  ConsumerState<ConnectionPathway> createState() =>
+      _ConnectionPathwayPageState();
 }
 
 class _ConnectionPathwayPageState extends ConsumerState<ConnectionPathway> {
@@ -31,7 +32,8 @@ class _ConnectionPathwayPageState extends ConsumerState<ConnectionPathway> {
   String? _deepConversationValue;
   String? _strongRelationshipValue;
 
-  final TextEditingController _exclusivityReasonController = TextEditingController();
+  final TextEditingController _exclusivityReasonController =
+      TextEditingController();
 
   bool get isFormComplete {
     return _boundariesValue != null &&
@@ -47,56 +49,32 @@ class _ConnectionPathwayPageState extends ConsumerState<ConnectionPathway> {
   }
 
   void submitForm() async {
-    if (!isFormComplete) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Answer All Questions',
-            message: "Please answer all questions before proceeding",
-            contentType: ContentType.failure,
-          ),
-        ),
-      );
-      return;
-    }
-
-    List<String> answers = [
-      _boundariesValue!,
-      _consentValue!,
-      _monogamousValue!,
-      _exclusivityReasonController.text.trim(),
-      _emotionalAvailabilityValue!,
-      _resolvedBaggageValue!,
-      _committedValue!,
-      _selfWorkValue!,
-      _deepConversationValue!,
-      _strongRelationshipValue!,
-    ];
-
-    final connectionNotifier = ref.read(connectionPathwayProvider.notifier);
-    await connectionNotifier.isSuitable(answers);
-
-    if (ref.read(connectionPathwayProvider).isSuccess == true && ref.read(connectionPathwayProvider).isLoading == false) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isFirstTime', false);
-      context.push(RouterPath.signUp);
-    } else {
-      context.push(RouterPath.attention);
-    }
+    if (ref.read(connectionPathwayProvider).isSuccess == true &&
+        ref.read(connectionPathwayProvider).isLoading == false) {}
   }
 
   @override
   Widget build(BuildContext context) {
     final connectionState = ref.watch(connectionPathwayProvider);
+    final connectionNotifier = ref.read(connectionPathwayProvider.notifier);
+
+    ref.listen(connectionPathwayProvider, (prev, current) async {
+      if (current.isLoading == false && current.isSuccess == true) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isFirstTime', false);
+        context.push(RouterPath.signUp);
+      } else if(current.isLoading == false && current.isSuccess == false) {
+        context.push(RouterPath.attention);
+      }
+    });
 
     return Scaffold(
-      appBar: CustomAppBar(title: AppStrings.connectionPathway, isLeading: true),
+      appBar:
+          CustomAppBar(title: AppStrings.connectionPathway, isLeading: true),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.w).copyWith(top: 20.h, bottom: 44.h),
+          padding: EdgeInsets.symmetric(horizontal: 10.w)
+              .copyWith(top: 20.h, bottom: 44.h),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,85 +85,146 @@ class _ConnectionPathwayPageState extends ConsumerState<ConnectionPathway> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
                 ),
-
                 SizedBox(height: 16.h),
                 _buildQuestion(
-                  text: "I believe in communicating openly about boundaries with my partner.",
+                  text:
+                      "I believe in communicating openly about boundaries with my partner.",
                   groupValue: _boundariesValue,
-                  onChanged: (value) => setState(() => _boundariesValue = value),
-                  labels: ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'],
+                  onChanged: (value) =>
+                      setState(() => _boundariesValue = value),
+                  labels: [
+                    'Strongly Disagree',
+                    'Disagree',
+                    'Neutral',
+                    'Agree',
+                    'Strongly Agree'
+                  ],
                 ),
-
                 _buildQuestion(
-                  text: "It’s important to me that both partners give enthusiastic consent before progressing to physical intimacy.",
+                  text:
+                      "It’s important to me that both partners give enthusiastic consent before progressing to physical intimacy.",
                   groupValue: _consentValue,
                   onChanged: (value) => setState(() => _consentValue = value),
                   labels: ['Yes', 'No'],
                 ),
-
                 _buildQuestion(
-                  text: "I am interested in a monogamous, exclusive relationship.",
+                  text:
+                      "I am interested in a monogamous, exclusive relationship.",
                   groupValue: _monogamousValue,
-                  onChanged: (value) => setState(() => _monogamousValue = value),
+                  onChanged: (value) =>
+                      setState(() => _monogamousValue = value),
                   labels: ['Yes', 'No', 'Not sure yet'],
                 ),
-
                 SizedBox(height: 16.h),
                 CustomTextField(
-                  label: 'Why is exclusivity important to you in a relationship?',
+                  label:
+                      'Why is exclusivity important to you in a relationship?',
                   hint: 'Details',
                   controller: _exclusivityReasonController,
                   maxLines: 1,
                   onChanged: (value) => setState(() {}),
                 ),
-
                 _buildQuestion(
-                  text: "I am emotionally available and ready to invest in a serious relationship.",
+                  text:
+                      "I am emotionally available and ready to invest in a serious relationship.",
                   groupValue: _emotionalAvailabilityValue,
-                  onChanged: (value) => setState(() => _emotionalAvailabilityValue = value),
-                  labels: ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'],
+                  onChanged: (value) =>
+                      setState(() => _emotionalAvailabilityValue = value),
+                  labels: [
+                    'Strongly Disagree',
+                    'Disagree',
+                    'Neutral',
+                    'Agree',
+                    'Strongly Agree'
+                  ],
                 ),
-
                 _buildQuestion(
-                  text: "I have resolved most of my past relationship baggage and am ready to move forward.",
+                  text:
+                      "I have resolved most of my past relationship baggage and am ready to move forward.",
                   groupValue: _resolvedBaggageValue,
-                  onChanged: (value) => setState(() => _resolvedBaggageValue = value),
+                  onChanged: (value) =>
+                      setState(() => _resolvedBaggageValue = value),
                   labels: ['Yes', 'No'],
                 ),
-
                 _buildQuestion(
                   text: "I prioritize being in a committed relationship.",
                   groupValue: _committedValue,
                   onChanged: (value) => setState(() => _committedValue = value),
-                  labels: ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'],
+                  labels: [
+                    'Strongly Disagree',
+                    'Disagree',
+                    'Neutral',
+                    'Agree',
+                    'Strongly Agree'
+                  ],
                 ),
-
                 _buildQuestion(
-                  text: "Have you worked on yourself to become a better partner?",
+                  text:
+                      "Have you worked on yourself to become a better partner?",
                   groupValue: _selfWorkValue,
                   onChanged: (value) => setState(() => _selfWorkValue = value),
                   labels: ['Yes', 'No', 'Not sure yet'],
                 ),
-
                 _buildQuestion(
-                  text: "I am willing to invest time in deep conversations to truly understand my partner.",
+                  text:
+                      "I am willing to invest time in deep conversations to truly understand my partner.",
                   groupValue: _deepConversationValue,
-                  onChanged: (value) => setState(() => _deepConversationValue = value),
+                  onChanged: (value) =>
+                      setState(() => _deepConversationValue = value),
                   labels: ['Yes', 'No'],
                 ),
-
                 _buildQuestion(
-                  text: "I believe that building a strong relationship takes time and intentional effort.",
+                  text:
+                      "I believe that building a strong relationship takes time and intentional effort.",
                   groupValue: _strongRelationshipValue,
-                  onChanged: (value) => setState(() => _strongRelationshipValue = value),
-                  labels: ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'],
+                  onChanged: (value) =>
+                      setState(() => _strongRelationshipValue = value),
+                  labels: [
+                    'Strongly Disagree',
+                    'Disagree',
+                    'Neutral',
+                    'Agree',
+                    'Strongly Agree'
+                  ],
                 ),
-
                 SizedBox(height: 30.h),
-
                 CustomRoundButton(
-                  text: AppStrings.submit,
-                  onPressed: submitForm,
+                  text: connectionState.isLoading == true
+                      ? "Submitting"
+                      : AppStrings.submit,
+                  onPressed: connectionState.isLoading == true
+                      ? null
+                      : () async {
+                          if (isFormComplete) {
+                            List<String> answers = [
+                              _boundariesValue!,
+                              _consentValue!,
+                              _monogamousValue!,
+                              _exclusivityReasonController.text.trim(),
+                              _emotionalAvailabilityValue!,
+                              _resolvedBaggageValue!,
+                              _committedValue!,
+                              _selfWorkValue!,
+                              _deepConversationValue!,
+                              _strongRelationshipValue!,
+                            ];
+                            await connectionNotifier.isSuitable(answers);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Answer All Questions',
+                                  message:
+                                      "Please answer all questions before proceeding",
+                                  contentType: ContentType.failure,
+                                ),
+                              ),
+                            );
+                          }
+                        },
                 ),
               ],
             ),
@@ -222,7 +261,10 @@ class _ConnectionPathwayPageState extends ConsumerState<ConnectionPathway> {
                 ),
                 SizedBox(width: 6.w),
                 Expanded(
-                  child: CustomText(text: label, fontWeight: FontWeight.w400, fontSize: 14.sp),
+                  child: CustomText(
+                      text: label,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14.sp),
                 ),
               ],
             );

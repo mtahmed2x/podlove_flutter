@@ -43,8 +43,8 @@ class ConnectionPathwayNotifier extends StateNotifier<ConnectionPathwayState> {
 
   Future<void> isSuitable(List<String> userResponses) async {
     state = state.copyWith(isLoading: true);
+    final apiService = ref.read(apiServiceProvider);
     try {
-      final apiService = ref.read(apiServiceProvider);
       final response = await apiService.post(
         ApiEndpoints.connectionPathway,
         data: {"userResponses": userResponses},
