@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -8,22 +9,32 @@ import 'package:podlove_flutter/ui/widgets/custom_radio_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
-class CompatibilityQuestion extends StatelessWidget {
+class CompatibilityQuestion extends StatefulWidget {
   final int pageIndex;
 
   const CompatibilityQuestion({super.key, required this.pageIndex});
 
   @override
-  Widget build(BuildContext context) {
-    final List<Map<String, dynamic>> questions = [
+  State<CompatibilityQuestion> createState() => _CompatibilityQuestionState();
+}
+
+class _CompatibilityQuestionState extends State<CompatibilityQuestion> {
+  late List<Map<String, dynamic>> questions;
+  final Map<int, String?> selectedAnswers = {};
+  final Map<int, TextEditingController> textControllers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    questions = [
       {
         'question':
-            "Do you prefer spending your weekends socializing in larger gatherings or relaxing at home with a few close friends? *",
+        "Do you prefer spending your weekends socializing in larger gatherings or relaxing at home with a few close friends? *",
         'options': ["Larger gatherings", "Relaxing with close friends"]
       },
       {
         'question':
-            "When faced with a major life decision, do you usually follow your head (logic) or your heart (feelings)? *",
+        "When faced with a major life decision, do you usually follow your head (logic) or your heart (feelings)? *",
         'options': ["Head (logic)", "Heart (feelings)"]
       },
       {
@@ -66,6 +77,11 @@ class CompatibilityQuestion extends StatelessWidget {
         'options': ["Yes", "No"]
       },
       {
+        'question':
+        'If yes, how many kids do you have?',
+        'options': [] // Free text input can be handled separately.
+      },
+      {
         'question': "Do you want kids in the future? *",
         'options': ["Yes", "No", "Maybe"]
       },
@@ -83,7 +99,7 @@ class CompatibilityQuestion extends StatelessWidget {
       },
       {
         'question':
-            "How would you describe your drinking habits? * (Select the option that best describes you.)",
+        "How would you describe your drinking habits? * (Select the option that best describes you.)",
         'options': [
           "Never – I don't drink alcohol at all",
           "Rarely – I drink only on special occasions (e.g., holidays, celebrations)",
@@ -95,12 +111,12 @@ class CompatibilityQuestion extends StatelessWidget {
       },
       {
         'question':
-            'If "Never", would you be comfortable dating someone who drinks?',
+        'If "Never", would you be comfortable dating someone who drinks?',
         'options': ["Yes", "No", "Depends"]
       },
       {
         'question':
-            "Do you consider yourself religious or spiritual? * (Select the option that best describes you.)",
+        "Do you consider yourself religious or spiritual? * (Select the option that best describes you.)",
         'options': [
           "Yes, I'm religious",
           "Yes, I'm spiritual but not religious",
@@ -114,12 +130,12 @@ class CompatibilityQuestion extends StatelessWidget {
       },
       {
         'question':
-            'If "Spiritual", would you like to describe your spiritual beliefs?',
+        'If "Spiritual", would you like to describe your spiritual beliefs?',
         'options': [] // Free text input can be handled separately.
       },
       {
         'question':
-            "How important is religion or spirituality in your life? * (Select the option that best describes you.)",
+        "How important is religion or spirituality in your life? * (Select the option that best describes you.)",
         'options': [
           "Not important at all",
           "Somewhat important",
@@ -130,7 +146,7 @@ class CompatibilityQuestion extends StatelessWidget {
       },
       {
         'question':
-            "Would you date someone with different religious or spiritual beliefs? * (Select one option.)",
+        "Would you date someone with different religious or spiritual beliefs? * (Select one option.)",
         'options': [
           "Yes, I'm open to dating someone with different beliefs",
           "No, I prefer someone who shares my beliefs",
@@ -139,7 +155,7 @@ class CompatibilityQuestion extends StatelessWidget {
       },
       {
         'question':
-            "How would you describe your level of political engagement? * (Select the option that best describes you.)",
+        "How would you describe your level of political engagement? * (Select the option that best describes you.)",
         'options': [
           "Not at all political – I don't follow politics and prefer to avoid political discussions",
           "Slightly political – I'm minimally engaged, but I occasionally follow major events",
@@ -150,7 +166,7 @@ class CompatibilityQuestion extends StatelessWidget {
       },
       {
         'question':
-            "Would you date someone with different political beliefs? * (Select one option.)",
+        "Would you date someone with different political beliefs? * (Select one option.)",
         'options': [
           "Yes, I'm open to dating someone with different political views",
           "No, I prefer someone who aligns with my political beliefs",
@@ -167,49 +183,83 @@ class CompatibilityQuestion extends StatelessWidget {
       }
     ];
 
-    // Split questions into two pages dynamically
-    final List<Map<String, dynamic>> pageQuestions = pageIndex == 1
-        ? questions.sublist(0, (questions.length / 2).ceil())
-        : questions.sublist((questions.length / 2).ceil());
+    final totalQuestions = 6;
+    final startIndex = widget.pageIndex == 1 ? 0 : totalQuestions;
+    final endIndex = widget.pageIndex == 1 ? totalQuestions : questions.length;
+    questions = questions.sublist(startIndex, endIndex);
+  }
 
+  void _validateAndProceed(BuildContext context) {
+    if (selectedAnswers.length < questions.length || selectedAnswers.containsValue(null)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: SizedBox(
+            width: 400.w,
+            child: AwesomeSnackbarContent(
+              title: "Answer all questions",
+              message: "Please answer all questions before proceeding.",
+              contentType: ContentType.failure,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (widget.pageIndex == 1) {
+      context.push('${RouterPath.compatibalityQuestion}/2');
+    } else {
+      context.push(RouterPath.selectPersonalityTraits);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: "Discover Compatibility", isLeading: true),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w)
-              .copyWith(top: 20.h, bottom: 44.h),
+          padding: EdgeInsets.symmetric(horizontal: 20.w).copyWith(top: 20.h, bottom: 44.h),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20.h),
                 CustomText(
                   text: "Let’s Discover Your Compatibility!",
                   color: AppColors.primaryText,
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
                 ),
-                SizedBox(height: 10.h),
-                ...List.generate(pageQuestions.length, (index) {
-                  final question = pageQuestions[index];
+                SizedBox(height: 30.h),
+                ...List.generate(questions.length, (index) {
+                  final question = questions[index];
                   return Padding(
                     padding: EdgeInsets.only(bottom: 20.h),
-                    child: _QuestionWidget(
+                    child: question['options'].isEmpty
+                        ? _TextFieldQuestionWidget(
+                      question: question['question'],
+                      onTextChanged: (value) {
+                        selectedAnswers[index] = value;
+                      },
+                    )
+                        : _QuestionWidget(
                       question: question['question'],
                       options: question['options'],
+                      onOptionSelected: (value) {
+                        setState(() {
+                          selectedAnswers[index] = value;
+                        });
+                      },
                     ),
                   );
                 }),
                 SizedBox(height: 30.h),
                 CustomRoundButton(
-                  text: pageIndex == 1 ? "Next" : "Submit",
-                  onPressed: () {
-                    if (pageIndex == 1) {
-                      context.push('${RouterPath.compatibalityQuestion}/2');
-                    } else {
-                      context.push(RouterPath.selectPersonalityTraits);
-                    }
-                  },
+                  text: widget.pageIndex == 1 ? "Next" : "Submit",
+                  onPressed: () => _validateAndProceed(context),
                 ),
                 SizedBox(height: 30.h),
               ],
@@ -221,13 +271,67 @@ class CompatibilityQuestion extends StatelessWidget {
   }
 }
 
+class _TextFieldQuestionWidget extends StatelessWidget {
+  final String question;
+  final Function(String) onTextChanged;
+
+  const _TextFieldQuestionWidget({
+    required this.question,
+    required this.onTextChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          question,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: const Color.fromARGB(255, 51, 50, 50),
+          ),
+        ),
+        SizedBox(height: 8.h),
+        TextField(
+          onChanged: onTextChanged,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(
+                color: AppColors.accent,
+                width: 1.0,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(
+                color: AppColors.accent,
+                width: 1.0,
+              ),
+            ),
+            hintText: "Input here",
+          ),
+
+        ),
+      ],
+    );
+  }
+}
+
 class _QuestionWidget extends StatefulWidget {
   final String question;
   final List<dynamic> options;
+  final Function(String) onOptionSelected;
 
   const _QuestionWidget({
     required this.question,
     required this.options,
+    required this.onOptionSelected,
   });
 
   @override
@@ -251,10 +355,8 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
           ),
         ),
         SizedBox(height: 8.h),
-        ...List.generate(widget.options.length, (index) {
-          final option = widget.options[index];
+        ...widget.options.map((option) {
           final isSelected = _selectedOption == option;
-
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 10.h),
             child: GestureDetector(
@@ -262,7 +364,7 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
                 setState(() {
                   _selectedOption = option;
                 });
-                print("Selected Option: $option");
+                widget.onOptionSelected(option);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +375,7 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
                       setState(() {
                         _selectedOption = option;
                       });
-                      print("Selected Option: $option");
+                      widget.onOptionSelected(option);
                     },
                   ),
                   SizedBox(width: 8.w),
@@ -283,9 +385,7 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
-                        color: isSelected
-                            ? AppColors.primaryText
-                            : const Color.fromARGB(255, 51, 50, 50),
+                        color: isSelected ? AppColors.primaryText : const Color.fromARGB(255, 51, 50, 50),
                       ),
                     ),
                   ),
@@ -298,3 +398,5 @@ class _QuestionWidgetState extends State<_QuestionWidget> {
     );
   }
 }
+
+

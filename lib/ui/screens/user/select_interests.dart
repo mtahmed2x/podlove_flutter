@@ -131,7 +131,7 @@ class SelectInterests extends ConsumerWidget {
                               userNotifier
                                   .updateInterests(selectedInterests.toList());
                               userNotifier.update();
-                              context.push(RouterPath.findingMatch);
+                              context.push(RouterPath.chooseSubscription);
                             },
                     );
                   },

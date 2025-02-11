@@ -18,7 +18,7 @@ class _FAQPageState extends ConsumerState<FAQ> {
     final faqAsyncValue = ref.watch(faqProvider);
 
     return Scaffold(
-      appBar: CustomAppBar(title: "FAQs"),
+      appBar: CustomAppBar(title: "FAQs", isLeading: true),
       body: faqAsyncValue.when(
         data: (faqs) {
           if (faqs.isEmpty) {

@@ -11,7 +11,7 @@ class PrivacyPolicy extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final privacyPolicyAsyncValue = ref.watch(privacyPolicyProvider);
     return Scaffold(
-      appBar: CustomAppBar(title: "Privacy Policy"),
+      appBar: CustomAppBar(title: "Privacy Policy", isLeading: true,),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: privacyPolicyAsyncValue.when(

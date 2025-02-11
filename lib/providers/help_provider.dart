@@ -46,7 +46,7 @@ class HelpNotifier extends StateNotifier<HelpState> {
 
   final issueController = TextEditingController();
 
-  Future<void> submitHelp() async {
+  Future<void> submitHelp(String category) async {
     final userState = ref.watch(userProvider);
 
     final helpData = {

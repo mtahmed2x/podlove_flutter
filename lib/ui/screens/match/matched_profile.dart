@@ -37,7 +37,7 @@ class _MatchedProfileState extends ConsumerState<MatchedProfile> {
             Participant participant = data.podcast!.participants![widget.index];
             logger.i(participant.id);
             return Scaffold(
-              appBar: CustomAppBar(title: "${participant.name} Bio"),
+              appBar: CustomAppBar(title: "${participant.name} Bio", isLeading: true,),
               body: Padding(
                 padding: EdgeInsets.only(bottom: 44),
                 child: SingleChildScrollView(

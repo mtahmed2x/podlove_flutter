@@ -60,7 +60,7 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "${widget.name}"),
+      appBar: CustomAppBar(title: "${widget.name}", isLeading: true,),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10).copyWith(top: 20),

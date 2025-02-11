@@ -242,8 +242,11 @@ class AppRouter {
       GoRoute(
         path: RouterPath.purchase,
         builder: (context, state) {
-          final url = state.extra as String? ?? "https://fallback-url.com";
-          return Purchase(url: url);
+          final args = state.extra as Map<String, dynamic>?;
+          return Purchase(
+              url: args?['url'] ?? "url",
+              onPressed: args?["onPressed"] ?? () {}
+          );
         },
       ),
       GoRoute(

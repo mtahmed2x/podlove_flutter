@@ -11,7 +11,7 @@ class TermsConditions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final termAsyncValue = ref.watch(termProvider);
     return Scaffold(
-      appBar: CustomAppBar(title: "Terms & Conditions"),
+      appBar: CustomAppBar(title: "Terms & Conditions", isLeading: true,),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: termAsyncValue.when(

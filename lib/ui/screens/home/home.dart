@@ -121,6 +121,15 @@ class _HomePageState extends ConsumerState<Home> {
               const Expanded(child: SizedBox()),
               ListTile(
                 leading: Image.asset("assets/images/logout.png"),
+                title: const Text('Pause Account'),
+                onTap: () async {
+                  await _logOut()
+                      .whenComplete(() => context.go(RouterPath.signIn));
+                },
+              ),
+              const SizedBox(height: 10),
+              ListTile(
+                leading: Image.asset("assets/images/logout.png"),
                 title: const Text('Logout'),
                 onTap: () async {
                   await _logOut()

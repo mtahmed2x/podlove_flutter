@@ -260,15 +260,22 @@ class _HomeContentState extends ConsumerState<HomeContent> {
                                                 ? () {}
                                                 : () {
                                                     () async {
-                                                      logger.i("tap");
                                                       final url =
                                                           await purchaseNotifier
                                                               .purchase(
                                                                   subscription
                                                                       .id!);
                                                       context.push(
-                                                          RouterPath.purchase,
-                                                          extra: url);
+                                                        RouterPath.purchase,
+                                                        extra: {
+                                                          "url": url,
+                                                          "onPressed": () {
+                                                            context.push(
+                                                                RouterPath
+                                                                    .home);
+                                                          }
+                                                        },
+                                                      );
                                                     }();
                                                   },
                                             isCurrentPlan: isCurrentPlan,
