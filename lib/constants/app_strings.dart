@@ -22,7 +22,7 @@ class AppStrings {
   static const String emailActivationVerify = "EmailActivationVerify";
   static const String verifyEmail = "Verify Email";
   static const String verifyEmailInstruction =
-      "Please enter the six digit code we sent you to your email";
+      "Please enter the six digit code we sent you to your email. If you don't find the code, please check your spam folder";
   static const String verifyPhoneInstruction =
       "Please enter the six digit code we sent you to your phone";
   static const String podLoveLogoPath = "assets/images/podLove.png";
