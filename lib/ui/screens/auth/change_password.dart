@@ -10,9 +10,7 @@ import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:podlove_flutter/utils/logger.dart';
 
 class ChangePassword extends ConsumerStatefulWidget {
   const ChangePassword({super.key});
@@ -26,6 +24,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
   final currentPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(changePasswordProvider);
+  }
 
   @override
   void dispose() {
@@ -52,7 +56,6 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
       } else if (current.isSuccess != true &&
           current.error != null &&
           current.isLoading == false) {
-        logger.i(current.error!);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             elevation: 0,

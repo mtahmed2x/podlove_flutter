@@ -30,6 +30,11 @@ class _SignUpState extends ConsumerState<SignUp> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(signUpProvider);
+  }
 
   @override
   void dispose() {

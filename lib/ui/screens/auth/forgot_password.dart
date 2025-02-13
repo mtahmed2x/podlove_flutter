@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +15,7 @@ import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
   const ForgotPassword({super.key});
+
   @override
   ConsumerState<ForgotPassword> createState() => _ForgotPasswordState();
 }
@@ -21,6 +23,12 @@ class ForgotPassword extends ConsumerStatefulWidget {
 class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(forgotPasswordProvider);
+  }
 
   @override
   void dispose() {
@@ -36,13 +44,31 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
     ref.listen<ForgotPasswordState>(
       forgotPasswordProvider,
       (previous, current) {
-        if (current.isSuccess == true) {
+        if (current.isSuccess == true && current.isLoading == false) {
           context.push(
             RouterPath.verifyCode,
             extra: {
               "method": Method.emailRecovery,
               "email": current.email,
             },
+          );
+        } else if (current.isSuccess == false &&
+            current.error != null &&
+            current.isLoading == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: SizedBox(
+                width: 400.w,
+                child: AwesomeSnackbarContent(
+                  title: "Error",
+                  message: current.error.toString(),
+                  contentType: ContentType.failure,
+                ),
+              ),
+            ),
           );
         }
       },
@@ -106,7 +132,8 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                       ? null
                       : () async {
                           if (_formKey.currentState!.validate()) {
-                            await forgotPasswordNotifier.forgotPassword(emailController.text);
+                            await forgotPasswordNotifier
+                                .forgotPassword(emailController.text);
                           }
                         },
                 ),

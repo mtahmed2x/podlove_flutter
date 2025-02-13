@@ -43,14 +43,14 @@ class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
 
   Future<void> changePassword(
       String password, String newPassword, String confirmPassword) async {
+    state = state.copyWith(isLoading: true);
+    final apiService = ref.read(apiServiceProvider);
     final changePasswordData = {
       "password": password,
       "newPassword": newPassword,
       "confirmPassword": confirmPassword,
     };
-    state = state.copyWith(isLoading: true);
     try {
-      final apiService = ref.read(apiServiceProvider);
       final response = await apiService.post(
         ApiEndpoints.changePassword,
         data: changePasswordData,
@@ -60,22 +60,20 @@ class ChangePasswordNotifier extends StateNotifier<ChangePasswordState> {
           isSuccess: true,
           isLoading: false,
         );
-        logger.i(state.isLoading);
-        logger.i(state.isSuccess);
       } else if (response.statusCode == StatusCode.UNAUTHORIZED) {
         state = state.copyWith(
           isSuccess: false,
           error:
               "Your current password is incorrect. Please check and try again.",
-          isLoading: false,
         );
       }
     } catch (e) {
       state = state.copyWith(
         isSuccess: false,
-        error: "An unexpected error occurred. Please try again.",
-        isLoading: false,
+        error: e.toString(),
       );
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 }

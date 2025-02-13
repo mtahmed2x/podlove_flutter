@@ -29,10 +29,15 @@ class _SignInState extends ConsumerState<SignIn> {
   final passwordController = TextEditingController();
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(signInProvider);
+  }
+
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-    ref.read(signInProvider.notifier).resetState();
     super.dispose();
   }
 

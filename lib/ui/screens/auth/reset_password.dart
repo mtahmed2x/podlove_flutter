@@ -33,7 +33,7 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
     final resetPasswordNotifier = ref.watch(resetPasswordProvider.notifier);
 
     ref.listen<ResetPasswordState>(resetPasswordProvider, (previous, current) {
-      if (current.isSuccess == true) {
+      if (current.isSuccess == true && current.isLoading == false) {
         showMessageDialog(
           context,
           AppStrings.success,

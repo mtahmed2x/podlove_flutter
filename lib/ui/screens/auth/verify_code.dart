@@ -14,7 +14,6 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
-import 'package:podlove_flutter/utils/logger.dart';
 
 class VerifyCode extends ConsumerStatefulWidget {
   final Method? method;
@@ -54,13 +53,20 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
             current.isVerificationSuccess == true &&
             current.isLoading == false) {
           context.push(RouterPath.locationAccess);
-        } else if (current.isPhoneSuccess == true &&
+        } else if (widget.method == Method.emailRecovery &&
+            current.isRecoverySuccess == true &&
+            current.isLoading == false) {
+          context.push(RouterPath.resetPass);
+        } else if (widget.method == Method.emailActivation &&
+            current.isPhoneUse == true &&
+            current.isResendSuccess == true &&
+            current.successMessage != null &&
             current.isLoading == false) {
           showMessageDialog(
             context,
             "Alert",
-            "A verification Code has been sent to your phone",
-                () => context.push(
+            current.successMessage!,
+            () => context.push(
               RouterPath.verifyCode,
               extra: {
                 "method": Method.phoneActivation,
@@ -69,45 +75,30 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
             ),
             buttonText: "Verify",
           );
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     elevation: 0,
-          //     behavior: SnackBarBehavior.floating,
-          //     backgroundColor: Colors.transparent,
-          //     duration: Duration(seconds: 5),
-          //     content: SizedBox(
-          //       width: 400.w,
-          //       child: AwesomeSnackbarContent(
-          //         title: "Success",
-          //         message: "A verification Code has been sent to your phone",
-          //         contentType: ContentType.success,
-          //       ),
-          //     ),
-          //   ),
-          // );
-          //
-          // Future.delayed(Duration(seconds: 5), () {
-          //   if (context.mounted) {
-          //     context.push(
-          //       RouterPath.verifyCode,
-          //       extra: {
-          //         "method": Method.phoneActivation,
-          //         "email": widget.email,
-          //       },
-          //     );
-          //   }
-          // });
-        }
-
-        if (widget.method == Method.emailRecovery &&
-            current.isVerificationSuccess == true &&
+        } else if (current.isResendSuccess == true &&
+            current.isPhoneUse == false &&
+            current.successMessage != null &&
             current.isLoading == false) {
-          context.push(RouterPath.resetPass, extra: {
-            "email": widget.email,
-          });
-        }
-        if (current.isVerificationSuccess == false &&
-            current.isLoading == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              elevation: 0,
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: Colors.transparent,
+              content: SizedBox(
+                width: 400.w,
+                child: AwesomeSnackbarContent(
+                  title: "Success",
+                  message: current.successMessage!,
+                  contentType: ContentType.success,
+                ),
+              ),
+            ),
+          );
+        } else if ((current.isVerificationSuccess == false ||
+                current.isResendSuccess == false ||
+                current.isRecoverySuccess == false) &&
+            current.isLoading == false &&
+            current.error != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               elevation: 0,
@@ -217,8 +208,9 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                           ? null
                           : () async {
                               await verifyCodeNotifier.resendOTP(
-                                widget.method!.toString(),
+                                widget.method!,
                                 widget.email!,
+                                false,
                               );
                             },
                       child: CustomText(
@@ -239,18 +231,33 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                       ? null
                       : () async {
                           final otp = otpController.text;
-                          logger.i(otp);
                           if (otp.length == 6) {
-                            verifyCodeNotifier.verifyCode(
-                              widget.method!,
-                              widget.email!,
-                              otp,
-                            );
+                            if (widget.method == Method.emailActivation ||
+                                widget.method == Method.phoneActivation) {
+                              verifyCodeNotifier.activate(
+                                widget.email!,
+                                otp,
+                              );
+                            } else if (widget.method == Method.emailRecovery) {
+                              verifyCodeNotifier.recoveryVerify(
+                                widget.email!,
+                                otp,
+                              );
+                            }
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(AppStrings.invalidOtpError),
-                                backgroundColor: Colors.red,
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: SizedBox(
+                                  width: 400.w,
+                                  child: AwesomeSnackbarContent(
+                                    title: "Invalid OTP",
+                                    message: AppStrings.invalidOtpError,
+                                    contentType: ContentType.failure,
+                                  ),
+                                ),
                               ),
                             );
                           }
@@ -264,14 +271,18 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                             onTap: verifyCodeState.isLoading == true
                                 ? null
                                 : () async {
-                                    await verifyCodeNotifier
-                                        .phoneVerification(widget.email!);
+                                    await verifyCodeNotifier.resendOTP(
+                                      Method.phoneActivation,
+                                      widget.email!,
+                                      true,
+                                    );
                                   },
                             child: CustomText(
                               text: "Use Phone Instead",
                               color: AppColors.accent,
                             ),
                           ),
+                          SizedBox(height: 20.h),
                           verifyCodeState.isLoading == true
                               ? CustomText(
                                   text:

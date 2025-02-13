@@ -78,6 +78,9 @@ class AppStrings {
   static const String verifyingCode = "Verifying Code...";
   static const String verifyCode = "Verify Code";
   static const String invalidOtpError = "Please enter a valid 6-digit code";
+  static const String emailVerificationSent = "A verification code had been sent to your email";
+  static const String phoneVerificationSent = "A verification code had been sent to your phone";
+  static const String recoveryVerificationSent = "A recovery code had been sent to your email";
 
   static const String forgotPasswordInstruction =
       "Enter your email and we will send you a verification code";
