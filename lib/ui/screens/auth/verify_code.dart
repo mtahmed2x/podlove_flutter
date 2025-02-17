@@ -264,7 +264,7 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                         },
                 ),
                 SizedBox(height: 20.h),
-                widget.method != Method.phoneActivation
+                widget.method == Method.emailActivation
                     ? Column(
                         children: [
                           GestureDetector(

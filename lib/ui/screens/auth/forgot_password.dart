@@ -12,6 +12,7 @@ import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
   const ForgotPassword({super.key});
@@ -123,19 +124,29 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                     controller: emailController,
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 30.h),
                 CustomRoundButton(
                   text: forgotPasswordState.isLoading
                       ? AppStrings.sendingCode
                       : AppStrings.sendCode,
-                  onPressed: () => forgotPasswordState.isLoading
-                      ? null
-                      : () async {
-                          if (_formKey.currentState!.validate()) {
-                            await forgotPasswordNotifier
-                                .forgotPassword(emailController.text);
-                          }
-                        },
+                  onPressed: forgotPasswordState.isLoading ? null : () async {
+                    logger.i(emailController.text);
+                    if (_formKey.currentState!.validate()) {
+                      await forgotPasswordNotifier
+                          .forgotPassword(emailController.text);
+                    } else {
+                      logger.i("No Email");
+                    }
+                  },
+                  // onPressed: () => forgotPasswordState.isLoading
+                  //     ? null
+                  //     : () async {
+                  //
+                  //         if (_formKey.currentState!.validate()) {
+                  //           await forgotPasswordNotifier
+                  //               .forgotPassword(emailController.text);
+                  //         }
+                  //       },
                 ),
               ],
             ),

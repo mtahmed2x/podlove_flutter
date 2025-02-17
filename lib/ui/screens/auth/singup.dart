@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
@@ -26,7 +27,7 @@ class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-  final phoneController = TextEditingController();
+  final phoneController = PhoneController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -52,11 +53,10 @@ class _SignUpState extends ConsumerState<SignUp> {
     final signUpState = ref.watch(signUpProvider);
     final signUpNotifier = ref.read(signUpProvider.notifier);
 
-
     ref.listen<SignUpState>(
       signUpProvider,
-          (previous, current) {
-        if (current.isSuccess == true  && current.isLoading == false) {
+      (previous, current) {
+        if (current.isSuccess == true && current.isLoading == false) {
           context.push(
             RouterPath.verifyCode,
             extra: {
@@ -70,7 +70,7 @@ class _SignUpState extends ConsumerState<SignUp> {
               context,
               "Alert",
               current.error.toString(),
-                  () => context.push(RouterPath.signIn),
+              () => context.push(RouterPath.signIn),
               buttonText: "Sign in",
             );
           } else if (current.isVerified == false) {
@@ -78,7 +78,7 @@ class _SignUpState extends ConsumerState<SignUp> {
               context,
               "Alert",
               current.error.toString(),
-                  () => context.push(
+              () => context.push(
                 RouterPath.verifyCode,
                 extra: {
                   "method": Method.emailActivation,
@@ -162,18 +162,43 @@ class _SignUpState extends ConsumerState<SignUp> {
                       return null;
                     },
                   ),
-                  CustomTextField(
-                    fieldType: TextFieldType.text,
-                    label: AppStrings.phoneNumber,
-                    hint: AppStrings.phoneNumberHint,
-                    controller: phoneController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.enterPhoneNumberError;
-                      }
-                      return null;
-                    },
+                  CustomText(
+                    text: "Phone Number",
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    color: const Color.fromARGB(255, 51, 51, 51),
                   ),
+                  SizedBox(height: 10.h),
+                  PhoneFormField(
+                    controller: phoneController,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your phone number',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.accent)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.accent)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.accent)),
+
+                    ),
+                    countrySelectorNavigator:
+                        const CountrySelectorNavigator.page(),
+                    isCountryButtonPersistent: true,
+                    isCountrySelectionEnabled: true,
+                    countryButtonStyle: const CountryButtonStyle(
+                      showDialCode: true,
+                      showIsoCode: false,
+                      showFlag: true,
+                      flagSize: 18,
+                    ),
+                    validator: PhoneValidator.compose([
+                      PhoneValidator.required(context,
+                          errorText: AppStrings.enterPhoneNumberError),
+                      PhoneValidator.validMobile(context,
+                          errorText: "* Invalid mobile number"),
+                    ]),
+                  ),
+                  SizedBox(height: 20.h),
                   CustomTextField(
                     fieldType: TextFieldType.password,
                     label: AppStrings.password,
@@ -213,7 +238,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                               await signUpNotifier.signUp(
                                 nameController.text,
                                 emailController.text,
-                                phoneController.text,
+                                phoneController.value.toString(),
                                 passwordController.text,
                               );
                             }

@@ -83,7 +83,7 @@ class AppStrings {
   static const String recoveryVerificationSent = "A recovery code had been sent to your email";
 
   static const String forgotPasswordInstruction =
-      "Enter your email and we will send you a verification code";
+      "Enter your email and we will send you a recovery code";
   static const String sendingCode = "Sending code...";
   static const String sendCode = "Send code";
   static const String emailRecoveryVerify = "EmailRecoveryVerify";
