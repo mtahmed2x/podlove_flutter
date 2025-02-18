@@ -5,7 +5,7 @@ import 'package:podlove_flutter/constants/api_endpoints.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/data/services/api_exceptions.dart';
 import 'package:podlove_flutter/providers/global_providers.dart';
-import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/providers/user_provider.dart';
 import 'package:podlove_flutter/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

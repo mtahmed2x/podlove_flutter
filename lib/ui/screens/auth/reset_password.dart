@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
-import 'package:podlove_flutter/providers/auth/reset_password_provider.dart';
+import 'package:podlove_flutter/providers/reset_password_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';

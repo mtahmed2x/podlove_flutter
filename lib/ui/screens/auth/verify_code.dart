@@ -8,7 +8,7 @@ import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-import 'package:podlove_flutter/providers/auth/verify_code_provider.dart';
+import 'package:podlove_flutter/providers/verify_code_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';

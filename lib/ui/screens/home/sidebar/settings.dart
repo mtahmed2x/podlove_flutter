@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
-import 'package:podlove_flutter/providers/auth/delete_account_provider.dart';
+import 'package:podlove_flutter/providers/delete_account_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_outline_button.dart';

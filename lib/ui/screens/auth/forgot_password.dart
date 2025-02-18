@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-import 'package:podlove_flutter/providers/auth/forgot_password_provider.dart';
+import 'package:podlove_flutter/providers/forgot_password_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';

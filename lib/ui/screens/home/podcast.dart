@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
-import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/providers/user_provider.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class PodcastPage extends ConsumerWidget {

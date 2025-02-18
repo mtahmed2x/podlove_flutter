@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/providers/home_provider.dart';
 import 'package:podlove_flutter/providers/purchase_providers.dart';
-import 'package:podlove_flutter/providers/user/user_provider.dart';
+import 'package:podlove_flutter/providers/user_provider.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_image_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
@@ -308,8 +308,6 @@ class _HomeContentState extends ConsumerState<HomeContent> {
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stack) {
-                  print(error);
-                  print(stack.toString());
                   return Center(child: Text("Error: ${error.toString()}"));
                 },
               );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:podlove_flutter/constants/app_strings.dart';
+
+import 'app_strings.dart';
 
 class AppWidgets {
   static Widget podLoveLogo = Image.asset(

@@ -7,7 +7,7 @@ import 'package:phone_form_field/phone_form_field.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
-import 'package:podlove_flutter/providers/auth/sign_up_provider.dart';
+import 'package:podlove_flutter/providers/sign_up_provider.dart';
 import 'package:podlove_flutter/constants/app_strings.dart';
 import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
