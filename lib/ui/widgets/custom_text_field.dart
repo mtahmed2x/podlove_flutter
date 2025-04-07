@@ -23,6 +23,8 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final FocusNode? focusNode;
+  final String? errorText;
 
   const CustomTextField({
     super.key,
@@ -44,6 +46,8 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.validator,
     this.onChanged,
+    this.focusNode,
+    this.errorText,
   });
 
   @override
@@ -89,6 +93,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 fontSize: 14.sp,
               ),
           enabled: widget.enabled,
+          focusNode: widget.focusNode,
           decoration: InputDecoration(
             hintText: widget.hint,
             hintStyle: TextStyle(
@@ -125,6 +130,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   color: widget.borderColor ?? customOrange, width: 2.w),
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
+            errorText: widget.errorText,
             errorStyle: TextStyle(
               color: Colors.red,
               fontSize: 12.sp,

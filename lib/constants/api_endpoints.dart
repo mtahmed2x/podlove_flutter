@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static String baseUrl = "http://142.93.217.28:7000";
+  static String baseUrl = "http://182.252.68.230:7001";
   // static String baseUrl = "http://10.0.60.41:7000";
   static String signUp = "/auth/register";
   static String activate = "/auth/activate";

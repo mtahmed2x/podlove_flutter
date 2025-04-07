@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:phone_form_field/phone_form_field.dart';
+import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:podlove_flutter/constants/app_colors.dart';
 import 'package:podlove_flutter/constants/app_enums.dart';
 import 'package:podlove_flutter/constants/app_widgets.dart';
@@ -25,11 +26,107 @@ class SignUp extends ConsumerStatefulWidget {
 
 class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final phoneController = PhoneController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  final _nameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
+  final _confirmPasswordFocus = FocusNode();
+
+  String? _nameError;
+  String? _emailError;
+  String? _passwordError;
+  String? _confirmPasswordError;
+
+  String? _validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return '* Name is required';
+    } else if (value.trim().length < 2) {
+      return '* Name must be at least 2 characters';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    final regExp = RegExp(pattern);
+
+    if (value == null || value.isEmpty) {
+      return '* Email is required';
+    } else if (!regExp.hasMatch(value)) {
+      return '* Invalid Email! Enter a valid one';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    const pattern = r'^(?=.*\d).{6,}$';
+    final regExp = RegExp(pattern);
+
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    } else if (!regExp.hasMatch(value)) {
+      return 'Password must be at least 6 characters and include a number';
+    }
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppStrings.confirmPasswordError;
+    }
+    if (value != _passwordController.text) {
+      return AppStrings.passwordMismatchError;
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _nameFocus.addListener(() {
+      if (!_nameFocus.hasFocus) {
+        final error = _validateName(_nameController.text);
+        if (_nameError != error) {
+          setState(() => _nameError = error);
+        }
+      }
+    });
+
+
+    _emailFocus.addListener(() {
+      if (!_emailFocus.hasFocus) {
+        final error = _validateEmail(_emailController.text);
+        if(_emailError != error) {
+          setState(() => _emailError = error);
+        }
+      }
+    });
+
+    _passwordFocus.addListener(() {
+      if (!_passwordFocus.hasFocus) {
+        final error = _validatePassword(_passwordController.text);
+        if(_passwordError != error) {
+          setState(() => _passwordError = error);
+        }
+      }
+    });
+
+    _confirmPasswordFocus.addListener(() {
+      if (!_confirmPasswordFocus.hasFocus) {
+        final error = _validatePassword(_confirmPasswordController.text);
+        if(_confirmPasswordError != error) {
+          setState(() => _confirmPasswordError = error);
+        }
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -39,11 +136,11 @@ class _SignUpState extends ConsumerState<SignUp> {
 
   @override
   void dispose() {
-    nameController.dispose();
-    emailController.dispose();
-    phoneController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     ref.read(signUpProvider.notifier).resetState();
     super.dispose();
   }
@@ -142,24 +239,22 @@ class _SignUpState extends ConsumerState<SignUp> {
                     fieldType: TextFieldType.text,
                     label: AppStrings.fullName,
                     hint: AppStrings.fullNameHint,
-                    controller: nameController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.enterFullNameError;
-                      }
-                      return null;
+                    controller: _nameController,
+                    focusNode: _nameFocus,
+                    errorText: _nameError,
+                    onChanged: (_) {
+                      if (_nameError != null) setState(() => _nameError = null);
                     },
                   ),
                   CustomTextField(
                     fieldType: TextFieldType.email,
                     label: AppStrings.email,
                     hint: AppStrings.emailHint,
-                    controller: emailController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.enterEmailError;
-                      }
-                      return null;
+                    controller: _emailController,
+                    focusNode: _emailFocus,
+                    errorText: _emailError,
+                    onChanged: (_) {
+                      if (_emailError != null) setState(() => _emailError = null);
                     },
                   ),
                   CustomText(
@@ -169,62 +264,68 @@ class _SignUpState extends ConsumerState<SignUp> {
                     color: const Color.fromARGB(255, 51, 51, 51),
                   ),
                   SizedBox(height: 10.h),
-                  PhoneFormField(
-                    controller: phoneController,
-                    decoration: const InputDecoration(
+                  IntlPhoneField(
+                    decoration: InputDecoration(
                       hintText: 'Enter your phone number',
+                      hintStyle: TextStyle(
+                        color: Color.fromARGB(255, 121, 121, 121),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14.sp,
+                      ),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.accent)),
+                        borderSide: BorderSide(color: AppColors.accent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.accent)),
+                        borderSide: BorderSide(color: AppColors.accent, width: 2.w),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.accent)),
-
+                        borderSide: BorderSide(color: AppColors.accent),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
                     ),
-                    countrySelectorNavigator:
-                        const CountrySelectorNavigator.page(),
-                    isCountryButtonPersistent: true,
-                    isCountrySelectionEnabled: true,
-                    countryButtonStyle: const CountryButtonStyle(
-                      showDialCode: true,
-                      showIsoCode: false,
-                      showFlag: true,
-                      flagSize: 18,
-                    ),
-                    validator: PhoneValidator.compose([
-                      PhoneValidator.required(context,
-                          errorText: AppStrings.enterPhoneNumberError),
-                      PhoneValidator.validMobile(context,
-                          errorText: "* Invalid mobile number"),
-                    ]),
+                    initialCountryCode: 'US',
+                    countries: countries
+                        .where((element) => ['US']
+                        .contains(element.code))
+                        .toList(),// Limit to US
+                    onChanged: (phone) {
+                      _phoneController.text = phone.completeNumber;
+                    },
+                    validator: (phone) {
+                      if (phone == null || phone.number.isEmpty) {
+                        return AppStrings.enterPhoneNumberError;
+                      } else if (phone.number.length != 10) {
+                        return "* Invalid US mobile number";
+                      }
+                      return null;
+                    },
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 5.h),
                   CustomTextField(
                     fieldType: TextFieldType.password,
                     label: AppStrings.password,
                     hint: AppStrings.passwordHint,
-                    controller: passwordController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.enterPasswordError;
-                      }
-                      return null;
+                    controller: _passwordController,
+                    focusNode: _passwordFocus,
+                    errorText: _passwordError,
+                    onChanged: (_) {
+                      if (_passwordError != null) setState(() => _passwordError = null);
                     },
                   ),
+                  SizedBox(height: 10.h),
                   CustomTextField(
                     fieldType: TextFieldType.password,
                     label: AppStrings.confirmPassword,
                     hint: AppStrings.confirmPasswordHint,
-                    controller: confirmPasswordController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppStrings.confirmPasswordError;
-                      }
-                      if (value != passwordController.text) {
-                        return AppStrings.passwordMismatchError;
-                      }
-                      return null;
+                    controller: _confirmPasswordController,
+                    focusNode: _confirmPasswordFocus,
+                    errorText: _confirmPasswordError,
+                    onChanged: (_) {
+                      if(_confirmPasswordError != null) setState(() => _confirmPasswordError = null);
                     },
+
                   ),
                   SizedBox(height: 30.h),
                   CustomRoundButton(
@@ -236,10 +337,10 @@ class _SignUpState extends ConsumerState<SignUp> {
                         : () async {
                             if (_formKey.currentState?.validate() ?? false) {
                               await signUpNotifier.signUp(
-                                nameController.text,
-                                emailController.text,
-                                phoneController.value.toString(),
-                                passwordController.text,
+                                _nameController.text,
+                                _emailController.text,
+                                _phoneController.value.toString(),
+                                _passwordController.text,
                               );
                             }
                           },

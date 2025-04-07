@@ -269,10 +269,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: e3fc9a65820fef83035af8ee8c09004a719d5d1d54e6de978fcb0d84bbeb241a
+      sha256: "72d146c6d7098689ff5c5f66bcf593ac11efc530095385356e131070333e64da"
       url: "https://pub.dev"
     source: hosted
-    version: "11.2.2"
+    version: "11.3.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -450,13 +450,13 @@ packages:
     source: hosted
     version: "1.1.1"
   floating:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: floating
-      sha256: d6e7046bfec4c1ab9e09ef9d88fee104b1eb41171d6e083099bf310535d26b79
+      sha256: e51ce1dbcab3ea83da0ad1b07f2091b99c0e8680184c780a000567f41234d454
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.1"
+    version: "6.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -845,6 +845,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
+  intl_phone_field:
+    dependency: "direct main"
+    description:
+      name: intl_phone_field
+      sha256: "73819d3dfcb68d2c85663606f6842597c3ddf6688ac777f051b17814fe767bbf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   js:
     dependency: transitive
     description:
@@ -1478,18 +1486,18 @@ packages:
     dependency: transitive
     description:
       name: vibration
-      sha256: "06588a845a4ebc73ab7ff7da555c2b3dbcd9676164b5856a38bf0b2287f1045d"
+      sha256: "804ee8f9628f31ee71fbe6137a2bc6206a64e101ec22cd9dd6d3a7dc0272591b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.0"
+    version: "3.1.3"
   vibration_platform_interface:
     dependency: transitive
     description:
       name: vibration_platform_interface
-      sha256: "6ffeee63547562a6fef53c05a41d4fdcae2c0595b83ef59a4813b0612cd2bc36"
+      sha256: "03e9deaa4df48a1a6212e281bfee5f610d62e9247929dd2f26f4efd4fa5e225c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.1.0"
   visibility_detector:
     dependency: transitive
     description:
@@ -1606,42 +1614,42 @@ packages:
     dependency: transitive
     description:
       name: zego_express_engine
-      sha256: "1af0359534c684cdf0ff2736b646ca9825cdb042b07c2fabc1fbbd148596b0ff"
+      sha256: "2edd207f5299e5dcfa44c7b4e8d2088e718bab81d96bdc6b78a7649adaac1361"
       url: "https://pub.dev"
     source: hosted
-    version: "3.19.0"
+    version: "3.20.0"
   zego_plugin_adapter:
     dependency: transitive
     description:
       name: zego_plugin_adapter
-      sha256: "3a747df549d5abe75ce90f81a85eb5619a9542e0d0e58f0e026987558ab25992"
+      sha256: b8552195f1a9d055e1daa71247434f09b647837d1ac41b41a68b49a6a8bf35b6
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.6"
+    version: "2.13.8"
   zego_uikit:
     dependency: transitive
     description:
       name: zego_uikit
-      sha256: "79f15330b31281f6c45323b78ce8620a9712170e07fc96e788d02d619a394876"
+      sha256: "1a7a4cc5ca5781571e71250fcbfa457145670798aedc151bb2a0caa88bf9401f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.28.5"
+    version: "2.28.11"
   zego_uikit_prebuilt_call:
     dependency: "direct main"
     description:
       name: zego_uikit_prebuilt_call
-      sha256: df012666cda16366e089ff7e445b06ae7c88f1a11fff1f2ee77695a697e21256
+      sha256: "0507dc506c1f33a461f24555e75ed33fc9ce87e7e4102df9dafde62f04bc1e76"
       url: "https://pub.dev"
     source: hosted
-    version: "4.16.22"
+    version: "4.16.27"
   zego_uikit_signaling_plugin:
     dependency: transitive
     description:
       name: zego_uikit_signaling_plugin
-      sha256: "8a306e0f1765c9037f9ce14ef1ca679fa9c96a6c866b19c8f8adfe347d771f88"
+      sha256: "7d3bcd763657fd0eb253b05b4c84d48515e46515229884e6e3506c98ba99d453"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.9"
+    version: "2.8.11"
   zego_zim:
     dependency: transitive
     description:
