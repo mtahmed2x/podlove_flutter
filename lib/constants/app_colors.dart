@@ -8,6 +8,7 @@ class AppColors {
   static const Color mutedText = Color(0xFF5C5C5C); // Medium Gray
   static const Color backgroundAlt = Color(0xFFF8F8F8);
   static const Color blue = Color.fromARGB(255, 33, 150, 243);
+  static const Color red = Color(0xFFF28B82);
 }
 
 const Color customOffWhite = Color.fromARGB(255, 248, 248, 248);

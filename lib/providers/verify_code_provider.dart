@@ -70,7 +70,7 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
     final apiService = ref.read(apiServiceProvider);
     final activationData = {
       "email": email,
-      "verificationOTP": otp,
+      "otp": otp,
     };
     try {
       final response = await apiService.post(
@@ -124,19 +124,19 @@ class VerifyCodeNotifier extends StateNotifier<VerifyCodeState> {
     }
   }
 
-  Future<void> resendOTP(Method method, String email, bool isPhoneUse) async {
+  Future<void> resendOTP(String method, String email, bool isPhoneUse) async {
     state = state.copyWith(isLoading: true);
     final apiService = ref.read(apiServiceProvider);
     var successMessage = "";
-    if (method == Method.emailActivation) {
+    if (method == Method.emailActivation.toString()) {
       successMessage = AppStrings.emailVerificationSent;
-    } else if (method == Method.phoneActivation) {
+    } else if (method == Method.phoneActivation.toString()) {
       successMessage = AppStrings.phoneVerificationSent;
     } else {
       successMessage = AppStrings.recoveryVerificationSent;
     }
     final resendOTPData = {
-      "method": method.toString(),
+      "method": method,
       "email": email,
     };
     try {

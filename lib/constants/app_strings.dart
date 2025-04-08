@@ -28,7 +28,7 @@ class AppStrings {
   static const String podLoveLogoPath = "assets/images/podLove.png";
   static const String welcome = "Welcome!";
   static const String fullName = "Full Name";
-  static const String fullNameHint = "Enter your full name here";
+  static const String fullNameHint = "Enter your full name";
   static const String enterFullNameError = "* Please enter your full name";
   static const String email = "Email";
   static const String emailHint = "Enter your email";

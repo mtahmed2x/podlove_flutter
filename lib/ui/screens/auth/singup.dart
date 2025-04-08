@@ -16,6 +16,7 @@ import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -35,19 +36,21 @@ class _SignUpState extends ConsumerState<SignUp> {
 
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
+  final _phoneFocus = FocusNode();
   final _passwordFocus = FocusNode();
   final _confirmPasswordFocus = FocusNode();
 
   String? _nameError;
   String? _emailError;
+  String? _phoneError;
   String? _passwordError;
   String? _confirmPasswordError;
 
   String? _validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return '* Name is required';
-    } else if (value.trim().length < 2) {
-      return '* Name must be at least 2 characters';
+    } else if (value.trim().length < 3) {
+      return '* Name must be at least 3 characters';
     }
     return null;
   }
@@ -64,14 +67,40 @@ class _SignUpState extends ConsumerState<SignUp> {
     return null;
   }
 
-  String? _validatePassword(String? value) {
-    const pattern = r'^(?=.*\d).{6,}$';
-    final regExp = RegExp(pattern);
+  String? _validatePhone(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return '* Phone number is required';
+    } else if (!RegExp(r'^\+1\d{10}$').hasMatch(value)) {
+      return "* Invalid US mobile number";
+    }
+    return null;
+  }
 
-    if (value == null || value.isEmpty) {
-      return 'Password is required';
-    } else if (!regExp.hasMatch(value)) {
-      return 'Password must be at least 6 characters and include a number';
+  String? _validatePassword(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return '* Password is required';
+    }
+    final password = value.trim();
+    List<String> errors = [];
+
+    if (password.length < 8) {
+      errors.add('• Must have at least 8 characters');
+    }
+    if (!RegExp(r'[A-Z]').hasMatch(password)) {
+      errors.add('• Must have one uppercase letter');
+    }
+    if (!RegExp(r'[a-z]').hasMatch(password)) {
+      errors.add('• Must have one lowercase letter');
+    }
+    if (!RegExp(r'\d').hasMatch(password)) {
+      errors.add('• Must have one digit');
+    }
+    if (!RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(password)) {
+      errors.add('• Must have one special character');
+    }
+
+    if (errors.isNotEmpty) {
+      return errors.join('\n');
     }
     return null;
   }
@@ -99,13 +128,20 @@ class _SignUpState extends ConsumerState<SignUp> {
       }
     });
 
-
     _emailFocus.addListener(() {
       if (!_emailFocus.hasFocus) {
         final error = _validateEmail(_emailController.text);
         if(_emailError != error) {
           setState(() => _emailError = error);
         }
+      }
+    });
+
+    _phoneFocus.addListener(() {
+      if (!_phoneFocus.hasFocus) {
+        setState(() {
+          _phoneError = _validatePhone(_phoneController.text);
+        });
       }
     });
 
@@ -120,7 +156,7 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     _confirmPasswordFocus.addListener(() {
       if (!_confirmPasswordFocus.hasFocus) {
-        final error = _validatePassword(_confirmPasswordController.text);
+        final error = _validateConfirmPassword(_confirmPasswordController.text);
         if(_confirmPasswordError != error) {
           setState(() => _confirmPasswordError = error);
         }
@@ -222,7 +258,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       child: Column(
                         children: [
                           AppWidgets.podLoveLogo,
-                          SizedBox(height: 40.h),
+                          SizedBox(height: 20.h),
                           CustomText(
                             text: AppStrings.welcome,
                             color: const Color.fromARGB(255, 51, 51, 51),
@@ -284,7 +320,22 @@ class _SignUpState extends ConsumerState<SignUp> {
                         borderSide: BorderSide(color: AppColors.accent),
                         borderRadius: BorderRadius.circular(10.r),
                       ),
+                      errorText: _phoneError,
+                      errorStyle: TextStyle(
+                        color: AppColors.red,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.red),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.red, width: 2.w),
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
                     ),
+                    focusNode: _phoneFocus,
                     initialCountryCode: 'US',
                     countries: countries
                         .where((element) => ['US']
@@ -292,6 +343,9 @@ class _SignUpState extends ConsumerState<SignUp> {
                         .toList(),// Limit to US
                     onChanged: (phone) {
                       _phoneController.text = phone.completeNumber;
+                      if (_phoneError != null) {
+                        setState(() => _phoneError = null);
+                      }
                     },
                     validator: (phone) {
                       if (phone == null || phone.number.isEmpty) {
@@ -335,15 +389,34 @@ class _SignUpState extends ConsumerState<SignUp> {
                     onPressed: signUpState.isLoading
                         ? null
                         : () async {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              await signUpNotifier.signUp(
-                                _nameController.text,
-                                _emailController.text,
-                                _phoneController.value.toString(),
-                                _passwordController.text,
-                              );
-                            }
-                          },
+                      final nameErr = _validateName(_nameController.text);
+                      final emailErr = _validateEmail(_emailController.text);
+                      final phoneErr = _validatePhone(_phoneController.text);
+                      final passwordErr = _validatePassword(_passwordController.text);
+                      final confirmPasswordErr = _validateConfirmPassword(_confirmPasswordController.text);
+
+                      setState(() {
+                        _nameError = nameErr;
+                        _emailError = emailErr;
+                        _phoneError = phoneErr;
+                        _passwordError = passwordErr;
+                        _confirmPasswordError = confirmPasswordErr;
+                      });
+
+                      if (nameErr == null &&
+                          emailErr == null &&
+                          phoneErr == null &&
+                          passwordErr == null &&
+                          confirmPasswordErr == null) {
+                        logger.i(_phoneController.text);
+                        await signUpNotifier.signUp(
+                          _nameController.text,
+                          _emailController.text,
+                          _phoneController.text,
+                          _passwordController.text,
+                        );
+                      }
+                    },
                   ),
                   SizedBox(height: 20.h),
                   // Sign In Link

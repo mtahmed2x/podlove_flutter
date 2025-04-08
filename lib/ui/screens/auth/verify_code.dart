@@ -14,6 +14,7 @@ import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_round_button.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
+import 'package:podlove_flutter/utils/logger.dart';
 
 class VerifyCode extends ConsumerStatefulWidget {
   final Method? method;
@@ -207,8 +208,9 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                       onTap: verifyCodeState.isLoading
                           ? null
                           : () async {
+                              logger.i(widget.email);
                               await verifyCodeNotifier.resendOTP(
-                                widget.method!,
+                                widget.method.toString()!,
                                 widget.email!,
                                 false,
                               );

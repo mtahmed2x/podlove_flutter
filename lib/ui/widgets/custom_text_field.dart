@@ -132,16 +132,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
             errorText: widget.errorText,
             errorStyle: TextStyle(
-              color: Colors.red,
+              color: AppColors.red,
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
             ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+              borderSide: BorderSide(color: AppColors.red),
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red, width: 2.w),
+              borderSide: BorderSide(color: AppColors.red, width: 2.w),
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
             ),
           ),
