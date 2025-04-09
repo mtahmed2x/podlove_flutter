@@ -1,7 +1,7 @@
 class Podcast {
   final Schedule? schedule;
   final String? id;
-  final String? primaryUser;
+  final Participant? primaryUser;
   final List<Participant>? participants;
   final dynamic selectedUser;
   final String? status;
@@ -22,12 +22,11 @@ class Podcast {
   Podcast copyWith({
     Schedule? schedule,
     String? id,
-    String? primaryUser,
+    Participant? primaryUser,
     List<Participant>? participants,
     dynamic selectedUser,
     String? status,
     String? recordingUrl,
-    int? v,
   }) =>
       Podcast(
         schedule: schedule ?? this.schedule,
@@ -37,7 +36,6 @@ class Podcast {
         selectedUser: selectedUser ?? this.selectedUser,
         status: status ?? this.status,
         recordingUrl: recordingUrl ?? this.recordingUrl,
-        v: v ?? this.v,
       );
 
   factory Podcast.fromJson(Map<String, dynamic> json) => Podcast(
@@ -45,7 +43,7 @@ class Podcast {
             ? null
             : Schedule.fromJson(json["schedule"]),
         id: json["_id"],
-        primaryUser: json["primaryUser"],
+        primaryUser: json["primaryUser"] == null ? null : Participant.fromJson(json["primaryUser"]),
         participants: json["participants"] == null
             ? []
             : List<Participant>.from(
@@ -53,7 +51,6 @@ class Podcast {
         selectedUser: json["selectedUser"],
         status: json["status"],
         recordingUrl: json["recordingUrl"],
-        v: json["__v"],
       );
 }
 

@@ -53,7 +53,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.signUp,
+    initialLocation: RouterPath.initialScreen,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -131,8 +131,8 @@ class AppRouter {
         builder: (context, state) => const LocationAccess(),
       ),
       GoRoute(
-        path: RouterPath.enterLocation,
-        builder: (context, state) => const EnterLocation(),
+          path: RouterPath.enterLocation,
+          builder: (context, state) => const EnterLocation(),
       ),
       GoRoute(
         path: RouterPath.distancePreference,

@@ -6,6 +6,7 @@ import 'package:podlove_flutter/routes/route_path.dart';
 import 'package:podlove_flutter/ui/widgets/custom_app_bar.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class ProfileContent extends ConsumerWidget {
   const ProfileContent({super.key});
@@ -15,6 +16,19 @@ class ProfileContent extends ConsumerWidget {
     return parts.length >= 2
         ? '${parts[parts.length - 2]}, ${parts.last}'
         : input;
+  }
+
+  int calculateAgeFromDateString(String dateString) {
+    final dateFormat = DateFormat('dd/MM/yyyy');
+    final birthDate = dateFormat.parseStrict(dateString);
+    final now = DateTime.now();
+
+    int age = now.year - birthDate.year;
+    if (now.month < birthDate.month ||
+        (now.month == birthDate.month && now.day < birthDate.day)) {
+      age--;
+    }
+    return age;
   }
 
   @override
@@ -107,7 +121,7 @@ class ProfileContent extends ConsumerWidget {
                           ),
                           const SizedBox(width: 10),
                           CustomText(
-                            text: userState.user.age.toString(),
+                            text: calculateAgeFromDateString(userState.user.dateOfBirth).toString(),
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),

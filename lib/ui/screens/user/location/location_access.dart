@@ -71,7 +71,17 @@ class LocationAccess extends ConsumerWidget {
                               }
                             }
                           },
-                        )
+                        ),
+                        SizedBox(height: 20.h),
+                        GestureDetector(
+                          onTap: () => GoRouter.of(context).push(RouterPath.enterLocation),
+                          child: CustomText(
+                            text: "Enter Location Manually",
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.accent,
+                          ),
+                        ),
                       ],
                     ),
                   ),

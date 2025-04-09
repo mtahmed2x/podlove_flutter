@@ -24,7 +24,9 @@ class HomeNotifier extends StateNotifier<AsyncValue<HomeModel>> {
       if (response.statusCode == StatusCode.OK) {
         final userJson = response.data["data"]["user"];
         ref.read(userProvider.notifier).initialize(userJson);
-        state = AsyncData(HomeModel.fromJson(response.data["data"]));
+        final home = HomeModel.fromJson(response.data["data"]);
+        logger.i(home.user!.name);
+        state = AsyncData(home);
       } else {
         state = AsyncError(
             'Failed to load data. Status: ${response.statusCode}',

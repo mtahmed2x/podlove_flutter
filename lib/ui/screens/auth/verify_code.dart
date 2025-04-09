@@ -210,7 +210,7 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                           : () async {
                               logger.i(widget.email);
                               await verifyCodeNotifier.resendOTP(
-                                widget.method.toString()!,
+                                widget.method.toString(),
                                 widget.email!,
                                 false,
                               );
@@ -274,7 +274,7 @@ class _VerifyCodeState extends ConsumerState<VerifyCode> {
                                 ? null
                                 : () async {
                                     await verifyCodeNotifier.resendOTP(
-                                      Method.phoneActivation,
+                                      Method.phoneActivation.toString(),
                                       widget.email!,
                                       true,
                                     );

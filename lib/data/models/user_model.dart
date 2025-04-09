@@ -8,11 +8,10 @@ class UserModel {
   final String id;
   final String name;
   final String phoneNumber;
-  final String address;
-  final int age;
+  final String dateOfBirth;
   final String gender;
   final String bodyType;
-  final String ethnicity;
+  final List<String> ethnicity;
   final String bio;
   final String avatar;
   final List<String> interests;
@@ -29,8 +28,7 @@ class UserModel {
     required this.id,
     required this.name,
     required this.phoneNumber,
-    required this.address,
-    required this.age,
+    required this.dateOfBirth,
     required this.gender,
     required this.bodyType,
     required this.ethnicity,
@@ -51,11 +49,10 @@ class UserModel {
         id: json["_id"],
         name: json["name"],
         phoneNumber: json["phoneNumber"],
-        address: json["address"],
-        age: json["age"],
+        dateOfBirth: json["dateOfBirth"],
         gender: json["gender"],
         bodyType: json["bodyType"],
-        ethnicity: json["ethnicity"],
+        ethnicity: List<String>.from(json["ethnicity"].map((x) => x)),
         bio: json["bio"],
         avatar: json["avatar"],
         interests: List<String>.from(json["interests"].map((x) => x)),
@@ -71,8 +68,7 @@ class UserModel {
         "location": location.toJson(),
         "preferences": preferences.toJson(),
         "subscription": subscription.toJson(),
-        "address": address,
-        "age": age,
+        "dateOfBirth": dateOfBirth,
         "gender": gender,
         "bodyType": bodyType,
         "ethnicity": ethnicity,
@@ -94,10 +90,10 @@ class UserModel {
     String? name,
     String? phoneNumber,
     String? address,
-    int? age,
+    String? dateOfBirth,
     String? gender,
     String? bodyType,
-    String? ethnicity,
+    List<String>? ethnicity,
     String? bio,
     String? avatar,
     List<String>? interests,
@@ -114,8 +110,7 @@ class UserModel {
       id: id ?? this.id,
       name: name ?? this.name,
       phoneNumber: phoneNumber ?? this.phoneNumber,
-      address: address ?? this.address,
-      age: age ?? this.age,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       gender: gender ?? this.gender,
       bodyType: bodyType ?? this.bodyType,
       ethnicity: ethnicity ?? this.ethnicity,
@@ -294,12 +289,14 @@ class Age {
 }
 
 class Subscription {
+  final String id;
   final String plan;
   final String fee;
   final String status;
   final DateTime startedAt;
 
   Subscription({
+    required this.id,
     required this.plan,
     required this.fee,
     required this.status,
@@ -307,6 +304,7 @@ class Subscription {
   });
 
   factory Subscription.fromJson(Map<String, dynamic> json) => Subscription(
+        id: json["id"],
         plan: json["plan"],
         fee: json["fee"],
         status: json["status"],
@@ -314,6 +312,7 @@ class Subscription {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "plan": plan,
         "fee": fee,
         "status": status,
@@ -321,12 +320,14 @@ class Subscription {
       };
 
   Subscription copyWith({
+    String? id,
     String? plan,
     String? fee,
     String? status,
     DateTime? startedAt,
   }) {
     return Subscription(
+      id: id ?? this.id,
       plan: plan ?? this.plan,
       fee: fee ?? this.fee,
       status: status ?? this.status,

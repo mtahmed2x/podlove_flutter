@@ -15,10 +15,12 @@ class SelectEthnicity extends ConsumerStatefulWidget {
   const SelectEthnicity({super.key});
 
   @override
-  ConsumerState<SelectEthnicity> createState() => _SelectEthnicityState();
+  ConsumerState<SelectEthnicity> createState() =>
+      _SelectPreferredEthnicitiesState();
 }
 
-class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
+class _SelectPreferredEthnicitiesState
+    extends ConsumerState<SelectEthnicity> {
   final List<String> ethnicityOptions = [
     "African American/Black",
     "Asian",
@@ -30,11 +32,15 @@ class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
     "Other"
   ];
 
-  String? selectedEthnicity;
+  List<String> selectedEthnicities = [];
 
-  void selectEthnicity(String ethnicity) {
+  void toggleEthnicity(String ethnicity) {
     setState(() {
-      selectedEthnicity = ethnicity;
+      if (selectedEthnicities.contains(ethnicity)) {
+        selectedEthnicities.remove(ethnicity);
+      } else {
+        selectedEthnicities.add(ethnicity);
+      }
     });
   }
 
@@ -56,7 +62,8 @@ class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Ethnicity", isLeading: true,),
+      appBar: CustomAppBar(title: "Ethnicity", isLeading: true),
+      backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w)
@@ -74,7 +81,7 @@ class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
                       CustomText(
                         text: "What is your ethnicity?",
                         color: const Color.fromARGB(255, 51, 51, 51),
-                        fontSize: 22.sp,
+                        fontSize: 18.sp,
                         textAlign: TextAlign.center,
                         fontWeight: FontWeight.w500,
                       ),
@@ -90,29 +97,32 @@ class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
                 SizedBox(height: 15.h),
                 CustomCheckboxGroup(
                   labels: ethnicityOptions,
-                  selectedItem: selectedEthnicity,
-                  onItemSelected: selectEthnicity,
+                  selectedItems: selectedEthnicities,
+                  onItemSelected: toggleEthnicity,
                 ),
-                SizedBox(height: 30.h),
+                SizedBox(height: 50.h),
                 CustomRoundButton(
                   text: userState?.isLoading == true ? "Saving" : "Continue",
                   onPressed: userState?.isLoading == true
                       ? null
                       : () {
-                          if (selectedEthnicity == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please select your ethnicity'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
-                          userNotifier.updateEthnicity(selectedEthnicity!);
-                          logger.i(selectedEthnicity);
-                          context.push(RouterPath.selectPreferredEthnicities);
-                        },
+                    if (selectedEthnicities.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Please select at least one preference'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    userNotifier
+                        .updateEthnicity(selectedEthnicities);
+                    logger.i("Selected ethnicities: $selectedEthnicities");
+                    context.push(RouterPath.addBio);
+                  },
                 ),
+                SizedBox(height: 50.h),
               ],
             ),
           ),
@@ -124,13 +134,13 @@ class _SelectEthnicityState extends ConsumerState<SelectEthnicity> {
 
 class CustomCheckboxGroup extends StatelessWidget {
   final List<String> labels;
-  final String? selectedItem;
+  final List<String> selectedItems;
   final Function(String) onItemSelected;
 
   const CustomCheckboxGroup({
     super.key,
     required this.labels,
-    required this.selectedItem,
+    required this.selectedItems,
     required this.onItemSelected,
   });
 
@@ -149,7 +159,7 @@ class CustomCheckboxGroup extends StatelessWidget {
                 side: WidgetStateBorderSide.resolveWith(
                       (states) => BorderSide(width: 2.0.w, color: AppColors.accent),
                 ),
-                value: selectedItem == label,
+                value: selectedItems.contains(label),
                 activeColor: AppColors.accent,
                 checkColor: AppColors.background,
                 onChanged: (value) => onItemSelected(label),

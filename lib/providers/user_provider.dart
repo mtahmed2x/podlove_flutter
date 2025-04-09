@@ -58,7 +58,7 @@ class UserNotifier extends StateNotifier<UserState?> {
     }
   }
 
-  Future<void> updateLocation(double lat, double lng, String placeName) async {
+  void updateLocation(double lat, double lng, String placeName) {
     if (state == null) return;
 
     final newLocation = Location(
@@ -94,8 +94,8 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
-  void updateAge(int newAge) {
-    final updatedUser = state!.user.copyWith(age: newAge);
+  void updateDateOfBirth(String newDateOfBirth) {
+    final updatedUser = state!.user.copyWith(dateOfBirth: newDateOfBirth);
     _updateUser(updatedUser);
   }
 
@@ -138,8 +138,9 @@ class UserNotifier extends StateNotifier<UserState?> {
     _updateUser(updatedUser);
   }
 
-  void updateEthnicity(String newEthnicity) {
+  void updateEthnicity(List<String> newEthnicity) {
     if (state == null) return;
+    
     final updatedUser = state!.user.copyWith(ethnicity: newEthnicity);
     _updateUser(updatedUser);
   }
@@ -303,7 +304,7 @@ class UserNotifier extends StateNotifier<UserState?> {
       logger.i(userUpdateData);
 
       final response = await apiService.patch(
-        "/user/update/${state!.user.id}",
+        "/user/update",
         data: userUpdateData,
       );
 

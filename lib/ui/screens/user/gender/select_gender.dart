@@ -26,6 +26,7 @@ class _SelectGenderState extends ConsumerState<SelectGender> {
     AppStrings.nonBinary,
     AppStrings.transgender,
     AppStrings.genderFluid,
+    "Others"
   ];
 
   String? selectedGender;

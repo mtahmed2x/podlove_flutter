@@ -62,7 +62,7 @@ class _SelectPreferredEthnicitiesState
     }
 
     return Scaffold(
-      appBar: CustomAppBar(title: "Cultural & Ethnic Background", isLeading: true,),
+      appBar: CustomAppBar(title: "Cultural & Ethnic Background", isLeading: true),
       backgroundColor: const Color.fromARGB(255, 248, 248, 248),
       body: SafeArea(
         child: Padding(
@@ -80,7 +80,7 @@ class _SelectPreferredEthnicitiesState
                       SizedBox(height: 25.h),
                       CustomText(
                         text:
-                            "At PodLove, we believe love can flourish across all backgrounds. Are there any cultural or ethnic preferences that are important for you in a partner?",
+                        "At PodLove, we believe love can flourish across all backgrounds. Are there any cultural or ethnic preferences that are important for you in a partner?",
                         color: const Color.fromARGB(255, 51, 51, 51),
                         fontSize: 18.sp,
                         textAlign: TextAlign.center,
@@ -107,21 +107,21 @@ class _SelectPreferredEthnicitiesState
                   onPressed: userState?.isLoading == true
                       ? null
                       : () {
-                          if (selectedEthnicities.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                    'Please select at least one preference'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
-                          userNotifier
-                              .updatePreferredEthnicity(selectedEthnicities);
-                          logger.i(selectedEthnicities);
-                          context.push(RouterPath.addBio);
-                        },
+                    if (selectedEthnicities.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Please select at least one preference'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+                    userNotifier
+                        .updatePreferredEthnicity(selectedEthnicities);
+                    logger.i("Selected ethnicities: " + ref.watch(userProvider)!.user.ethnicity[1]);
+                    context.push(RouterPath.addBio);
+                  },
                 ),
                 SizedBox(height: 50.h),
               ],
