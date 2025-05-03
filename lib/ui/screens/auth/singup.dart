@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/gestures.dart'; // Import for TapGestureRecognizer
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ import 'package:podlove_flutter/ui/widgets/custom_text.dart';
 import 'package:podlove_flutter/ui/widgets/custom_text_field.dart';
 import 'package:podlove_flutter/ui/widgets/show_message_dialog.dart';
 import 'package:podlove_flutter/utils/logger.dart';
+
 
 class SignUp extends ConsumerStatefulWidget {
   const SignUp({super.key});
@@ -46,6 +48,14 @@ class _SignUpState extends ConsumerState<SignUp> {
   String? _passwordError;
   String? _confirmPasswordError;
 
+  bool _agreedToTerms = false; // State variable for the checkbox
+
+  // Gesture recognizers for the policy links
+  late TapGestureRecognizer _privacyPolicyRecognizer;
+  late TapGestureRecognizer _consumerPolicyRecognizer;
+  late TapGestureRecognizer _mediaPolicyRecognizer;
+
+
   String? _validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return '* Name is required';
@@ -66,15 +76,13 @@ class _SignUpState extends ConsumerState<SignUp> {
     }
     return null;
   }
-
   String? _validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return '* Phone number is required';
-    } else if (!RegExp(r'^\+1\d{10}$').hasMatch(value)) {
-      return "* Invalid US mobile number";
     }
     return null;
   }
+
 
   String? _validatePassword(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -118,6 +126,10 @@ class _SignUpState extends ConsumerState<SignUp> {
   @override
   void initState() {
     super.initState();
+    _privacyPolicyRecognizer = TapGestureRecognizer()..onTap = _navigateToPrivacyPolicy;
+    _consumerPolicyRecognizer = TapGestureRecognizer()..onTap = _navigateToConsumerPolicy;
+    _mediaPolicyRecognizer = TapGestureRecognizer()..onTap = _navigateToMediaPolicy;
+
 
     _nameFocus.addListener(() {
       if (!_nameFocus.hasFocus) {
@@ -139,9 +151,10 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     _phoneFocus.addListener(() {
       if (!_phoneFocus.hasFocus) {
-        setState(() {
-          _phoneError = _validatePhone(_phoneController.text);
-        });
+        final error = _validatePhone(_phoneController.text);
+        if (_phoneError != error) {
+          setState(() => _phoneError = error);
+        }
       }
     });
 
@@ -177,8 +190,31 @@ class _SignUpState extends ConsumerState<SignUp> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
+    _nameFocus.dispose();
+    _emailFocus.dispose();
+    _phoneFocus.dispose();
+    _passwordFocus.dispose();
+    _confirmPasswordFocus.dispose();
+
+    _privacyPolicyRecognizer.dispose();
+    _consumerPolicyRecognizer.dispose();
+    _mediaPolicyRecognizer.dispose();
+
     ref.read(signUpProvider.notifier).resetState();
     super.dispose();
+  }
+
+  void _navigateToPrivacyPolicy() {
+    context.push(RouterPath.privacy);
+  }
+
+  void _navigateToConsumerPolicy() {
+    context.push(RouterPath.consumer);
+  }
+
+  void _navigateToMediaPolicy() {
+   context.push(RouterPath.media);
   }
 
   @override
@@ -188,7 +224,7 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     ref.listen<SignUpState>(
       signUpProvider,
-      (previous, current) {
+          (previous, current) {
         if (current.isSuccess == true && current.isLoading == false) {
           context.push(
             RouterPath.verifyCode,
@@ -203,7 +239,7 @@ class _SignUpState extends ConsumerState<SignUp> {
               context,
               "Alert",
               current.error.toString(),
-              () => context.push(RouterPath.signIn),
+                  () => context.push(RouterPath.signIn),
               buttonText: "Sign in",
             );
           } else if (current.isVerified == false) {
@@ -211,7 +247,7 @@ class _SignUpState extends ConsumerState<SignUp> {
               context,
               "Alert",
               current.error.toString(),
-              () => context.push(
+                  () => context.push(
                 RouterPath.verifyCode,
                 extra: {
                   "method": Method.emailActivation,
@@ -270,7 +306,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       ),
                     ),
                   ),
-                  // Form Fields
+                  // --- Form Fields ---
                   CustomTextField(
                     fieldType: TextFieldType.text,
                     label: AppStrings.fullName,
@@ -356,7 +392,7 @@ class _SignUpState extends ConsumerState<SignUp> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 5.h), // Added spacing
                   CustomTextField(
                     fieldType: TextFieldType.password,
                     label: AppStrings.password,
@@ -378,43 +414,137 @@ class _SignUpState extends ConsumerState<SignUp> {
                     errorText: _confirmPasswordError,
                     onChanged: (_) {
                       if(_confirmPasswordError != null) setState(() => _confirmPasswordError = null);
+                      // Also re-validate confirm password if password changes
+                      if (_passwordFocus.hasFocus || _confirmPasswordFocus.hasFocus) {
+                        final error = _validateConfirmPassword(_confirmPasswordController.text);
+                        if (_confirmPasswordError != error) {
+                          setState(() => _confirmPasswordError = error);
+                        }
+                      }
                     },
 
                   ),
+                  SizedBox(height: 20.h), // Spacing before agreement
+
+                  // --- Terms and Conditions Agreement ---
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start, // Align checkbox top with text
+                    children: [
+                      SizedBox(
+                        height: 24.0, // Standard checkbox tap target height
+                        width: 24.0,   // Standard checkbox tap target width
+                        child: Checkbox(
+                          value: _agreedToTerms,
+                          checkColor: Colors.white,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _agreedToTerms = value ?? false;
+                            });
+                          },
+                          visualDensity: VisualDensity.compact, // Reduce padding
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap, // Minimize tap area padding
+                          activeColor: AppColors.accent, // Optional: style checkbox color
+                        ),
+                      ),
+                      SizedBox(width: 8.w), // Spacing between checkbox and text
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle( // Default text style
+                                fontSize: 14.sp,
+                                color: Colors.black87,
+                                height: 1.4 // Adjust line spacing if needed
+                            ),
+                            children: <TextSpan>[
+                              const TextSpan(text: 'I have read and agree to the '),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: TextStyle(
+                                  color: AppColors.accent, // Link color
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: _privacyPolicyRecognizer,
+                              ),
+                              const TextSpan(text: ', '),
+                              TextSpan(
+                                text: 'Consumer Policy',
+                                style: TextStyle(
+                                  color: AppColors.accent, // Link color
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: _consumerPolicyRecognizer,
+                              ),
+                              const TextSpan(text: ' and '),
+                              TextSpan(
+                                text: 'Media Policy',
+                                style: TextStyle(
+                                  color: AppColors.accent, // Link color
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: _mediaPolicyRecognizer,
+                              ),
+                              const TextSpan(text: '.'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // --- End Terms and Conditions ---
+
                   SizedBox(height: 30.h),
                   CustomRoundButton(
                     text: signUpState.isLoading
                         ? AppStrings.signingUp
                         : AppStrings.signUp,
-                    onPressed: signUpState.isLoading
+                    // Disable button if loading OR terms not agreed
+                    onPressed: signUpState.isLoading || !_agreedToTerms
                         ? null
                         : () async {
+
                       final nameErr = _validateName(_nameController.text);
                       final emailErr = _validateEmail(_emailController.text);
-                      final phoneErr = _validatePhone(_phoneController.text);
+                      final isPhoneValid = _formKey.currentState?.validate() ?? false;
                       final passwordErr = _validatePassword(_passwordController.text);
                       final confirmPasswordErr = _validateConfirmPassword(_confirmPasswordController.text);
 
+                      // Update state to show errors immediately
                       setState(() {
                         _nameError = nameErr;
                         _emailError = emailErr;
-                        _phoneError = phoneErr;
+                        // Let form validator handle phone error text update
+                        // _phoneError = phoneErr;
                         _passwordError = passwordErr;
                         _confirmPasswordError = confirmPasswordErr;
                       });
 
+                      // Check agreement again (belt and braces)
+                      if (!_agreedToTerms) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Please agree to the policies to continue.', style: TextStyle(fontSize: 14.sp)),
+                            backgroundColor: AppColors.red,
+                          ),
+                        );
+                        return; // Stop submission if terms not agreed
+                      }
+
+                      // Proceed only if all validations pass AND terms agreed
                       if (nameErr == null &&
                           emailErr == null &&
-                          phoneErr == null &&
+                          isPhoneValid && // Check form validation result which includes phone
                           passwordErr == null &&
-                          confirmPasswordErr == null) {
-                        logger.i(_phoneController.text);
+                          confirmPasswordErr == null)
+                      {
+                        logger.i("Form valid. Phone: ${_phoneController.text}");
                         await signUpNotifier.signUp(
-                          _nameController.text,
-                          _emailController.text,
-                          _phoneController.text,
-                          _passwordController.text,
+                          _nameController.text.trim(),
+                          _emailController.text.trim(),
+                          _phoneController.text.trim(),
+                          _passwordController.text.trim(),
                         );
+                      } else {
+                        logger.w("Form validation failed.");
                       }
                     },
                   ),
@@ -422,11 +552,27 @@ class _SignUpState extends ConsumerState<SignUp> {
                   // Sign In Link
                   Center(
                     child: GestureDetector(
-                      onTap: () => context.push(RouterPath.signIn),
-                      child: CustomText(
-                        text: AppStrings.signInPrompt,
-                        color: AppColors.accent,
-                      ),
+                        onTap: () => context.push(RouterPath.signIn),
+                        child: RichText(
+                          text: TextSpan(
+                              style: TextStyle(fontSize: 14.sp, color: Colors.black87),
+                              children: [
+                                const TextSpan(text: "Already have an account? "),
+                                TextSpan(
+                                  text: AppStrings.signIn,
+                                  style: TextStyle(
+                                    color: AppColors.accent, // Link color
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              ]
+                          ),
+                        )
+                      // Old version:
+                      // CustomText(
+                      //   text: AppStrings.signInPrompt,
+                      //   color: AppColors.accent,
+                      // ),
                     ),
                   ),
                 ],

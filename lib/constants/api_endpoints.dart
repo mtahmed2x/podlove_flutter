@@ -15,8 +15,11 @@ class ApiEndpoints {
   static String privacy = "/privacy";
   static String terms = "/tac";
   static String faq = "/faq";
+  static String consumer = "/consumer";
+  static String media = "/media";
   static String help = "/support/create";
   static String purchase = "/subscription/upgrade";
   static String subscriptionPlan = "/plan";
   static String connectionPathway = "/ai/is-user-suitable";
+  static String bioCheck = "/user/validate-bio";
 }

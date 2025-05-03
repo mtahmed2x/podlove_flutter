@@ -188,45 +188,45 @@ class _ConnectionPathwayPageState extends ConsumerState<ConnectionPathway> {
                   ],
                 ),
                 SizedBox(height: 30.h),
-                CustomRoundButton(text: AppStrings.submit, onPressed: () => context.push(RouterPath.signUp),)
-                // CustomRoundButton(
-                //   text: connectionState.isLoading == true
-                //       ? "Submitting"
-                //       : AppStrings.submit,
-                //   onPressed: connectionState.isLoading == true
-                //       ? null
-                //       : () async {
-                //           if (isFormComplete) {
-                //             List<String> answers = [
-                //               _boundariesValue!,
-                //               _consentValue!,
-                //               _monogamousValue!,
-                //               _exclusivityReasonController.text.trim(),
-                //               _emotionalAvailabilityValue!,
-                //               _resolvedBaggageValue!,
-                //               _committedValue!,
-                //               _selfWorkValue!,
-                //               _deepConversationValue!,
-                //               _strongRelationshipValue!,
-                //             ];
-                //             await connectionNotifier.isSuitable(answers);
-                //           } else {
-                //             ScaffoldMessenger.of(context).showSnackBar(
-                //               SnackBar(
-                //                 elevation: 0,
-                //                 behavior: SnackBarBehavior.floating,
-                //                 backgroundColor: Colors.transparent,
-                //                 content: AwesomeSnackbarContent(
-                //                   title: 'Answer All Questions',
-                //                   message:
-                //                       "Please answer all questions before proceeding",
-                //                   contentType: ContentType.failure,
-                //                 ),
-                //               ),
-                //             );
-                //           }
-                //         },
-                // ),
+                // CustomRoundButton(text: AppStrings.submit, onPressed: () => context.push(RouterPath.signUp),)
+                CustomRoundButton(
+                  text: connectionState.isLoading == true
+                      ? "Submitting"
+                      : AppStrings.submit,
+                  onPressed: connectionState.isLoading == true
+                      ? null
+                      : () async {
+                          if (isFormComplete) {
+                            List<String> answers = [
+                              _boundariesValue!,
+                              _consentValue!,
+                              _monogamousValue!,
+                              _exclusivityReasonController.text.trim(),
+                              _emotionalAvailabilityValue!,
+                              _resolvedBaggageValue!,
+                              _committedValue!,
+                              _selfWorkValue!,
+                              _deepConversationValue!,
+                              _strongRelationshipValue!,
+                            ];
+                            await connectionNotifier.isSuitable(answers);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 0,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                content: AwesomeSnackbarContent(
+                                  title: 'Answer All Questions',
+                                  message:
+                                      "Please answer all questions before proceeding",
+                                  contentType: ContentType.failure,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                ),
               ],
             ),
           ),

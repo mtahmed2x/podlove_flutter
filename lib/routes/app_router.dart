@@ -12,8 +12,10 @@ import 'package:podlove_flutter/ui/screens/home/podcast_details.dart';
 import 'package:podlove_flutter/ui/screens/home/profile/edit_profile.dart';
 import 'package:podlove_flutter/ui/screens/home/purchase.dart';
 import 'package:podlove_flutter/ui/screens/auth/change_password.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/consumer_policy.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/faq.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/help.dart';
+import 'package:podlove_flutter/ui/screens/home/sidebar/media_policy.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/privacy_policty.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/settings.dart';
 import 'package:podlove_flutter/ui/screens/home/sidebar/terms_conditions.dart';
@@ -53,7 +55,7 @@ import 'package:podlove_flutter/ui/screens/user/upload_photo.dart';
 
 class AppRouter {
   static GoRouter appRouter = GoRouter(
-    initialLocation: RouterPath.initialScreen,
+    initialLocation: RouterPath.addBio,
     routes: [
       GoRoute(
         path: RouterPath.initialScreen,
@@ -218,6 +220,18 @@ class AppRouter {
       GoRoute(
         path: RouterPath.terms,
         builder: (context, state) => const TermsConditions(),
+      ),
+      GoRoute(
+        path: RouterPath.faqs,
+        builder: (context, state) => const FAQ(),
+      ),
+      GoRoute(
+        path: RouterPath.consumer,
+        builder: (context, state) => const ConsumerPolicy(),
+      ),
+      GoRoute(
+        path: RouterPath.media,
+        builder: (context, state) => const MediaPolicy(),
       ),
       GoRoute(
         path: RouterPath.faqs,
